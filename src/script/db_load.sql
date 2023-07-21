@@ -1,0 +1,20 @@
+insert into cmn_partp values (1, null, 'PL', 'Pravno lice', 1  );
+insert into cmn_partp values (2, null, 'FL', 'Fizicko lice', 1  );
+insert into cmn_par values (1, null, 'P1', 1, 'adm_action', null, null, null, null, null, null, null, null, null,'20230202', '99991231');
+insert into cmn_par values (2, null, 'F1', 1, 'adm_action', null, null, null, null, null, null, null, null, null,'20230202', '99991231');
+insert into cmn_menu values (1, null, '1.', 'ROOT', null, null, null, 1, null, null,1);
+insert into cmn_menu values (11, null, '1.1.', 'ADM', 1, null, null, 1, null, null,1);
+insert into cmn_menu values (12, null, '1.2.', 'CMN', 1, null, null, 2, null, null,1);
+insert into cmn_menu values (121, null, '1.2.1.', 'Šifarnici', 12, null, null, 2, null, null,1);
+insert into cmn_menu values (122, null, '1.2.2.', 'Obrada', 12, null, null, 2, null, null,1);
+insert into cmn_menu values (123, null, '1.2.3.', 'Izveštaji', 12, null, null, 2, null, null,1);
+insert into cmn_menu values (1211, null, '1.2.1.1.', 'Tip partnera', 121, null, null, 2, null, null,1);
+insert into cmn_menu values (1212, null, '1.2.1.2.', 'Partnera', 121, null, null, 2, null, null,1);
+insert into adm_action values (21, null, 'cmn_partp', 'cmn_partp', 1  );
+insert into adm_action values (22, null, 'cmn_par', 'cmn_par', 1  );
+insert into adm_action values (23, null, 'cmn_menu', 'cmn_menu', 1  );
+
+insert into adm_rollact values (21, null, 1, 21);
+insert into adm_rollact values (22, null, 1, 22);
+insert into adm_rollact values (23, null, 2, 23);
+insert into adm_rollact values (2323, null, 1, 23);
