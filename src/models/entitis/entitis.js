@@ -47,8 +47,10 @@ const entitiesInfo =
 		"site": "number",
 		"code": "string",
 		"text": "string",
-		"event": "number",
 		"tp": "number",
+		"um": "number",
+		"tgp": "number",
+		"event": "number",		
 		"eancode": "string",
 		"qrcode": "string",
 		"valid": "number"
