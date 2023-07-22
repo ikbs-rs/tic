@@ -428,7 +428,7 @@ const entitiesInfo =
 		"event": "number",
 		"loc": "number",
 		"begda": "string",
-		"datumod2": "string"
+		"endda": "string"
 	  }
 	},
 	"tic_eventtp": {

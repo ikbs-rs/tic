@@ -28,6 +28,12 @@ const getLista = async (objName, stm, objId, lang) => {
       case "tic_eventatts_v":
         result = await vModel.getEventattsL(objName, objId, lang);
         break;
+      case "tic_eventagenda_v":
+        result = await vModel.getEventagendaL(objName, objId, lang);
+        break;
+      case "tic_eventloc_v":
+        result = await vModel.getEventlocL(objName, objId, lang);
+        break;
       case "cmn_obj_v":
         result = await vModel.getObjV(objName, lang);
         break;

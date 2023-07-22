@@ -77,6 +77,52 @@ const getEventattsL = async (objName, objId, lang) => {
   from	tic_eventatts aa
   where aa.event = ${objId}`      
   //const [rows] = await db.query(sqlRecenic);
+ 
+  let result = await db.query(sqlRecenica);
+  let rows = result.rows;
+  if (Array.isArray(rows)) {
+    return rows;
+  } else {
+    throw new Error(
+      `Greška pri dohvatanju slogova iz baze - abs find: ${rows}`
+    );
+  }
+};
+
+const getEventagendaL = async (objName, objId, lang) => {
+  const sqlRecenica =  
+  `select aa.id , aa.site , aa.event, aa.agenda, aa.date , aa2.code, aa2.text, aa2.begtm, aa2.endtm
+  from (
+    select *
+    from	tic_eventagenda a
+    where	a.event = ${objId}
+  ) aa
+  left join (
+    select *
+    from	tic_agendax_v a2
+    where 	a2.lang = '${lang||'en'}'
+  ) aa2
+  on aa.agenda = aa2.id`     
+  //const [rows] = await db.query(sqlRecenic);
+
+  let result = await db.query(sqlRecenica);
+  let rows = result.rows;
+  if (Array.isArray(rows)) {
+    return rows;
+  } else {
+    throw new Error(
+      `Greška pri dohvatanju slogova iz baze - abs find: ${rows}`
+    );
+  }
+};
+
+const getEventlocL = async (objName, objId, lang) => {
+  const sqlRecenica =  
+  `select aa.id , aa.site , aa.event , aa.begda, aa.endda, 
+        aa.loc, getValueById(aa.loc, 'cmn_objx_v', 'code', '${lang||'en'}') cloc, getValueById(aa.loc, 'cmn_objx_v', 'text', '${lang||'en'}') nloc
+  from	tic_eventloc aa
+  where aa.event = ${objId}`      
+  //const [rows] = await db.query(sqlRecenic);
   console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
@@ -216,5 +262,7 @@ export default {
   getEventL,
   getEventlinkL,
   getEventattsL,
+  getEventagendaL,
+  getEventlocL,
   getObjTree,
 };

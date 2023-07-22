@@ -17,7 +17,9 @@ const add = async (objName, objData) => {
       const hashedPassword = await bcrypt.hash(objData.password, saltRounds);
       objData.password = hashedPassword;
     }
+    console.log(objData, "***************************")
     const sqlQuery = await abstructQuery.getInsertQuery(objName, objData);
+    console.log(objData, "***************2222222222222************", sqlQuery)
     const result = await abstractModel.add(sqlQuery);
     return objData.id; //result;
   } catch (err) {
