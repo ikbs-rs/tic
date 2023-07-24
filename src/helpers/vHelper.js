@@ -12,12 +12,32 @@ const getCmnLinkV = async (objName, lang) => {
   }
 };
 
+const getListaC = async (objName, stm, sqlstmt, lang) => {
+  try {
+    const result = await vModel.getCmnLinkV(objName, sqlstmt, lang);
+    return result;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+};
+
 const getLista = async (objName, stm, objId, lang) => {
   try {
+    console.log("*******Helper*********", stm)
     let result = {};
     switch (stm) {
       case "tic_agenda_v":
         result = await vModel.getAgendaL(objName, lang);
+        break;
+      case "tic_art_v":
+        result = await vModel.getArtL(objName, lang);
+        break;
+      case "tic_cena_v":
+        result = await vModel.getCenaL(objName, lang);
+        break;
+      case "tic_docvr_v":
+        result = await vModel.getDocvrL(objName, lang);
         break;
       case "tic_event_v":
         result = await vModel.getEventL(objName, lang);
@@ -37,6 +57,12 @@ const getLista = async (objName, stm, objId, lang) => {
       case "cmn_obj_v":
         result = await vModel.getObjV(objName, lang);
         break;
+      case "tic_privilege_v":
+        result = await vModel.getPrivilegeL(objName, lang);
+        break;
+        case "tic_discount_v":
+          result = await vModel.getDiscountL(objName, lang);
+          break;        
       case "cmn_objtree_json_v":
         result = await vModel.getObjTree(objName, lang);
         break;
@@ -70,6 +96,7 @@ const getListaById = async (objName, stm, objId, lang) => {
 };
 
 export default {
+  getListaC,
   getCmnLinkV,
   getLista,
   getListaById,

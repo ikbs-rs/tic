@@ -53,7 +53,8 @@ const entitiesInfo =
 		"event": "number",		
 		"eancode": "string",
 		"qrcode": "string",
-		"valid": "number"
+		"valid": "number",
+		"grp": "number"
 	  }
 	},
 	"tic_artcena": {
@@ -86,6 +87,25 @@ const entitiesInfo =
 		"code": "string",
 		"text": "string",
 		"valid": "number"
+	  }
+	},
+	"tic_artgrp": {
+	  "attributes": {
+		"id": "number",
+		"site": "number",
+		"code": "string",
+		"text": "string",
+		"valid": "number"
+	  }
+	},
+	"tic_artgrpx": {
+	  "attributes": {
+		"id": "number",
+		"site": "number",
+		"tableid": "number",
+		"lang": "string",
+		"grammcase": "number",
+		"text": "string"
 	  }
 	},
 	"tic_arttpx": {
@@ -315,8 +335,8 @@ const entitiesInfo =
 		"code": "string",
 		"text": "string",
 		"valid": "number",
-		"left": "number",
-		"sign": "string"
+		"duguje": "number",
+		"znak": "string"
 	  }
 	},
 	"tic_doctpx": {

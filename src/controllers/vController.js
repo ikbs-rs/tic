@@ -11,8 +11,18 @@ const getCmnLinkV = async (req, res) => {
 };
 
 const getLista = async (req, res) => {
-  try {
+  //try {
+    console.log(req.query, "*******************")
     const item = await vHelper.getLista( req.objName, req.query.stm, req.query.objid, req.query.sl||'en');
+    res.status(200).json({ item }); 
+/*  } catch (err) {
+    res.status(500).json({ message: `Doslo je do greske getLista vController ${req.objName}`, error: err.message });
+  }*/
+};
+
+const getListaC = async (req, res) => {
+  try {
+    const item = await vHelper.getListaC( req.objName, req.query.stm, req.query.sqlstmt, req.query.sl||'en');
     res.status(200).json({ item }); 
   } catch (err) {
     res.status(500).json({ message: `Doslo je do greske getLista vController ${req.objName}`, error: err.message });
@@ -31,5 +41,6 @@ const getListaById = async (req, res) => {
 export default {
   getCmnLinkV,
   getLista,
+  getListaC,
   getListaById
 };
