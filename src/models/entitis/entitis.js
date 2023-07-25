@@ -507,7 +507,7 @@ const entitiesInfo =
 		"code": "string",
 		"text": "string",
 		"tp": "number",
-		"limit": "number",
+		"limitirano": "number",
 		"valid": "number"
 	  }
 	},
