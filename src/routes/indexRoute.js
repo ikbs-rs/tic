@@ -60,10 +60,8 @@ router.use('/tic/privilegecond', checkPermissions(), abstruct)
 router.use('/tic/privilegediscount', checkPermissions(), abstruct)
 router.use('/tic/privilegelink', checkPermissions(), abstruct) 
  
-router.use('/tic/seat', checkPermissions(), abstruct) 
+
 router.use('/tic/seatloc', checkPermissions(), abstruct) 
-router.use('/tic/seattp', checkPermissions(), abstruct) 
-router.use('/tic/seattpatt', checkPermissions(), abstruct) 
 router.use('/tic/seattpatts', checkPermissions(), abstruct) 
 router.use('/tic/stampa', checkPermissions(), abstruct)
 
@@ -85,6 +83,9 @@ router.use('/tic/x/eventatt', checkPermissions(), abstructX)
 router.use('/tic/x/eventtp', checkPermissions(), abstructX) 
 router.use('/tic/x/privilege', checkPermissions(), abstructX) 
 router.use('/tic/x/privilegetp', checkPermissions(), abstructX)
+router.use('/tic/x/seat', checkPermissions(), abstructX) 
+router.use('/tic/x/seattp', checkPermissions(), abstructX) 
+router.use('/tic/x/seattpatt', checkPermissions(), abstructX) 
 
 //router.use('/adm/services', servicesRoute)
 

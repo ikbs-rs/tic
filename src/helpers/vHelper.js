@@ -24,7 +24,7 @@ const getListaC = async (objName, stm, sqlstmt, lang) => {
 
 const getLista = async (objName, stm, objId, lang) => {
   try {
-    console.log("*******Helper*********", stm)
+    console.log("*******Helper*********", stm);
     let result = {};
     switch (stm) {
       case "tic_agenda_v":
@@ -60,9 +60,12 @@ const getLista = async (objName, stm, objId, lang) => {
       case "tic_privilege_v":
         result = await vModel.getPrivilegeL(objName, lang);
         break;
-        case "tic_discount_v":
-          result = await vModel.getDiscountL(objName, lang);
-          break;        
+      case "tic_discount_v":
+        result = await vModel.getDiscountL(objName, lang);
+        break;
+      case "tic_seat_v":
+        result = await vModel.getSeatL(objName, lang);
+        break;
       case "cmn_objtree_json_v":
         result = await vModel.getObjTree(objName, lang);
         break;

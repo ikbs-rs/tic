@@ -253,6 +253,24 @@ const getEventlocL = async (objName, objId, lang) => {
   }
 };
 
+const getSeatL = async (objName, lang) => {
+  const sqlRecenica =  
+  `select aa.id , aa.site , aa.code , text, aa.valid, aa.lang, aa.grammcase,
+	      aa.tp, getValueById(aa.tp, 'tic_seattpx_v', 'code', '${lang||'en'}') ctp , getValueById(aa.tp, 'tic_seattpx_v', 'text', '${lang||'en'}') ntp
+  from	tic_seatx_v aa
+  where aa.lang = '${lang||'en'}'`      
+  //const [rows] = await db.query(sqlRecenic);
+  let result = await db.query(sqlRecenica);
+  let rows = result.rows;
+  if (Array.isArray(rows)) {
+    return rows;
+  } else {
+    throw new Error(
+      `Greška pri dohvatanju slogova iz baze - abs find: ${rows}`
+    );
+  }
+};
+
 const getObjTree = async (objName, lang) => {
   const sqlRecenica = 
   ` select tree
@@ -389,4 +407,5 @@ export default {
   getObjTree,
   getPrivilegeL,
   getDiscountL,
+  getSeatL,
 };
