@@ -98,9 +98,26 @@ const getListaById = async (objName, stm, objId, lang) => {
   }
 };
 
+const getListaByText = async (objName, stm, objId, lang) => {
+  try {
+    switch (stm) {
+      case "cmn_locbytxt_v":
+        var result = await vModel.getCmnLocByTxtV(objName, stm, item, objId, lang);
+        break;
+      default:
+        console.error("Pogresan naziv za view");
+    }
+    return result;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+};
+
 export default {
   getListaC,
   getCmnLinkV,
   getLista,
   getListaById,
+  getListaByText,
 };

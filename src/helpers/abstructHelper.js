@@ -8,8 +8,8 @@ const saltRounds = 10
 
 const add = async (objName, objData) => {
   try {
-
-    if (!objData.id || objData.id !== null) {
+    console.log(objData.id, "***********AbstructHelper****************")
+    if (!objData.id || objData.id == null) {
         objData.id = await uniqueId();
     }
     // Mozda mi ovo ne treba jer dolazi sa fronta !!!
@@ -17,10 +17,11 @@ const add = async (objName, objData) => {
       const hashedPassword = await bcrypt.hash(objData.password, saltRounds);
       objData.password = hashedPassword;
     }
-    console.log(objData, "***************************")
+  
     const sqlQuery = await abstructQuery.getInsertQuery(objName, objData);
     console.log(objData, "***************2222222222222************", sqlQuery)
     const result = await abstractModel.add(sqlQuery);
+    console.log(result, "***************3333333333333************")
     return objData.id; //result;
   } catch (err) {
     console.log(err);
@@ -60,7 +61,9 @@ const getByStext = async (objName, value) => {
 
 const update = async (objName, objData) => {
   try {
+    console.log(objData, "***************11111111111111************", objName)
     const sqlQuery = await abstructQuery.getUpdateQuery(objName, objData);
+    console.log(objData, "***************2222222222222************", sqlQuery)
     const result = await abstractModel.update(sqlQuery);
     return result;
   } catch (err) {

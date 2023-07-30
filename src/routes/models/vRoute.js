@@ -10,6 +10,7 @@ router.use("/", (req, res, next) => {
   router.get("/fkey", vController.getListaById);
   router.get("/lista", vController.getLista);
   router.get("/listac", vController.getListaC);
+  router.get("/listabytxt", vController.getListaByText);
   //router.get("/", vController.getLista);
   next();
 });

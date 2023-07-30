@@ -50,7 +50,7 @@ const entitiesInfo =
 		"tp": "number",
 		"um": "number",
 		"tgp": "number",
-		"event": "number",		
+		"event": "number",
 		"eancode": "string",
 		"qrcode": "string",
 		"valid": "number",
@@ -70,25 +70,6 @@ const entitiesInfo =
 		"datumod2": "string"
 	  }
 	},
-	"tic_artseat": {
-	  "attributes": {
-		"id": "number",
-		"site": "number",
-		"art": "number",
-		"seatloc": "number",
-		"begda": "string",
-		"datumod2": "string"
-	  }
-	},
-	"tic_arttp": {
-	  "attributes": {
-		"id": "number",
-		"site": "number",
-		"code": "string",
-		"text": "string",
-		"valid": "number"
-	  }
-	},
 	"tic_artgrp": {
 	  "attributes": {
 		"id": "number",
@@ -106,6 +87,35 @@ const entitiesInfo =
 		"lang": "string",
 		"grammcase": "number",
 		"text": "string"
+	  }
+	},
+	"tic_artseat": {
+	  "attributes": {
+		"id": "number",
+		"site": "number",
+		"art": "number",
+		"seatloc": "number",
+		"begda": "string",
+		"datumod2": "string"
+	  }
+	},
+	"tic_arttax": {
+	  "attributes": {
+		"id": "number",
+		"art": "number",
+		"tax": "number",
+		"value": "string",
+		"begda": "string",
+		"endda": "string"
+	  }
+	},
+	"tic_arttp": {
+	  "attributes": {
+		"id": "number",
+		"site": "number",
+		"code": "string",
+		"text": "string",
+		"valid": "number"
 	  }
 	},
 	"tic_arttpx": {
@@ -274,7 +284,13 @@ const entitiesInfo =
 		"curr": "number",
 		"currrate": "number",
 		"usr": "number",
-		"status": "string"
+		"status": "string",
+		"docobj": "number",
+		"broj": "number",
+		"obj": "number",
+		"obj2": "number",
+		"opis": "string",
+		"timecreation": "string"
 	  }
 	},
 	"tic_docdocslink": {
@@ -316,7 +332,8 @@ const entitiesInfo =
 		"rightcurr": "number",
 		"begtm": "string",
 		"endtm": "string",
-		"status": "string"
+		"status": "string",
+		"fee": "number"
 	  }
 	},
 	"tic_docslink": {
@@ -382,7 +399,10 @@ const entitiesInfo =
 		"endtm": "string",
 		"status": "number",
 		"descript": "string",
-		"note": "string"
+		"note": "string",
+		"event": "number",
+		"ctg": "number",
+		"loc": "number"
 	  }
 	},
 	"tic_eventagenda": {
@@ -434,6 +454,25 @@ const entitiesInfo =
 		"datumod2": "string"
 	  }
 	},
+	"tic_eventctg": {
+	  "attributes": {
+		"id": "number",
+		"site": "number",
+		"code": "string",
+		"text": "string",
+		"valid": "number"
+	  }
+	},
+	"tic_eventctgx": {
+	  "attributes": {
+		"id": "number",
+		"site": "number",
+		"tableid": "number",
+		"lang": "string",
+		"grammcase": "number",
+		"text": "string"
+	  }
+	},
 	"tic_eventlink": {
 	  "attributes": {
 		"id": "number",
@@ -451,6 +490,22 @@ const entitiesInfo =
 		"loc": "number",
 		"begda": "string",
 		"endda": "string"
+	  }
+	},
+	"tic_events": {
+	  "attributes": {
+		"id": "number",
+		"selection_duration": "string",
+		"payment_duration": "string",
+		"booking_duration": "string",
+		"max_ticket": "number",
+		"online_payment": "number",
+		"cash_payment": "number",
+		"delivery_payment": "number",
+		"presale_enabled": "number",
+		"presale_until": "string",
+		"presale_discount": "number",
+		"presale_discount_absolute": "number"
 	  }
 	},
 	"tic_eventtp": {

@@ -144,11 +144,20 @@ where aa.lang = '${lang||'en'}'`
 //# find function
 const getEventL = async (objName, lang) => {
   const sqlRecenica =  
-  `select aa.id , aa.site , aa.code , text, text textx, aa.begda, aa.endda, aa.begtm, aa.endtm, aa.status, aa.descript, aa.note, aa.lang, aa.grammcase,
-        aa.tp, getValueById(aa.tp, 'tic_eventtpx_v', 'code', '${lang||'en'}') ctp, getValueById(aa.tp, 'tic_eventtpx_v', 'text', '${lang||'en'}') ntp
-  from	tic_eventx_v aa
-  where aa.lang = '${lang||'en'}'`      
-  //const [rows] = await db.query(sqlRecenic);
+  `
+  select aa.id , aa.site , aa.code , aa.text, aa.text textx, aa.begda, aa.endda, aa.begtm, aa.endtm, aa.status, aa.descript, aa.note, aa.lang, aa.grammcase,
+        aa.tp, tp.code ctp, tp.text ntp,
+        aa.event, aa1.code cevent, aa1.text nevent,
+        aa.ctg, ctg.code cctg, ctg.text nctg
+  from	tic_eventx_v aa, tic_eventx_v aa1, tic_eventtpx_v tp, tic_eventctgx_v ctg
+  where aa.lang = '${lang||'en'}'
+  and aa.ctg = ctg.id
+  and aa.tp = tp.id
+  and aa.event = aa1.id
+  and tp.lang = '${lang||'en'}'
+  and tp.lang = '${lang||'en'}'
+  `      
+  console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
 
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
