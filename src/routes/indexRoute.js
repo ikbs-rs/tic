@@ -1,6 +1,7 @@
 import express from 'express'
 import abstruct from './models/abstructRoute.js'
 import abstructX from "./models/abstructXRoute.js";
+import fileRouter from "./services/fileRouter.js";
 //import servicesRoute from './services/servicesRoute.js'
 import { checkJwt, checkPermissions, checkPermissionsEx } from '../security/interceptors.js'
 
@@ -10,6 +11,7 @@ const router = express.Router();
 router.use(express.json())
 
 router.use("/", (req, res, next) => {
+  console.log("Dosao u index");
   const urlParts = req.url.split("/");
   // Dohvatam iz URL-a, koju tabelu obradjujen i setuje --- req.objName ****** TABELU
   // .../adm/menu/... adm je modul a menu je tabela
@@ -33,7 +35,7 @@ router.use((req, res, next) => {
 
 
 router.use('/tic/artcena', checkPermissions(), abstruct) 
-router.use('/tic/artseat', checkPermissions(), abstruct) 
+router.use('/tic/artloc', checkPermissions(), abstruct) 
 
 
  
@@ -54,6 +56,7 @@ router.use('/tic/eventcenatp', checkPermissions(), abstruct)
 router.use('/tic/eventlink', checkPermissions(), abstruct) 
 router.use('/tic/eventloc', checkPermissions(), abstruct)  
 router.use('/tic/events', checkPermissions(), abstruct) 
+router.use('/tic/file', checkPermissions(), fileRouter)  
 router.use('/tic/naime', checkPermissions(), abstruct) 
 router.use('/tic/parprivilege', checkPermissions(), abstruct) 
 

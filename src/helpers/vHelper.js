@@ -33,6 +33,9 @@ const getLista = async (objName, stm, objId, lang) => {
       case "tic_art_v":
         result = await vModel.getArtL(objName, lang);
         break;
+      case "tic_locart_v":
+        result = await vModel.getLocartL(objName, objId, lang);
+        break;
       case "tic_cena_v":
         result = await vModel.getCenaL(objName, lang);
         break;
@@ -60,6 +63,15 @@ const getLista = async (objName, stm, objId, lang) => {
       case "tic_privilege_v":
         result = await vModel.getPrivilegeL(objName, lang);
         break;
+      case "tic_privilegediscount_v":
+        result = await vModel.getPrivilegediscountL(objName, objId, lang);
+        break;
+      case "tic_privilegelink_v":
+        result = await vModel.getPrivilegelinkL(objName, objId, lang);
+        break;
+        case "tic_parprivilege_v":
+          result = await vModel.getParprivilegeL(objName, objId, lang);
+          break;        
       case "tic_discount_v":
         result = await vModel.getDiscountL(objName, lang);
         break;
@@ -102,10 +114,65 @@ const getListaByText = async (objName, stm, objId, lang) => {
   try {
     switch (stm) {
       case "cmn_locbytxt_v":
-        var result = await vModel.getCmnLocByTxtV(objName, stm, item, objId, lang);
+        var result = await vModel.getCmnLocByTxtV(
+          objName,
+          stm,
+          item,
+          objId,
+          lang
+        );
         break;
       default:
         console.error("Pogresan naziv za view");
+    }
+    return result;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+};
+
+const getListaByNum = async (objName, stm, item, objId, lang) => {
+  try {
+    switch (stm) {
+      case "tic_docbynum_v":
+        var result = await vModel.getTicDocByNumV(item, objId, lang);
+        break;
+      case "tic_docsbynum_v":
+        var result = await vModel.getTicDocsByNumV(item, objId, lang);
+        break;
+      default:
+        console.error("Pogresan naziv za view, getListaByNum");
+    }
+    return result;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+};
+
+const getListaByNum2 = async (
+  objName,
+  stm,
+  item1,
+  objId1,
+  item2,
+  objId2,
+  lang
+) => {
+  try {
+    switch (stm) {
+      case "tic_docbynum_v":
+        var result = await vModel.getTicDocByNumV2(
+          item1,
+          objId1,
+          item2,
+          objId2,
+          lang
+        );
+        break;
+      default:
+        console.error("Pogresan naziv za view, getListaByNum");
     }
     return result;
   } catch (err) {
@@ -120,4 +187,6 @@ export default {
   getLista,
   getListaById,
   getListaByText,
+  getListaByNum,
+  getListaByNum2,
 };

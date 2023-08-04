@@ -47,10 +47,30 @@ const getListaByText = async (req, res) => {
   }
 };
 
+const getListaByNum = async (req, res) => {
+  try {
+    const item = await vHelper.getListaByNum( req.objname, req.query.stm, req.query.item, req.query.id, req.query.sl||'en');
+    res.status(200).json({ item }); 
+  } catch (err) {
+    res.status(500).json({ message: `Doslo je do greske getListaByNum vController ${req.objName}`, error: err.message });
+  }
+};
+
+const getListaByNum2 = async (req, res) => {
+  try {
+    const item = await vHelper.getListaByNum2( req.objname, req.query.stm, req.query.item1, req.query.id1, req.query.item2, req.query.id2, req.query.sl||'en');
+    res.status(200).json({ item }); 
+  } catch (err) {
+    res.status(500).json({ message: `Doslo je do greske getListaByNum vController ${req.objName}`, error: err.message });
+  }
+};
+
 export default {
   getCmnLinkV,
   getLista,
   getListaC,
   getListaById,
-  getListaByText
+  getListaByText,
+  getListaByNum,
+  getListaByNum2
 };

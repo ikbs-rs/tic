@@ -67,7 +67,7 @@ const entitiesInfo =
 		"value": "number",
 		"terr": "number",
 		"begda": "string",
-		"datumod2": "string"
+		"endda": "string"
 	  }
 	},
 	"tic_artgrp": {
@@ -89,14 +89,25 @@ const entitiesInfo =
 		"text": "string"
 	  }
 	},
-	"tic_artseat": {
+	"tic_artprivilege": {
+		"attributes": {
+		  "id": "number",
+		  "site": "number",
+		  "art": "number",
+		  "privilege": "number",
+		  "begda": "string",
+		  "endda": "string",
+		  "value": "string"
+	   }
+	},
+	"tic_artloc": {
 	  "attributes": {
 		"id": "number",
 		"site": "number",
 		"art": "number",
-		"seatloc": "number",
+		"loc": "number",
 		"begda": "string",
-		"datumod2": "string"
+		"endda": "string"
 	  }
 	},
 	"tic_arttax": {
@@ -287,10 +298,12 @@ const entitiesInfo =
 		"status": "string",
 		"docobj": "number",
 		"broj": "number",
-		"obj": "number",
+		"event": "number",
 		"obj2": "number",
 		"opis": "string",
-		"timecreation": "string"
+		"timecreation": "string",
+		"storno": "number",
+		"year": "number"
 	  }
 	},
 	"tic_docdocslink": {
@@ -451,7 +464,7 @@ const entitiesInfo =
 		"event": "number",
 		"cenatp": "number",
 		"begda": "string",
-		"datumod2": "string"
+		"endda": "string"
 	  }
 	},
 	"tic_eventctg": {
@@ -552,7 +565,9 @@ const entitiesInfo =
 		"par": "number",
 		"privilege": "number",
 		"begda": "string",
-		"datumod2": "string"
+		"endda": "string",
+		"maxprc": "number",
+		"maxval": "number"
 	  }
 	},
 	"tic_privilege": {
@@ -589,7 +604,7 @@ const entitiesInfo =
 		"discount": "number",
 		"value": "number",
 		"begda": "string",
-		"datumod2": "string"
+		"endda": "string"
 	  }
 	},
 	"tic_privilegelink": {
@@ -599,7 +614,7 @@ const entitiesInfo =
 		"privilege1": "number",
 		"privilege2": "number",
 		"begda": "string",
-		"datumod2": "string"
+		"endda": "string"
 	  }
 	},
 	"tic_privilegetp": {

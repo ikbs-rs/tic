@@ -11,6 +11,8 @@ router.use("/", (req, res, next) => {
   router.get("/lista", vController.getLista);
   router.get("/listac", vController.getListaC);
   router.get("/listabytxt", vController.getListaByText);
+  router.get("/listabynum", vController.getListaByNum);
+  router.get("/listabynum2", vController.getListaByNum2);
   //router.get("/", vController.getLista);
   next();
 });

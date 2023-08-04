@@ -67,6 +67,28 @@ const getArtL = async (objName, lang) => {
   }
 };
 
+const getLocartL = async (objName, objId, lang) => {
+  const sqlRecenica =  
+  `
+  select aa.id , aa.site , aa.loc , aa.begda, aa.endda, 
+        aa.art, getValueById(aa.art, 'tic_artx_v', 'code', '${lang||'en'}') cart, getValueById(aa.art, 'tic_artx_v', 'text', '${lang||'en'}') nart
+  from	tic_artloc aa
+  where aa.loc = ${objId}
+  `  
+  console.log(sqlRecenica, "*******************sqlRecenica*********************"  )    
+  //const [rows] = await db.query(sqlRecenic);
+
+  let result = await db.query(sqlRecenica);
+  let rows = result.rows;
+  if (Array.isArray(rows)) {
+    return rows;
+  } else {
+    throw new Error(
+      `Greška pri dohvatanju slogova iz baze - abs find: ${rows}`
+    );
+  }
+};
+
 const getCenaL = async (objName, lang) => {
   const sqlRecenica =  
   `select aa.id , aa.site , aa.code , text, aa.valid, aa.lang, aa.grammcase,
@@ -123,6 +145,68 @@ const getPrivilegeL = async (objName, lang) => {
   }
 };
 
+
+const getPrivilegediscountL = async (objName, objId, lang) => {
+  const sqlRecenica =  
+  `
+  select aa.id , aa.site , aa.discount , aa.begda, aa.endda, aa.value, 
+	      aa.discount, getValueById(aa.discount, 'tic_discountx_v', 'code', '${lang||'en'}') cdiscount , getValueById(aa.discount, 'tic_discountx_v', 'text', '${lang||'en'}') ndiscount
+  from	tic_privilegediscount aa
+  where aa.privilege = ${objId}
+  `     
+  console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
+  let result = await db.query(sqlRecenica);
+  let rows = result.rows;
+  if (Array.isArray(rows)) {
+    return rows;
+  } else {
+    throw new Error(
+      `Greška pri dohvatanju slogova iz baze - abs find: ${rows}`
+    );
+  }
+};
+
+const getPrivilegelinkL = async (objName, objId, lang) => {
+  const sqlRecenica =  
+  `
+  select aa.id , aa.site , aa.privilege2 , aa.begda, aa.endda, 
+	      aa.privilege1, getValueById(aa.privilege1, 'tic_privilegex_v', 'code', '${lang||'en'}') cprivilege , getValueById(aa.privilege1, 'tic_privilegex_v', 'text', '${lang||'en'}') nprivilege
+  from	tic_privilegelink aa
+  where aa.privilege2 = ${objId}
+  `     
+  console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
+  let result = await db.query(sqlRecenica);
+  let rows = result.rows;
+  if (Array.isArray(rows)) {
+    return rows;
+  } else {
+    throw new Error(
+      `Greška pri dohvatanju slogova iz baze - abs find: ${rows}`
+    );
+  }
+};
+
+
+const getParprivilegeL = async (objName, objId, lang) => {
+  const sqlRecenica =  
+  `
+  select aa.id , aa.site , aa.par , aa.begda, aa.endda, maxprc, maxval,
+	      aa.privilege, getValueById(aa.privilege, 'tic_privilegex_v', 'code', '${lang||'en'}') cprivilege , getValueById(aa.privilege, 'tic_privilegex_v', 'text', '${lang||'en'}') nprivilege
+  from	tic_parprivilege aa
+  where aa.par = ${objId}
+  `     
+  console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
+  let result = await db.query(sqlRecenica);
+  let rows = result.rows;
+  if (Array.isArray(rows)) {
+    return rows;
+  } else {
+    throw new Error(
+      `Greška pri dohvatanju slogova iz baze - abs find: ${rows}`
+    );
+  }
+};
+
 const getDiscountL = async (objName, lang) => {
   const sqlRecenica =  
   `select aa.id , aa.site , aa.code , aa.text, aa.tp, aa.valid, aa.lang, aa.grammcase,
@@ -141,14 +225,106 @@ where aa.lang = '${lang||'en'}'`
   }
 };
 
-//# find function
+const getTicDocByNumV = async (item, objId, lang) => {
+  const sqlRecenica =  
+  `
+  select aa.id, aa.site, aa.date, aa.tm , aa.status, aa.docobj , aa.broj , aa.storno, aa.obj2 , aa.opis, aa.timecreation, aa.storno, aa.year, aa.currrate,
+	aa.usr , p.code cpar, p.text npar,
+	aa.curr, c.code ccurr, c.text ncurr,
+  aa.event , e.code cevent, e.text nevent,
+	aa.docvr, v.code cdocvr, v.text ndocvr
+from tic_doc aa, cmn_parx_v p, cmn_currx_v c, tic_docvrx_v v, tic_eventx_v e
+where aa.usr = p.id
+and aa.curr  = c.id 
+and aa.docvr  = v.id 
+and  aa.event  = e.id
+and ${item} = ${objId}
+and p.lang = '${lang||'en'}'
+and c.lang = '${lang||'en'}'
+and v.lang = '${lang||'en'}'
+and e.lang = '${lang||'en'}'
+  `      
+  console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
+
+  let result = await db.query(sqlRecenica);
+  let rows = result.rows;
+  if (Array.isArray(rows)) {
+    return rows;
+  } else {
+    throw new Error(
+      `Greška pri dohvatanju slogova iz baze - abs find: ${rows}`
+    );
+  }
+};
+
+const getTicDocByNumV2 = async (item1, objId1, item2, objId2, lang) => {
+  const sqlRecenica =  
+  `
+  select aa.id, aa.date, aa.tm , aa.status, aa.docobj , aa.broj , aa.storno, aa.obj , aa.obj2 , aa.opis, timecreation, storno, year,
+	aa.usr , p.code cpar, p.text npar,
+	aa.curr, c.code ccurr, c.text ncurr,
+	aa.docvr, c.code cdocvr, c.text ndocvr
+from tic_doc aa, cmn_parx_v p, cmn_currx_v c, tic_docvrx_v v
+where aa.usr = p.id
+and aa.curr  = c.id 
+and aa.docvr  = v.id 
+and ${item1} = ${objId1}
+and ${item2} = ${objId2}
+and p.lang = '${lang||'en'}'
+and c.lang = '${lang||'en'}'
+and v.lang = '${lang||'en'}'
+  `      
+  console.log("*-*-*-*-*-*-*-*-*-getTicDocByNumV21111111", sqlRecenica)
+
+  let result = await db.query(sqlRecenica);
+  let rows = result.rows;
+  if (Array.isArray(rows)) {
+    return rows;
+  } else {
+    throw new Error(
+      `Greška pri dohvatanju slogova iz baze - abs find: ${rows}`
+    );
+  }
+};
+
+const getTicDocsByNumV = async (item, objId, lang) => {
+  const sqlRecenica =  
+  `
+  select aa.id, aa.site, aa.doc, aa.event , aa.tgp , aa.taxrate, aa.price , aa.input , aa.output, discount, curr, currrate,
+    aa.left , aa.right, aa.leftcurr , aa.rightcurr , aa.begtm, endtm, status, fee,
+    aa.loc , p.code cloc, p.text nloc,
+    aa.curr, c.code ccurr, c.text ncurr,
+    aa.art, a.code cart, a.text nart
+  from tic_docs aa, cmn_locx_v p, tic_artx_v a, cmn_currx_v c
+  where aa.loc = p.id
+  and aa.art  = a.id 
+  and aa.curr  = c.id 
+  and ${item} = ${objId}
+  and p.lang = '${lang||'en'}'
+  and c.lang = '${lang||'en'}'
+  `      
+  console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
+
+  let result = await db.query(sqlRecenica);
+  let rows = result.rows;
+  if (Array.isArray(rows)) {
+    return rows;
+  } else {
+    throw new Error(
+      `Greška pri dohvatanju slogova iz baze - abs find: ${rows}`
+    );
+  }
+};
+
 const getEventL = async (objName, lang) => {
   const sqlRecenica =  
   `
-  select aa.id , aa.site , aa.code , aa.text, aa.text textx, aa.begda, aa.endda, aa.begtm, aa.endtm, aa.status, aa.descript, aa.note, aa.lang, aa.grammcase,
+  select aa.id , aa.site , aa.code , aa.text, aa.text textx, aa.begda, aa.endda, aa.begtm, aa.endtm, aa.status, aa.descript, aa.note, 
+        aa.lang, aa.grammcase,
         aa.tp, tp.code ctp, tp.text ntp,
         aa.event, aa1.code cevent, aa1.text nevent,
-        aa.ctg, ctg.code cctg, ctg.text nctg
+        aa.ctg, ctg.code cctg, ctg.text nctg,
+        aa.loc
   from	tic_eventx_v aa, tic_eventx_v aa1, tic_eventtpx_v tp, tic_eventctgx_v ctg
   where aa.lang = '${lang||'en'}'
   and aa.ctg = ctg.id
@@ -406,8 +582,12 @@ export default {
   getListaC,
   getAgendaL,
   getArtL,
+  getLocartL,
   getCenaL,
   getDocvrL,
+  getTicDocByNumV,
+  getTicDocByNumV2,
+  getTicDocsByNumV,
   getEventL,
   getEventlinkL,
   getEventattsL,
@@ -415,6 +595,9 @@ export default {
   getEventlocL,
   getObjTree,
   getPrivilegeL,
+  getPrivilegediscountL,
+  getPrivilegelinkL,
+  getParprivilegeL,
   getDiscountL,
   getSeatL,
 };
