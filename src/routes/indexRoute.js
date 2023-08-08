@@ -11,7 +11,7 @@ const router = express.Router();
 router.use(express.json())
 
 router.use("/", (req, res, next) => {
-  console.log("Dosao u index");
+  // console.log("Dosao u index");
   const urlParts = req.url.split("/");
   // Dohvatam iz URL-a, koju tabelu obradjujen i setuje --- req.objName ****** TABELU
   // .../adm/menu/... adm je modul a menu je tabela
@@ -56,6 +56,7 @@ router.use('/tic/eventcenatp', checkPermissions(), abstruct)
 router.use('/tic/eventlink', checkPermissions(), abstruct) 
 router.use('/tic/eventloc', checkPermissions(), abstruct)  
 router.use('/tic/events', checkPermissions(), abstruct) 
+router.use('/tic/eventtps', checkPermissions(), abstruct)
 router.use('/tic/file', checkPermissions(), fileRouter)  
 router.use('/tic/naime', checkPermissions(), abstruct) 
 router.use('/tic/parprivilege', checkPermissions(), abstruct) 

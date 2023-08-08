@@ -51,6 +51,9 @@ const getLista = async (objName, stm, objId, lang) => {
       case "tic_eventatts_v":
         result = await vModel.getEventattsL(objName, objId, lang);
         break;
+      case "tic_eventtps_v":
+        result = await vModel.getEventtpsL(objName, objId, lang);
+        break;
       case "tic_eventagenda_v":
         result = await vModel.getEventagendaL(objName, objId, lang);
         break;
@@ -69,9 +72,9 @@ const getLista = async (objName, stm, objId, lang) => {
       case "tic_privilegelink_v":
         result = await vModel.getPrivilegelinkL(objName, objId, lang);
         break;
-        case "tic_parprivilege_v":
-          result = await vModel.getParprivilegeL(objName, objId, lang);
-          break;        
+      case "tic_parprivilege_v":
+        result = await vModel.getParprivilegeL(objName, objId, lang);
+        break;
       case "tic_discount_v":
         result = await vModel.getDiscountL(objName, lang);
         break;

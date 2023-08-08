@@ -433,20 +433,20 @@ const entitiesInfo =
 		"site": "number",
 		"code": "string",
 		"text": "string",
-		"valid": "number"
+		"valid": "number",
+		"inputtp": "number"
 	  }
 	},
 	"tic_eventatts": {
-	  "attributes": {
-		"id": "number",
-		"site": "number",
-		"event": "number",
-		"att": "number",
-		"value": "string",
-		"begda": "string",
-		"endda": "string"
-	  }
-	},
+		"attributes": {
+		  "id": "number",
+		  "site": "number",
+		  "event": "number",
+		  "att": "number",
+		  "value": "string",
+		  "valid": "number"
+		}
+	  },
 	"tic_eventattx": {
 	  "attributes": {
 		"id": "number",
@@ -530,6 +530,17 @@ const entitiesInfo =
 		"valid": "number"
 	  }
 	},
+	"tic_eventtps": {
+		"attributes": {
+		  "id": "number",
+		  "site": "number",
+		  "eventtp": "number",
+		  "att": "number",
+		  "value": "string",
+		  "begda": "string",
+		  "endda": "string"
+		}
+	  },	
 	"tic_eventtpx": {
 	  "attributes": {
 		"id": "number",
