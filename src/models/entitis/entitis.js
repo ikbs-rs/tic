@@ -434,7 +434,8 @@ const entitiesInfo =
 		"code": "string",
 		"text": "string",
 		"valid": "number",
-		"inputtp": "number"
+		"inputtp": "number",
+		"ddlist": "string"
 	  }
 	},
 	"tic_eventatts": {
@@ -444,7 +445,8 @@ const entitiesInfo =
 		  "event": "number",
 		  "att": "number",
 		  "value": "string",
-		  "valid": "number"
+		  "valid": "number",
+		  "text": "string"
 		}
 	  },
 	"tic_eventattx": {

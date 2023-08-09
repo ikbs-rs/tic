@@ -375,7 +375,8 @@ const getEventlinkL = async (objName, objId, lang) => {
 
 const getEventattsL = async (objName, objId, lang) => {
   const sqlRecenica =  
-  `select aa.id , aa.site , aa.event , aa.value, aa.valid, a2.inputtp,
+  `select aa.id , aa.site , aa.event , aa.value, aa.valid, a2.ddlist, aa.text,
+        a2.inputtp, getValueById(a2.inputtp, 'cmn_inputtpx_v', 'code', '${lang||'en'}') cinputtp, getValueById(a2.inputtp, 'cmn_inputtpx_v', 'text', '${lang||'en'}') ninputtp,
         aa.att, a2.code ctp, a2.text ntp
   from	tic_eventatts aa, tic_eventattx_v a2
   where aa.event = ${objId}
@@ -399,7 +400,6 @@ const getEventattsL = async (objName, objId, lang) => {
 const getEventtpsL = async (objName, objId, lang) => {
   const sqlRecenica =  
   `select aa.id , aa.site , aa.eventtp , aa.value, aa.begda, aa.endda, 
-        aa.inputtp, getValueById(aa.inputtp, 'cmn_inputtpx_v', 'code', '${lang||'en'}') cinputtp, getValueById(aa.inputtp, 'cmn_inputtpx_v', 'text', '${lang||'en'}') ninputtp,
         aa.att, getValueById(aa.att, 'tic_eventattx_v', 'code', '${lang||'en'}') catt, getValueById(aa.att, 'tic_eventattx_v', 'text', '${lang||'en'}') natt
   from	tic_eventtps aa
   where aa.eventtp = ${objId}`      
