@@ -15,6 +15,8 @@ router.use("/", (req, res, next) => {
   } else {
     if (req.path.startsWith("/_v")) {
       router.use("/_v", vRoute);
+    } else if (req.path.startsWith("/_v")) {
+      router.use("/_special", vRoute);
     } else {
       router.get("/", abstructController.getAll);
       router.get("/:id", abstructController.getById);
