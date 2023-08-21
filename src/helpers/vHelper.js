@@ -24,7 +24,7 @@ const getListaC = async (objName, stm, sqlstmt, lang) => {
 
 const getLista = async (objName, stm, objId, lang) => {
   try {
-    console.log("*******Helper*********", stm);
+    console.log(objId, "*******Helper!!!!!!*********", stm);
     let result = {};
     switch (stm) {
       case "tic_agenda_v":
@@ -32,6 +32,15 @@ const getLista = async (objName, stm, objId, lang) => {
         break;
       case "tic_art_v":
         result = await vModel.getArtL(objName, lang);
+        break;
+      case "tic_artloc_v":
+        result = await vModel.getArtlocL(objName, objId, lang);
+        break;
+      case "tic_artcena_v":
+        result = await vModel.getArtcenaL(objName, objId, lang);
+        break;
+      case "tic_eventart_v":
+        result = await vModel.getEventartL(objName, objId, lang);
         break;
       case "tic_locart_v":
         result = await vModel.getLocartL(objName, objId, lang);
@@ -45,6 +54,9 @@ const getLista = async (objName, stm, objId, lang) => {
       case "tic_event_v":
         result = await vModel.getEventL(objName, lang);
         break;
+        case "tic_eventprodaja_v":
+          result = await vModel.getEventProdajaL(objName, lang);
+          break;        
       case "tic_eventlink_v":
         result = await vModel.getEventlinkL(objName, objId, lang);
         break;
@@ -59,6 +71,9 @@ const getLista = async (objName, stm, objId, lang) => {
         break;
       case "tic_eventloc_v":
         result = await vModel.getEventlocL(objName, objId, lang);
+        break;
+      case "tic_eventcenatp_v":
+        result = await vModel.getEventcenatpL(objName, objId, lang);
         break;
       case "cmn_obj_v":
         result = await vModel.getObjV(objName, lang);

@@ -12,7 +12,7 @@ const getCmnLinkV = async (req, res) => {
 
 const getLista = async (req, res) => {
   //try {
-    console.log(req.query, "*******************")
+    console.log(req.query, "*********getListagetListagetLista**********")
     const item = await vHelper.getLista( req.objName, req.query.stm, req.query.objid, req.query.sl||'en');
     res.status(200).json({ item }); 
 /*  } catch (err) {

@@ -67,7 +67,8 @@ const entitiesInfo =
 		"value": "number",
 		"terr": "number",
 		"begda": "string",
-		"endda": "string"
+		"endda": "string",
+		"curr": "number"
 	  }
 	},
 	"tic_artgrp": {
