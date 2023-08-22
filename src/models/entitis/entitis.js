@@ -299,7 +299,6 @@ const entitiesInfo =
 		"status": "string",
 		"docobj": "number",
 		"broj": "number",
-		"event": "number",
 		"obj2": "number",
 		"opis": "string",
 		"timecreation": "string",
