@@ -346,7 +346,9 @@ const entitiesInfo =
 		"begtm": "string",
 		"endtm": "string",
 		"status": "string",
-		"fee": "number"
+		"fee": "number",
+		"par": "number",
+		"descript": "string"
 	  }
 	},
 	"tic_docslink": {
@@ -427,6 +429,18 @@ const entitiesInfo =
 		"date": "string"
 	  }
 	},
+	"tic_eventart": {
+	  "attributes": {
+		"id": "number",
+		"site": "number",
+		"event": "number",
+		"art": "number",
+		"discount": "number",
+		"descript": "string",
+		"begda": "string",
+		"endda":  "string"
+	  }
+	},	
 	"tic_eventatt": {
 	  "attributes": {
 		"id": "number",
@@ -561,14 +575,6 @@ const entitiesInfo =
 		"lang": "string",
 		"grammcase": "number",
 		"text": "string"
-	  }
-	},
-	"tic_naime": {
-	  "attributes": {
-		"id": "number",
-		"site": "number",
-		"par": "number",
-		"docs": "number"
 	  }
 	},
 	"tic_parprivilege": {

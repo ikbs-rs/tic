@@ -39,7 +39,7 @@ const getAgendaL = async (objName, lang) => {
 
 const getArtL = async (objName, lang) => {
   const sqlRecenica =  
-  `select aa.id, aa.site, aa.code, aa.text, aa."event", aa.eancode, aa.qrcode, aa.valid, aa.lang, aa.grammcase,
+  `select aa.id, aa.site, aa.code, aa.text,  aa.eancode, aa.qrcode, aa.valid, aa.lang, aa.grammcase,
         aa.tp, p.code ctp, p."text" ntp, 
         aa.um, u.code cum, u.text num,
         aa.tgp,t.code ctgp, t.text ntgp,
@@ -92,13 +92,14 @@ const getLocartL = async (objName, objId, lang) => {
 const getEventartL = async (objName, objId, lang) => {
   const sqlRecenica =  
   `
-  select aa.id, aa.site, aa.code, aa.text, aa."event", aa.eancode, aa.qrcode, aa.valid, aa.lang, aa.grammcase,
-        aa.tp, p.code ctp, p."text" ntp, 
+  select ea.id, ea.site, ea."event", ea.discount, ea.descript, ea.begda, ea.endda, aa.site, aa.code, aa.text, aa.eancode, aa.qrcode, aa.valid, aa.lang, aa.grammcase,
+        ea.art, aa.code cart, aa."text" nart,
         aa.um, u.code cum, u.text num,
         aa.tgp,t.code ctgp, t.text ntgp,
         aa.grp, g.code cgrp, g.text ngrp
-  from tic_artx_v aa, tic_arttpx_v p, cmn_umx_v u, cmn_tgpx_v t, tic_artgrpx_v g
-  where aa.event = ${objId}
+  from tic_eventart ea, tic_artx_v aa, tic_arttpx_v p, cmn_umx_v u, cmn_tgpx_v t, tic_artgrpx_v g
+  where ea.event = ${objId}
+  and ea.art = aa.id   
   and aa.lang = '${lang||'en'}'
   and aa.tp = p.id 
   and aa.um = u.id 
@@ -108,10 +109,7 @@ const getEventartL = async (objName, objId, lang) => {
   and	u.lang = '${lang||'en'}'
   and	t.lang = '${lang||'en'}'
   and	g.lang = '${lang||'en'}'
-  `  
-  console.log(sqlRecenica, "*******************sqlRecenica*********************"  )    
-  //const [rows] = await db.query(sqlRecenic);
-
+  ` 
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
   if (Array.isArray(rows)) {
@@ -311,23 +309,21 @@ const getTicDocByNumV = async (item, objId, lang) => {
   select aa.id, aa.site, aa.date, aa.tm , aa.status, aa.docobj , aa.broj , aa.storno, aa.obj2 , aa.opis, aa.timecreation, aa.storno, aa.year, aa.currrate,
 	aa.usr , p.code cpar, p.text npar,
 	aa.curr, c.code ccurr, c.text ncurr,
-  aa.event , e.code cevent, e.text nevent,
 	aa.docvr, v.code cdocvr, v.text ndocvr
-from tic_doc aa, cmn_parx_v p, cmn_currx_v c, tic_docvrx_v v, tic_eventx_v e
+from tic_doc aa, cmn_parx_v p, cmn_currx_v c, tic_docvrx_v v
 where aa.usr = p.id
 and aa.curr  = c.id 
 and aa.docvr  = v.id 
-and  aa.event  = e.id
 and ${item} = ${objId}
 and p.lang = '${lang||'en'}'
 and c.lang = '${lang||'en'}'
 and v.lang = '${lang||'en'}'
-and e.lang = '${lang||'en'}'
   `      
   console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
 
   let result = await db.query(sqlRecenica);
-  let rows = result.rows;
+  console.log(result, "************************************************")
+  let rows = result.rows
   if (Array.isArray(rows)) {
     return rows;
   } else {
@@ -554,11 +550,9 @@ const getEventagendaL = async (objName, objId, lang) => {
 const getEventlocL = async (objName, objId, lang) => {
   const sqlRecenica =  
   `select aa.id , aa.site , aa.event , aa.begda, aa.endda, 
-        aa.loc, getValueById(aa.loc, 'cmn_objx_v', 'code', '${lang||'en'}') cloc, getValueById(aa.loc, 'cmn_objx_v', 'text', '${lang||'en'}') nloc
+        aa.loc, getValueById(aa.loc, 'cmn_locx_v', 'code', '${lang||'en'}') cloc, getValueById(aa.loc, 'cmn_locx_v', 'text', '${lang||'en'}') nloc
   from	tic_eventloc aa
   where aa.event = ${objId}`      
-  //const [rows] = await db.query(sqlRecenic);
-  console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
   if (Array.isArray(rows)) {

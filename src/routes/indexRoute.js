@@ -51,6 +51,7 @@ router.use('/tic/docs', checkPermissions(), abstruct)
 router.use('/tic/docslink', checkPermissions(), abstruct) 
 
 router.use('/tic/eventagenda', checkPermissions(), abstruct) 
+router.use('/tic/eventart', checkPermissions(), abstruct) 
 router.use('/tic/eventatts', checkPermissions(), abstruct) 
 router.use('/tic/eventcenatp', checkPermissions(), abstruct) 
 router.use('/tic/eventlink', checkPermissions(), abstruct) 
