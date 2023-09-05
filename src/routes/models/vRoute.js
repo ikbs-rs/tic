@@ -9,6 +9,7 @@ router.use("/", (req, res, next) => {
   router.get("/cmn_link_v", vController.getCmnLinkV);
   router.get("/fkey", vController.getListaById);
   router.get("/lista", vController.getLista);
+  router.get("/function", vController.getFunction);
   router.get("/listac", vController.getListaC);
   router.get("/listabytxt", vController.getListaByText);
   router.get("/listabynum", vController.getListaByNum);

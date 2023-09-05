@@ -51,12 +51,15 @@ const getLista = async (objName, stm, objId, lang) => {
       case "tic_docvr_v":
         result = await vModel.getDocvrL(objName, lang);
         break;
+      case "tic_docs_v":
+        result = await vModel.getDocsL(objName, objId, lang);
+        break;
       case "tic_event_v":
         result = await vModel.getEventL(objName, lang);
         break;
-        case "tic_eventprodaja_v":
-          result = await vModel.getEventProdajaL(objName, lang);
-          break;        
+      case "tic_eventprodaja_v":
+        result = await vModel.getEventProdajaL(objName, lang);
+        break;
       case "tic_eventlink_v":
         result = await vModel.getEventlinkL(objName, objId, lang);
         break;
@@ -96,11 +99,51 @@ const getLista = async (objName, stm, objId, lang) => {
       case "tic_seat_v":
         result = await vModel.getSeatL(objName, lang);
         break;
+      case "tic_eventst_v":
+          result = await vModel.getEventstL(objName, objId, lang);
+          break;        
       case "cmn_objtree_json_v":
         result = await vModel.getObjTree(objName, lang);
         break;
       default:
         console.error("vHelper: Pogresan naziv za view-a");
+    }
+    return result;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+};
+
+const getFunction = async (objName, stm, eventid, objid, dat, dattm, lang) => {
+  try {
+    switch (stm) {
+      case "tic_artpricecurr_f":
+        var result = await vModel.getTicartpricecurrF(
+          objName,
+          eventid,
+          objid,
+          lang
+        );
+        break;
+      case "tic_arttgpratecurr_f":
+        var result = await vModel.getTicarttgpratecurrF(
+          objName,
+          eventid,
+          objid,
+          lang
+        );
+        break;
+      case "tic_pardiscountcurr_f":
+        var result = await vModel.getTicpardiscountcurrF(
+          objName,
+          eventid,
+          objid,
+          lang
+        );
+        break;
+      default:
+        console.error("Pogresan naziv za view");
     }
     return result;
   } catch (err) {
@@ -203,6 +246,7 @@ export default {
   getListaC,
   getCmnLinkV,
   getLista,
+  getFunction,
   getListaById,
   getListaByText,
   getListaByNum,
