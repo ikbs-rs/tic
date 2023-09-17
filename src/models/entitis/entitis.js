@@ -90,6 +90,15 @@ const entitiesInfo =
 		"text": "string"
 	  }
 	},
+	"tic_artlink": {
+		"attributes": {
+			"id": "number",
+			"site": "number",
+			"art1": "number",
+			"art2": "number",
+			"tp": "string"
+		}
+	},
 	"tic_artprivilege": {
 		"attributes": {
 		  "id": "number",
@@ -306,6 +315,15 @@ const entitiesInfo =
 		"year": "number"
 	  }
 	},
+	"tic_docb": {
+		"attributes": {
+			"id": "number",
+			"site": "number",
+			"doc": "number",
+			"tp": "string",
+			"bcontent": "number"
+		}
+	},	
 	"tic_docdocslink": {
 	  "attributes": {
 		"id": "number",
@@ -323,6 +341,29 @@ const entitiesInfo =
 		"time": "string"
 	  }
 	},
+	"tic_docpaydelivery": {
+		"attributes": {
+			"id": "number",
+			"site": "number",
+			"docpayment": "number",
+			"courier": "number",
+			"delivery_adress": "string",
+			"amount": "number",
+			"dat": "string",
+			"datdelivery": "string",
+			"status": "string"
+		}
+	},	
+	"tic_docpayment": {
+		"attributes": {
+			"id": "number",
+			"site": "number",
+			"doc": "number",
+			"paymenttp": "number",
+			"amount": "number",
+			"bcontent": "number"
+		}
+	},	
 	"tic_docs": {
 	  "attributes": {
 		"id": "number",
@@ -665,6 +706,20 @@ const entitiesInfo =
 		"text": "string"
 	  }
 	},
+	"tic_paycard": {
+		"attributes": {
+			"id": "number",
+			"site": "number",
+			"docpayment": "number",
+			"ccard": "number",
+			"owner": "number",
+			"cardnum": "string",
+			"code": "string",
+			"dat": "string",
+			"amount": "number",
+			"status": "number"
+		}
+	},	
 	"tic_seat": {
 	  "attributes": {
 		"id": "number",
@@ -745,6 +800,18 @@ const entitiesInfo =
 		"text": "string"
 	  }
 	},
+	"tic_speccheck": {
+		"attributes": {
+			"id": "number",
+			"site": "number",
+			"docpayment": "number",
+			"bank": "number",
+			"code1": "string",
+			"code2": "string",
+			"code3": "string",
+			"amount": "number"
+	}
+  },	
 	"tic_stampa": {
 	  "attributes": {
 		"id": "number",

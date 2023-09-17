@@ -2,12 +2,15 @@ import axios from "axios";
 import jwt from "jsonwebtoken";
 import jwtConfig from "../config/jwtConfig.js";
 import roll from "./guards/roll.js";
+//import https from 'https';
 
 // funkcija za proveru ispravnosti JWT tokena za postojeci modul CMD.
 export const checkJwt = async (req, res, next) => {
   try {
     const jwtServer = process.env.JWT_URL;
     const token = req.headers.authorization?.replace("Bearer ", "");
+    //const agent = new https.Agent({ rejectUnauthorized: false });
+    console.log("*-*-*-*-*-Eve me*-*-*-*-**-*", jwtServer)
 
     if (!jwtServer) {
       throw new Error(
@@ -23,15 +26,18 @@ export const checkJwt = async (req, res, next) => {
         });
       } else {
         const checkJwtUrl = `${jwtServer}/checkJwt`;
+        console.log("*-*-*-*-*-checkJwtUrl*-*-*-*-*3333*-*", checkJwtUrl)
         const response = await axios.post(`${checkJwtUrl}`, {}, {
           headers: { Authorization: `Bearer ${token}` },
-          timeout: 5000, // vreme za koje se očekuje odgovor od udaljenog servera (u milisekundama)
+          timeout: 500 // vreme za koje se očekuje odgovor od udaljenog servera (u milisekundama)
         });
         // provera statusa odgovora
+        console.log(response.status, "*-*-*-*-*-response*-*-*-*-**-*", response.data.success)
         if (response.status === 200 && response.data.success) {
           // ako je JWT token ispravan, prelazimo na sledeći middleware
           req.userId = response.data.userId
           req.decodeJwt = response.data.decodeJwt
+          console.log("*-*-*-*-*-Kuku*-*-*-*-**-*")
           next();
         } else {
           // ako nije ispravan, vraćamo poruku o grešci
@@ -42,6 +48,7 @@ export const checkJwt = async (req, res, next) => {
       }
     }
   } catch (error) {
+    console.log(error, "*-*-*-*-*-checkJwt error*-*-*-*-**-*")
     // u slučaju greške, vraćamo objekat sa informacijama o grešci
     return res.status(error.response?.status || 500).json({
       message: error.message || "Internal Server Error",
@@ -55,6 +62,7 @@ export const checkPermissions = (par1 = "1", par2 = "1") => {
   return async (req, res, next) => {
     try {
       // Dohvatam objekat i korisnika i prosledjujem dalje
+      //const agent = new https.Agent({ rejectUnauthorized: false });
       const objName = req.objName;
       const userId = req.userId;
       const jwtServer = process.env.JWT_URL
@@ -81,7 +89,7 @@ export const checkPermissions = (par1 = "1", par2 = "1") => {
           {
             headers: {
               Authorization: `Bearer ${token}`
-            }
+            },
           }
         );        
         if (response.status === 200 && response.data.allowed) {
@@ -93,6 +101,7 @@ export const checkPermissions = (par1 = "1", par2 = "1") => {
         }
       }
     } catch (error) {
+      console.log(error, "*-*-*-*-*-checkPermissions error*-*-*-*-**-*")
       // u slučaju greške, vraćamo objekat sa informacijama o grešci
       return res.status(error.response?.status || 500).json({
         message: error.message || "Internal  Server Error - roll",
@@ -104,6 +113,7 @@ export const checkPermissions = (par1 = "1", par2 = "1") => {
 
 export const checkPermissionsEx = async (req, res, next) => {
   try {
+    console.log( "*-*-*-*-*-checkPermissions Ex*-*-*-*-**-*")
     // Dohvatam objekat i korisnika i prosledjujem dalje
     const userId = req.body.userId;
     const objName = req.body.objName;
@@ -120,6 +130,7 @@ export const checkPermissionsEx = async (req, res, next) => {
         .json({ message: "Nemate pravo pristupa ovom resursu - roll." });
     }
   } catch (error) {
+    console.log(error, "*-*-*-*-*-checkPermissions error*-*-*-*-**-*")
     // u slučaju greške, vraćamo objekat sa informacijama o grešci
     return res.status(error.response?.status || 500).json({
       message: error.message || "Internal  Server Error - roll",
