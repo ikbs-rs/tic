@@ -1,8 +1,50 @@
 import db from "../db/db.js";
+import { uniqueId } from "../middleware/utility.js";
 import entities from "./entitis/entitis.js";
 
 const saltRounds = 10;
 
+const moveAndCopy = async (objName, lang, uId1, uId2, id) => {
+  try {
+    await db.query("BEGIN");
+
+    // First, delete from one table
+    const deleteResult = await db.query(`DELETE FROM ${objName} WHERE tableid = $1`, [id]);
+
+    // Create a temporary table in PostgreSQL
+    await db.query(`
+      CREATE TEMP TABLE tmp_eventtpatt AS
+      SELECT *
+      FROM tic_eventtpatt
+      WHERE eventtp = $1
+    `, [uId1]);
+
+    // Update the temporary table
+    await db.query(`
+      UPDATE tmp_eventtpatt
+      SET eventtp = $1
+    `, [uId2]);
+
+    // Insert data from the temporary table into tic_eventtpatt
+    await db.query(`
+      INSERT INTO tic_eventtpatt (id, some_column_name, eventtp, att, text)
+      SELECT $1, null, eventtp, att, text
+      FROM tmp_eventtpatt
+    `, [uniqueId]); // Replace uniqueId with an actual value
+
+    await db.query("COMMIT"); // Confirm the transaction
+
+    return {
+      deleteRowCount: deleteResult.rowCount,
+      copyRowCount: result1.rowCount // Replace result1 with the correct value
+    };
+  } catch (error) {
+    if (db) {
+      await db.query("ROLLBACK"); // Rollback the transaction in case of an error
+    }
+    throw error;
+  }
+}
 
 //# find function
 const getListaC = async (objName, sqlstmt, lang) => {
@@ -153,7 +195,51 @@ const getArtcenaL = async (objName, objId, lang) => {
   from	tic_artcena aa
   where aa.art = ${objId}
   `  
-  console.log(sqlRecenica, "*******************getArtcenaL*********************"  )    
+  //console.log(sqlRecenica, "*******************getArtcenaL*********************"  )    
+  //const [rows] = await db.query(sqlRecenic);
+
+  let result = await db.query(sqlRecenica);
+  let rows = result.rows;
+  if (Array.isArray(rows)) {
+    return rows;
+  } else {
+    throw new Error(
+      `Greška pri dohvatanju slogova iz baze - abs find: ${rows}`
+    );
+  }
+};
+
+const getArtlinkL = async (objName, objId, lang) => {
+  const sqlRecenica =  
+  `
+  select aa.id , aa.site , aa.tp, aa.art2,
+        aa.art1, getValueById(aa.art1, 'tic_artx_v', 'code', '${lang||'en'}') cart1, getValueById(aa.art1, 'tic_artx_v', 'text', '${lang||'en'}') nart1
+  from	tic_artlink aa
+  where aa.art2 = ${objId}
+  `  
+  //console.log(sqlRecenica, "*******************getArtcenaL*********************"  )    
+  //const [rows] = await db.query(sqlRecenic);
+
+  let result = await db.query(sqlRecenica);
+  let rows = result.rows;
+  if (Array.isArray(rows)) {
+    return rows;
+  } else {
+    throw new Error(
+      `Greška pri dohvatanju slogova iz baze - abs find: ${rows}`
+    );
+  }
+};
+
+const getDocpaymentL = async (objName, objId, lang) => {
+  const sqlRecenica =  
+  `
+  select aa.id , aa.site , aa.amount, aa.doc,
+        aa.paymenttp, getValueById(aa.paymenttp, 'cmn_paymenttpx_v', 'code', '${lang||'en'}') cpaymenttp, getValueById(aa.paymenttp, 'cmn_paymenttpx_v', 'text', '${lang||'en'}') npaymenttp
+  from	tic_docpayment aa
+  where aa.doc = ${objId}
+  `  
+  //console.log(sqlRecenica, "*******************getArtcenaL*********************"  )    
   //const [rows] = await db.query(sqlRecenic);
 
   let result = await db.query(sqlRecenica);
@@ -521,6 +607,29 @@ const getEventattsL = async (objName, objId, lang) => {
   }
 };
 
+const getEventobjL = async (objName, objId, lang) => {
+  const sqlRecenica =  
+  `
+  select aa.id , aa.site , aa.event , aa.begda, aa.endda,  a2.lang , a2.grammcase ,
+        aa.objtp, getValueById(aa.objtp, 'cmn_objtpx_v', 'code', '${lang||'en'}') cobjtp, getValueById(aa.objtp, 'cmn_objtpx_v', 'text', '${lang||'en'}') nobjtp,
+        aa.obj, a2.code cobj, a2.text nobj
+  from	tic_eventobj aa, cmn_objx_v a2
+  where aa.event = ${objId}
+  and   aa.event = a2.id
+  and   a2.lang = '${lang||'en'}'
+  `      
+  console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
+ 
+  let result = await db.query(sqlRecenica);
+  let rows = result.rows;
+  if (Array.isArray(rows)) {
+    return rows;
+  } else {
+    throw new Error(
+      `Greška pri dohvatanju slogova iz baze - abs find: ${rows}`
+    );
+  }
+};
 
 const getEventtpsL = async (objName, objId, lang) => {
   const sqlRecenica =  
@@ -847,15 +956,18 @@ export default {
   getEventartL,
   getLocartL,
   getArtcenaL,
+  getArtlinkL,
   getCenaL,
   getDocsL,
   getDocvrL,
+  getDocpaymentL,
   getTicDocByNumV,
   getTicDocByNumV2,
   getTicDocsByNumV,
   getEventL,
   getEventProdajaL,
   getEventlinkL,
+  getEventobjL,
   getEventattsL,
   getEventtpsL,
   getEventagendaL,

@@ -39,6 +39,12 @@ const getLista = async (objName, stm, objId, lang) => {
       case "tic_artcena_v":
         result = await vModel.getArtcenaL(objName, objId, lang);
         break;
+      case "tic_artlink_v":
+          result = await vModel.getArtlinkL(objName, objId, lang);
+          break;   
+      case "tic_docpayment_v":
+          result = await vModel.getDocpaymentL(objName, objId, lang);
+          break;      
       case "tic_eventart_v":
         result = await vModel.getEventartL(objName, objId, lang);
         break;
@@ -63,6 +69,9 @@ const getLista = async (objName, stm, objId, lang) => {
       case "tic_eventlink_v":
         result = await vModel.getEventlinkL(objName, objId, lang);
         break;
+        case "tic_eventobj_v":
+          result = await vModel.getEventobjL(objName, objId, lang);
+          break;        
       case "tic_eventatts_v":
         result = await vModel.getEventattsL(objName, objId, lang);
         break;

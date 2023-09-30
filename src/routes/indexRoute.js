@@ -42,6 +42,7 @@ router.use((req, res, next) => {
 
 router.use('/tic/artcena', checkPermissions(), abstruct) 
 router.use('/tic/artloc', checkPermissions(), abstruct) 
+router.use('/tic/artlink', checkPermissions(), abstruct) 
 
 
  
@@ -55,6 +56,7 @@ router.use('/tic/docdocslink', checkPermissions(), abstruct)
 router.use('/tic/doclink', checkPermissions(), abstruct) 
 router.use('/tic/docs', checkPermissions(), abstruct) 
 router.use('/tic/docslink', checkPermissions(), abstruct) 
+router.use('/tic/docpayment', checkPermissions(), abstruct)
 
 router.use('/tic/eventagenda', checkPermissions(), abstruct) 
 router.use('/tic/eventart', checkPermissions(), abstruct) 

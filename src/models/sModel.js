@@ -1,5 +1,6 @@
 import db from "../db/db.js";
 import entities from "./entitis/entitis.js";
+import { uniqueId } from "../middleware/utility.js";
 
 const saltRounds = 10;
 
@@ -53,8 +54,50 @@ const getArtL = async (objName, lang) => {
   }
 };
 
+const moveAndCopy = async (att, objName1, objName2, objId1, objId2, stm, lang) => {
+  try {
+    await db.query("BEGIN");
+
+    // First, delete from one table
+    const deleteResult = await db.query(`DELETE FROM ${objName1} WHERE ${att}  = $1`, [objId1]);
+
+    // Create a temporary table in PostgreSQL
+    await db.query(`
+      CREATE TEMP TABLE ${objName2} AS
+      SELECT *
+      FROM ${objName1}
+      WHERE ${att} = $1
+    `, [objId2]);
+
+    // Update the temporary table
+    await db.query(`
+      UPDATE ${objName2} 
+      SET ${att} = $1
+    `, [objId1]);
+
+    // Insert data from the temporary table into tic_eventtpatt
+    await db.query(`
+      INSERT INTO ${objName1} (id, site, event, att, value, valid, text)
+      SELECT $1, site, event, att, value, valid, text
+      FROM ${objName2} 
+    `, [uniqueId]); // Replace uniqueId with an actual value
+
+    await db.query("COMMIT"); // Confirm the transaction
+
+    return {
+      deleteRowCount: deleteResult.rowCount,
+      copyRowCount: result1.rowCount // Replace result1 with the correct value
+    };
+  } catch (error) {
+    if (db) {
+      await db.query("ROLLBACK"); // Rollback the transaction in case of an error
+    }
+    throw error;
+  }
+}
 
 export default {
   getAgendaL,
   getArtL,
+  moveAndCopy,
 };

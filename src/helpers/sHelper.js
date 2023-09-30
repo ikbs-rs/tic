@@ -23,6 +23,25 @@ const getLista = async (objName, stm, objId, lang) => {
   }
 };
 
+const postFunction = async (att, objName1, objName2, objId1, objId2, stm, lang) => {
+  try {
+    console.log("*******Helper*********", stm);
+    let result = {};
+    switch (stm) {
+      case "tic_eventtpatt_s":
+        result = await sModel.postFunction(att, objName1, objName2, objId1, objId2, stm, lang);
+        break;
+      default:
+        console.error("vHelper: Pogresan naziv za view-a");
+    }
+    return result;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+};
+
 export default {
   getLista,
+  postFunction,
 };
