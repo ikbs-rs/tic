@@ -96,8 +96,32 @@ const moveAndCopy = async (att, objName1, objName2, objId1, objId2, stm, lang) =
   }
 }
 
+const getEventartCena = async (objName, objId, objId1, lang) => {
+  const sqlRecenica =  
+  `
+    SELECT distinct c.id, c.code, c."text", c.lang, c.grammcase 
+    FROM tic_eventartcena a, tic_cenax_v c
+    where	a.event = ${objId}
+    and a.art = ${objId1}
+    and   a.cena = c.id
+    and c.lang = '${lang||'en'}'
+    `    
+    console.log(sqlRecenica, "#######################getEventartCena###########################")
+  //const [rows] = await db.query(sqlRecenic);
+  let result = await db.query(sqlRecenica);
+  let rows = result.rows;
+  if (Array.isArray(rows)) {
+    return rows;
+  } else {
+    throw new Error(
+      `Greška pri dohvatanju slogova iz baze - abs find: ${rows}`
+    );
+  }
+};
+
 export default {
   getAgendaL,
   getArtL,
   moveAndCopy,
+  getEventartCena,
 };

@@ -50,7 +50,6 @@ const entitiesInfo =
 		"tp": "number",
 		"um": "number",
 		"tgp": "number",
-		"event": "number",
 		"eancode": "string",
 		"qrcode": "string",
 		"valid": "number",
@@ -69,6 +68,21 @@ const entitiesInfo =
 		"begda": "string",
 		"endda": "string",
 		"curr": "number"
+	  }
+	},
+	"tic_eventartcena": {
+	  "attributes": {
+		"id": "number",
+		"site": "number",
+		"event": "number",
+		"art": "number",
+		"cena": "number",
+		"value": "number",
+		"terr": "number",
+		"begda": "string",
+		"endda": "string",
+		"curr": "number",
+		"eventart": "number"
 	  }
 	},
 	"tic_artgrp": {
@@ -99,6 +113,15 @@ const entitiesInfo =
 			"tp": "string"
 		}
 	},
+	"tic_eventartlink": {
+		"attributes": {
+			"id": "number",
+			"site": "number",
+			"eventart1": "number",
+			"eventart2": "number",
+			"tp": "string"
+		}
+	},
 	"tic_artprivilege": {
 		"attributes": {
 		  "id": "number",
@@ -120,6 +143,28 @@ const entitiesInfo =
 		"endda": "string"
 	  }
 	},
+	"tic_eventartloc": {
+	  "attributes": {
+		"id": "number",
+		"site": "number",
+		"eventart": "number",
+		"loc": "number",
+		"begda": "string",
+		"endda": "string"
+	  }
+	},
+
+	"tic_eventobj": {
+		"attributes": {
+		  "id": "number",
+		  "site": "number",
+		  "event": "number",
+		  "objtp": "number",
+		  "obj": "number",
+		  "begda": "string",
+		  "endda": "string"
+		}
+	  },	
 	"tic_arttax": {
 	  "attributes": {
 		"id": "number",
@@ -206,7 +251,7 @@ const entitiesInfo =
 		"seatloc": "number",
 		"count": "number",
 		"begda": "string",
-		"datumod2": "string"
+		"endda": "string"
 	  }
 	},
 	"tic_channel": {
@@ -458,7 +503,8 @@ const entitiesInfo =
 		"note": "string",
 		"event": "number",
 		"ctg": "number",
-		"loc": "number"
+		"loc": "number",
+		"par": "number"
 	  }
 	},
 	"tic_eventagenda": {
@@ -476,10 +522,11 @@ const entitiesInfo =
 		"site": "number",
 		"event": "number",
 		"art": "number",
-		"discount": "number",
 		"descript": "string",
 		"begda": "string",
-		"endda":  "string"
+		"endda":  "string",
+		"nart": "string",
+		"discount":  "number"
 	  }
 	},	
 	"tic_eventatt": {
@@ -653,7 +700,7 @@ const entitiesInfo =
 		"endcondition": "string",
 		"endvalue": "string",
 		"begda": "string",
-		"datumod2": "string"
+		"endda": "string"
 	  }
 	},
 	"tic_privilegediscount": {

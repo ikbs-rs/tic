@@ -40,13 +40,19 @@ const getLista = async (objName, stm, objId, lang) => {
         result = await vModel.getArtcenaL(objName, objId, lang);
         break;
       case "tic_artlink_v":
-          result = await vModel.getArtlinkL(objName, objId, lang);
-          break;   
+        result = await vModel.getArtlinkL(objName, objId, lang);
+        break;
       case "tic_docpayment_v":
-          result = await vModel.getDocpaymentL(objName, objId, lang);
-          break;      
+        result = await vModel.getDocpaymentL(objName, objId, lang);
+        break;
       case "tic_eventart_v":
         result = await vModel.getEventartL(objName, objId, lang);
+        break;
+      case "tic_eventartlink_v":
+        result = await vModel.getEventartlinkL(objName, objId, lang);
+        break;
+      case "tic_eventart_opt_v":
+        result = await vModel.getEventartOptL(objName, objId, lang);
         break;
       case "tic_locart_v":
         result = await vModel.getLocartL(objName, objId, lang);
@@ -69,9 +75,18 @@ const getLista = async (objName, stm, objId, lang) => {
       case "tic_eventlink_v":
         result = await vModel.getEventlinkL(objName, objId, lang);
         break;
-        case "tic_eventobj_v":
-          result = await vModel.getEventobjL(objName, objId, lang);
-          break;        
+      case "tic_eventcena_v":
+        result = await vModel.getEventCena(objName, objId, lang);
+        break;
+      case "tic_eventartcena_v":
+        result = await vModel.getEventartCena(objName, objId, objId1, lang);
+        break;
+      case "tic_eventobj_v":
+        result = await vModel.getEventobjL(objName, objId, lang);
+        break;
+      case "tic_eventatt_v":
+        result = await vModel.getEventattL(objName, lang);
+        break;
       case "tic_eventatts_v":
         result = await vModel.getEventattsL(objName, objId, lang);
         break;
@@ -99,6 +114,9 @@ const getLista = async (objName, stm, objId, lang) => {
       case "tic_privilegelink_v":
         result = await vModel.getPrivilegelinkL(objName, objId, lang);
         break;
+      case "tic_privilegecond_v":
+        result = await vModel.getPrivilegecondL(objName, objId, lang);
+        break;
       case "tic_parprivilege_v":
         result = await vModel.getParprivilegeL(objName, objId, lang);
         break;
@@ -109,8 +127,8 @@ const getLista = async (objName, stm, objId, lang) => {
         result = await vModel.getSeatL(objName, lang);
         break;
       case "tic_eventst_v":
-          result = await vModel.getEventstL(objName, objId, lang);
-          break;        
+        result = await vModel.getEventstL(objName, objId, lang);
+        break;
       case "cmn_objtree_json_v":
         result = await vModel.getObjTree(objName, lang);
         break;
