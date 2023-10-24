@@ -79,7 +79,7 @@ const getLista = async (objName, stm, objId, lang) => {
         result = await vModel.getEventCena(objName, objId, lang);
         break;
       case "tic_eventartcena_v":
-        result = await vModel.getEventartCena(objName, objId, objId1, lang);
+        result = await vModel.getEventartcenaL(objName, objId, lang);
         break;
       case "tic_eventobj_v":
         result = await vModel.getEventobjL(objName, objId, lang);

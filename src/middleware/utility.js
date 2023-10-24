@@ -19,13 +19,16 @@ let workerId;
 // Generisanje novog Id na osnovu lokalnog okruzenje
 export const uniqueId = async () => {
   timestamp = Date.now().toString();
-  data = virtualHost + processId + timestamp;
+  const randomValue = Math.floor(Math.random() * 90) + 10;
+  data = virtualHost + processId + timestamp+ randomValue;
   workerId = createHash("sha256").update(data).digest("hex");
+  //console.log(data, "------dataCentar-------", dataCentar, "***workerId***", workerId, "*******processId*******", processId )
   snowflake.init({
-    worker_id: 1,
+    worker_id: workerId,
     data_center_id: dataCentar,
-    sequence: processId,
+    sequence: data,
   });
+  await new Promise((resolve) => setTimeout(resolve, 0.5));
 
   return snowflake.nextId();
 };

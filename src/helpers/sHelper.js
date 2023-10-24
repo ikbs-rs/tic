@@ -68,8 +68,11 @@ const postFunction = async (
           lang
         );
         break;
+      case "tic_autoeventatts_s":
+        result = await sModel.autoEventatts(objId1);
+        break;
       default:
-        console.error("vHelper: Pogresan naziv za view-a");
+        console.error("sHelper: Pogresan naziv za view-a - " +stm);
     }
     return result;
   } catch (err) {

@@ -22,7 +22,8 @@ const getLista2 = async (req, res) => {
 
 const postFunction = async (req, res) => {
   try {
-    const item = await sHelper.postFunction( req.att, req.objName1, req.objName2, req.objId1, req.objId2, req.stm, req.query.sl||'en' );
+    console.log(req.query, "*********postFunction**********")
+    const item = await sHelper.postFunction( req.query.att||0, req.query.objName1||0, req.query.objName2||0, req.query.objId1||0, req.query.objId2||0, req.query.stm||0, req.query.sl||'en' );
     res.status(200).json({ item }); 
   } catch (err) {
     res.status(500).json({ message: `Doslo je do greske postFunction sController ${req.objName}`, error: err.message });

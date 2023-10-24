@@ -504,7 +504,8 @@ const entitiesInfo =
 		"event": "number",
 		"ctg": "number",
 		"loc": "number",
-		"par": "number"
+		"par": "number",
+		"tmp": "number"
 	  }
 	},
 	"tic_eventagenda": {
