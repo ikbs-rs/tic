@@ -593,6 +593,35 @@ console.log("**************************getEventL******************************",
   }
 };
 
+const getEventTmpL = async (objName, lang) => {
+  const sqlRecenica =  
+  `
+  select aa.id , aa.site , aa.code , aa.text, aa.text textx, aa.begda, aa.endda, aa.begtm, aa.endtm, aa.status, aa.descript, aa.note, 
+        aa.lang, aa.grammcase, aa.loc, aa.tmp,
+        aa.tp, tp.code ctp, tp.text ntp,
+        aa.event, getValueById(aa.event, 'tic_eventx_v', 'code', '${lang||'en'}') cevent , getValueById(aa.event, 'tic_eventx_v', 'text', '${lang||'en'}') nevent,
+        aa.ctg, ctg.code cctg, ctg.text nctg,
+        aa.par, getValueById(aa.par, 'cmn_parx_v', 'code', '${lang||'en'}') cpar , getValueById(aa.par, 'cmn_parx_v', 'text', '${lang||'en'}') npar
+  from	tic_eventx_v aa, tic_eventtpx_v tp, tic_eventctgx_v ctg
+  where aa.lang = '${lang||'en'}'
+  and aa.ctg = ctg.id
+  and aa.tp = tp.id
+  and aa.tmp = 1
+  and tp.lang = '${lang||'en'}'
+  and ctg.lang = '${lang||'en'}'
+  `      
+console.log("**************************getEventL******************************", sqlRecenica)
+  let result = await db.query(sqlRecenica);
+  let rows = result.rows;
+  if (Array.isArray(rows)) {
+    return rows;
+  } else {
+    throw new Error(
+      `Greška pri dohvatanju slogova iz baze - abs find: ${rows}`
+    );
+  }
+};
+
 const getEventProdajaL = async (objName, lang) => {
   const sqlRecenica =  
   `
@@ -1082,6 +1111,7 @@ export default {
   getTicDocByNumV2,
   getTicDocsByNumV,
   getEventL,
+  getEventTmpL,
   getEventProdajaL,
   getEventlinkL,
   getEventobjL,

@@ -126,7 +126,7 @@ const autoEventatts = async (eventId) => {
     let ok = false;
 
     await db.query(
-    `
+      `
       delete from tic_eventatts
       where event = $1
     `, [eventId]);
@@ -140,14 +140,14 @@ const autoEventatts = async (eventId) => {
     //for (let i = 0; i < 1000; i++) {
     for (const row of eventAttRows.rows) {
       uId = await uniqueId()
-      console.log("***", uId)
+      //console.log("***", uId)
       // Insert rows into tic_eventatts
       await db.query(`
         INSERT INTO tic_eventatts (id, site, event, att, value, valid, text)
         VALUES ($1, NULL, $2, $3, '', 1, '')
       `, [uId, eventId, row.id]);
-    //}
-  }
+      //}
+    }
     await db.query("COMMIT"); // Confirm the transaction
     ok = true;
 
@@ -160,10 +160,118 @@ const autoEventatts = async (eventId) => {
   }
 };
 
+const copyEvent = async (eventId, tmpId, begda, endda) => {
+  const client = await db.connect(); // Povežite se s bazom podataka koristeći klijenta
+
+  try {
+    await client.query("BEGIN"); // Početak transakcije
+    let ok = false;
+
+    // Prvo obrišite podatke
+    await client.query("DELETE FROM tic_eventst WHERE event = $1", [eventId]);
+    await client.query("DELETE FROM tic_eventartcena WHERE event = $1", [eventId]);
+    await client.query("DELETE FROM tic_eventart WHERE event = $1", [eventId]);
+    await client.query("DELETE FROM tic_eventobj WHERE event = $1", [eventId]);
+    await client.query("DELETE FROM tic_eventatts WHERE event = $1", [eventId]);
+
+    // Zatim umetnite nove podatke koristeći SELECT INTO
+    await client.query(
+      `
+      INSERT INTO tic_eventatts (id, site, event, att, value, valid, text)
+      SELECT nextval('tic_table_id_seq'), site, $1, att, value, valid, text
+      FROM tic_eventatts
+      WHERE event = $2
+    `,
+      [eventId, tmpId]
+    );
+
+    await client.query(
+      `
+      INSERT INTO tic_eventobj (id, site, event, objtp, obj, begda, endda)
+      SELECT nextval('tic_table_id_seq'), site, $1, objtp, obj, $3, $4
+      FROM tic_eventobj
+      WHERE event = $2
+    `,
+      [eventId, tmpId, begda, endda]
+    );
+
+    // await client.tquery(
+    //   `
+    //   INSERT INTO tic_eventart (id, site, event, art, descript, begda, endda, nart, discount)
+    //   SELECT nextval('tic_table_id_seq'), site, $1, art, descript, $3, $4, nart, discount
+    //   FROM tic_eventart
+    //   WHERE event = $2
+    // `,
+    //   [eventId, tmpId, begda, endda]
+    // );
+
+    // Fetch rows from tic_eventatt
+    const eventArtRows = await db.query(`
+      SELECT nextval('tic_table_id_seq') id , site, $1 event, art, descript, $3 begda, $4 endda, nart, discount
+      FROM tic_eventart
+      WHERE event = $2
+    `,
+      [eventId, tmpId, begda, endda]);
+
+    for (const row of eventArtRows.rows) {
+      await db.query(`
+          INSERT INTO tic_eventart (id, site, event, art, descript, begda, endda, nart, discount)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+        `, [row.id, row.site, row.event, row.art, row.descript, row.begda, row.endda, row.nart, row.discount]);
+
+      const eventArtCenaRows = await db.query(`
+        SELECT nextval('tic_table_id_seq') id, site, $1 event, art, cena, value, terr, $3 begda, $4 endda, curr, $5 eventart
+        FROM tic_eventartcena
+        WHERE event = $2      
+        `,
+        [eventId, tmpId, begda, endda, row.id]);
+      for (const row1 of eventArtCenaRows.rows) {
+        await db.query(`
+          INSERT INTO tic_eventartcena (id, site, event, art, cena, value, terr, begda, endda, curr, eventart)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+          `, [row1.id, row1.site, row1.event, row1.art, row1.cena, row1.value, row1.terr, row1.begda, row1.endda, row1.curr, row1.eventart]);
+      }
+    }
+
+
+    // await client.query(
+    //   `
+    //   INSERT INTO tic_eventartcena (id, site, event, art, cena, value, terr, begda, endda, curr, eventarr)
+    //   SELECT nextval('tic_table_id_seq'), site, $1, art, cena, value, terr, $3, $4, curr, eventarr
+    //   FROM tic_eventartcena
+    //   WHERE event = $2
+    // `,
+    //   [eventId, tmpId, begda, endda]
+    // );
+
+    await client.query(
+      `
+      INSERT INTO tic_eventst (id, site, loc1, code1, text1, ntp1, loc2, code2, text2, ntp2, event, graftp, latlongs, radius, color, fillcolor, originfillcolor, rownum, art, cart, nart, longtext, tp1, tp2, kol)
+      SELECT nextval('tic_table_id_seq'), site, loc1, code1, text1, ntp1, loc2, code2, text2, ntp2, $1, graftp, latlongs, radius, color, fillcolor, originfillcolor, rownum, art, cart, nart, longtext, tp1, tp2, kol
+      FROM tic_eventst
+      WHERE event = $2
+    `,
+      [eventId, tmpId]
+    );
+
+    await client.query("COMMIT"); // Potvrdite transakciju
+    ok = true;
+
+    return ok;
+  } catch (error) {
+    await client.query("ROLLBACK"); // Poništite transakciju u slučaju greške
+    throw error;
+  } finally {
+    client.release(); // Oslobodite klijenta
+  }
+};
+
+
 export default {
   getAgendaL,
   getArtL,
   moveAndCopy,
   getEventartCena,
   autoEventatts,
+  copyEvent,
 };

@@ -51,6 +51,8 @@ const postFunction = async (
   objId1,
   objId2,
   stm,
+  begda,
+  endda,
   lang
 ) => {
   try {
@@ -71,8 +73,11 @@ const postFunction = async (
       case "tic_autoeventatts_s":
         result = await sModel.autoEventatts(objId1);
         break;
+      case "tic_copyevent_s":
+        result = await sModel.copyEvent(objId1, objId2, begda, endda);
+        break;
       default:
-        console.error("sHelper: Pogresan naziv za view-a - " +stm);
+        console.error("sHelper: Pogresan naziv za view-a - " + stm);
     }
     return result;
   } catch (err) {
