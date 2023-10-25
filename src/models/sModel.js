@@ -207,7 +207,7 @@ const copyEvent = async (eventId, tmpId, begda, endda) => {
 
     // Fetch rows from tic_eventatt
     const eventArtRows = await db.query(`
-      SELECT nextval('tic_table_id_seq') id , site, $1 event, art, descript, $3 begda, $4 endda, nart, discount
+      SELECT nextval('tic_table_id_seq') id , site, $1 event, art, descript, $3 begda, $4 endda, nart, discount, id idold
       FROM tic_eventart
       WHERE event = $2
     `,
@@ -222,9 +222,10 @@ const copyEvent = async (eventId, tmpId, begda, endda) => {
       const eventArtCenaRows = await db.query(`
         SELECT nextval('tic_table_id_seq') id, site, $1 event, art, cena, value, terr, $3 begda, $4 endda, curr, $5 eventart
         FROM tic_eventartcena
-        WHERE event = $2      
+        WHERE event = $2 
+        and eventart = $6    
         `,
-        [eventId, tmpId, begda, endda, row.id]);
+        [eventId, tmpId, begda, endda, row.id, row.idold]);
       for (const row1 of eventArtCenaRows.rows) {
         await db.query(`
           INSERT INTO tic_eventartcena (id, site, event, art, cena, value, terr, begda, endda, curr, eventart)
