@@ -161,6 +161,7 @@ const autoEventatts = async (eventId) => {
 };
 
 const copyEvent = async (eventId, tmpId, begda, endda) => {
+  
   const client = await db.connect(); // Povežite se s bazom podataka koristeći klijenta
 
   try {
