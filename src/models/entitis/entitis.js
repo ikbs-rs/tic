@@ -505,7 +505,8 @@ const entitiesInfo =
 		"ctg": "number",
 		"loc": "number",
 		"par": "number",
-		"tmp": "number"
+		"tmp": "number",
+		"season": "number"
 	  }
 	},
 	"tic_eventagenda": {
@@ -767,6 +768,25 @@ const entitiesInfo =
 			"amount": "number",
 			"status": "number"
 		}
+	},
+	"tic_season": {
+	  "attributes": {
+		"id": "number",
+		"site": "number",
+		"code": "string",
+		"text": "string",
+		"valid": "number"
+	  }
+	},
+	"tic_seasonx": {
+	  "attributes": {
+		"id": "number",
+		"site": "number",
+		"tableid": "number",
+		"lang": "string",
+		"grammcase": "number",
+		"text": "string"
+	  }
 	},	
 	"tic_seat": {
 	  "attributes": {
