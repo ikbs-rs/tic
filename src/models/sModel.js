@@ -161,7 +161,7 @@ const autoEventatts = async (eventId) => {
 };
 
 const copyEvent = async (eventId, tmpId, begda, endda) => {
-  
+
   const client = await db.connect(); // Povežite se s bazom podataka koristeći klijenta
 
   try {
@@ -268,6 +268,72 @@ const copyEvent = async (eventId, tmpId, begda, endda) => {
   }
 };
 
+const activateEvent = async (eventId, tmpId, begda, endda) => {
+  
+  const client = await db.connect(); // Povežite se s bazom podataka koristeći klijenta
+
+  try {
+    await client.query("BEGIN"); // Početak transakcije
+    let ok = false;
+
+    // Setuje se status 
+    await client.query("UPDATE FROM tic_eventst set status = 1 WHERE event = $1", [eventId]);
+    
+    // Create row for tic_doc
+    const docRows = await db.query(`
+      SELECT nextval('tic_table_id_seq') id , null site, to_char(NOW(), 'YYYYMMDD') "date", to_char(NOW(), 'YYYYMMDDHH24MISS') tm, 1 curr, 1 currrate, 
+      a.par usr, 1 status, 1 docobj, a.id broj, $1 obj2, ' ' opis, to_char(NOW(), 'YYYYMMDDHH24MISS') timecreation, 0 storno, to_char(NOW(), 'YYYY') "year"
+      FROM tic_event a
+      WHERE a.id = $2
+    `,
+      [eventId, eventId]);
+
+    for (const row of docRows.rows) {
+      // Insertuje se zaglavlje dokumenta - kupac organizator
+      await db.query(`
+          INSERT INTO tic_doc (id , site, date, tm, curr, currrate, usr, status, docobj, broj, obj2, opis, timecreation, storno, year)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
+        `, [row.id, row.site, row.date, row.tm, row.curr, row.currrate, row.usr, row.status, row.docobj, row.broj, row.obj2, row.opis, row.timecreation, row.storno, row.year]);
+
+      // Upit za sezonske doga]aje koji se primenjuju na pojedinacni
+      // Ako se kupac prijavljuje onda je to rezervacija u suprotnom je odmah racun
+    
+      const docsRows = await db.query(`
+          SELECT nextval('tic_table_id_seq') id, site, doc, $1 event, loc, art, tgp, taxrate, 0 price, input, output, 0 discount, curr, currrate, 0 duguje, 0 potrazuje, 0 leftcurr,
+          0 rightcurr, to_char(NOW(), 'YYYYMMDDHH24MISS') begtm, '99991231000000' endtm, 1 status, 0 fee, par, ' ' descript
+          FROM tic_docs
+          WHERE event in (
+            select a.value::numeric 
+            from	tic_eventatts a, tic_eventatt b
+            where a.event = $2
+            and a.att = b.id 
+            and b.code  = 'SZN'
+          ) 
+        `,
+        [eventId, row.id]);
+      for (const row1 of docsRows.rows) {
+        //Insert stavki sezonskih karti. Cena i iznos se neupisuju.
+        await db.query(`
+          INSERT INTO tic_docs (id, site, $1 doc, event, loc, art, tgp, taxrate, price, input, output, discount, curr, currrate, duguje, potrazuje,
+            leftcurr, rightcurr, begtm, endtm, endtm, status, fee, par, descript)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $15, $17, $18, $19, $20, $21, $22, $23, $24, $25)
+          `, [row1.id, row1.site, row1.doc, row1.event, row1.loc, row1.art, row1.tgp, row1.taxrate, row1.price, row1.input, 
+            row1.output, row1.discount, row1.curr, row1.currrate, row1.duguje, row1.potrazuje,
+            row1.leftcurr, row1.rightcurr, row1.begtm, row1.endtm, row1.endtm, row1.status, row1.fee, row1.par, row1.descript]);
+      }
+    }
+
+    await client.query("COMMIT"); // Potvrdite transakciju
+    ok = true;
+
+    return ok;
+  } catch (error) {
+    await client.query("ROLLBACK"); // Poništite transakciju u slučaju greške
+    throw error;
+  } finally {
+    client.release(); // Oslobodite klijenta
+  }
+};
 
 export default {
   getAgendaL,
@@ -276,4 +342,5 @@ export default {
   getEventartCena,
   autoEventatts,
   copyEvent,
+  activateEvent,
 };
