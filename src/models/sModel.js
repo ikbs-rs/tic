@@ -161,7 +161,11 @@ const autoEventatts = async (eventId) => {
 };
 
 const copyEvent = async (eventId, tmpId, begda, endda) => {
+<<<<<<< Updated upstream
 
+=======
+  console.log(tmpId, "*********copyEvent*******", eventId)
+>>>>>>> Stashed changes
   const client = await db.connect(); // Povežite se s bazom podataka koristeći klijenta
 
   try {
@@ -169,23 +173,29 @@ const copyEvent = async (eventId, tmpId, begda, endda) => {
     let ok = false;
 
     // Prvo obrišite podatke
+    console.log("Brisem tic_eventst")
     await client.query("DELETE FROM tic_eventst WHERE event = $1", [eventId]);
+    console.log("Brisem tic_eventartcena")
     await client.query("DELETE FROM tic_eventartcena WHERE event = $1", [eventId]);
+    console.log("Brisem tic_eventart")
     await client.query("DELETE FROM tic_eventart WHERE event = $1", [eventId]);
+    console.log("Brisem tic_eventobj")
     await client.query("DELETE FROM tic_eventobj WHERE event = $1", [eventId]);
     await client.query("DELETE FROM tic_eventatts WHERE event = $1", [eventId]);
 
     // Zatim umetnite nove podatke koristeći SELECT INTO
+    console.log("Inser  tic_eventatts")
     await client.query(
       `
       INSERT INTO tic_eventatts (id, site, event, att, value, valid, text)
-      SELECT nextval('tic_table_id_seq'), site, $1, att, value, valid, text
+      SELECT nextval('iis.tic_table_id_seq'), site, $1, att, value, valid, text
       FROM tic_eventatts
       WHERE event = $2
     `,
       [eventId, tmpId]
     );
 
+    console.log("Inser  tic_eventobj")
     await client.query(
       `
       INSERT INTO tic_eventobj (id, site, event, objtp, obj, begda, endda)
