@@ -161,11 +161,8 @@ const autoEventatts = async (eventId) => {
 };
 
 const copyEvent = async (eventId, tmpId, begda, endda) => {
-<<<<<<< Updated upstream
 
-=======
   console.log(tmpId, "*********copyEvent*******", eventId)
->>>>>>> Stashed changes
   const client = await db.connect(); // Povežite se s bazom podataka koristeći klijenta
 
   try {
