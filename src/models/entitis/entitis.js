@@ -396,7 +396,9 @@ const entitiesInfo =
 			"amount": "number",
 			"dat": "string",
 			"datdelivery": "string",
-			"status": "string"
+			"status": "string",
+			"note": "string",
+			"parent": "number"
 		}
 	},	
 	"tic_docpayment": {
