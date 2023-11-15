@@ -63,6 +63,9 @@ const getLista = async (objName, stm, objId, lang) => {
       case "tic_docvr_v":
         result = await vModel.getDocvrL(objName, lang);
         break;
+        case "tic_transaction_v":
+          result = await vModel.getTransactionL(objName, lang);
+          break;        
       case "tic_docs_v":
         result = await vModel.getDocsL(objName, objId, lang);
         break;

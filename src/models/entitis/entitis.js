@@ -386,11 +386,11 @@ const entitiesInfo =
 		"time": "string"
 	  }
 	},
-	"tic_docpaydelivery": {
+	"tic_docdelivery": {
 		"attributes": {
 			"id": "number",
 			"site": "number",
-			"docpayment": "number",
+			"doc": "number",
 			"courier": "number",
 			"delivery_adress": "string",
 			"amount": "number",

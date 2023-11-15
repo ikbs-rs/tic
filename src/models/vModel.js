@@ -279,7 +279,8 @@ const getDocpaymentL = async (objName, objId, lang) => {
   const sqlRecenica =  
   `
   select aa.id , aa.site , aa.amount, aa.doc,
-        aa.paymenttp, getValueById(aa.paymenttp, 'cmn_paymenttpx_v', 'code', '${lang||'en'}') cpaymenttp, getValueById(aa.paymenttp, 'cmn_paymenttpx_v', 'text', '${lang||'en'}') npaymenttp
+        aa.paymenttp, getValueById(aa.paymenttp, 'cmn_paymenttpx_v', 'code', '${lang||'en'}') cpaymenttp, getValueById(aa.paymenttp, 'cmn_paymenttpx_v', 'text', '${lang||'en'}') npaymenttp,
+        aa.bcontent
   from	tic_docpayment aa
   where aa.doc = ${objId}
   `  
@@ -328,6 +329,36 @@ const getDocsL = async (objName, objId, lang) => {
   and aa.doc = d.id
   `     
   console.log(objId, "*-*-*-*-*-*-*-*-*-1111111 objId 111111111", sqlRecenica)
+  let result = await db.query(sqlRecenica);
+  let rows = result.rows;
+  if (Array.isArray(rows)) {
+    return rows;
+  } else {
+    throw new Error(
+      `Greška pri dohvatanju slogova iz baze - abs find: ${rows}`
+    );
+  }
+};
+
+const getTransactionL = async (objName, lang) => {
+  const sqlRecenica =  
+  `
+    select 	a.id, a.tm, a.docvr, d."text" ndocvr, a.usr, p."text" nusr, b.event, e."text" nevent, e.begda, 'web' sal_ch, count(*) no_tick, 0 ticket, sum(b.potrazuje) amount, 
+            a.status , b.status, b.curr, c.code ccurr
+    from tic_doc a, tic_docs b, tic_eventx_v e, cmn_parx_v p, cmn_currx_v c, tic_docvrx_v d
+    where a.id = b.doc 
+    and b.event  = e.id
+    and a.usr = p.id
+    and b.curr = c.id
+    and a.docvr = d.id
+    and e.lang = '${lang||'en'}'
+    and p.lang = '${lang||'en'}'
+    and c.lang = '${lang||'en'}'
+    and d.lang = '${lang||'en'}'
+    group by a.id, a.tm, a.docvr, a.usr, p."text", b.event, e."text", e.begda, a.status, b.status, b.curr, c.code, d."text"
+    order by a.tm desc
+  `     
+  console.log("*-*-*-*-*-*-*-*-*-1111111 objId 111111111", sqlRecenica)
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
   if (Array.isArray(rows)) {
@@ -1105,6 +1136,7 @@ export default {
   getArtlinkL,
   getCenaL,
   getDocsL,
+  getTransactionL,
   getDocvrL,
   getDocpaymentL,
   getTicDocByNumV,

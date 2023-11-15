@@ -6,6 +6,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "npx nodemon index.js",
+    "devLocal": "copy .\\.envLocal .\\.env && npx nodemon index.js",
+    "devBoban": "copy .\\.envBoban .\\.env && npx nodemon index.js",    
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
