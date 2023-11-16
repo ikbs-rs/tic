@@ -596,6 +596,48 @@ const getTicDocsByNumV = async (item, objId, lang) => {
   }
 };
 
+const getTicDocdeliveryByNumV = async (item, objId, lang) => {
+  const sqlRecenica =  
+  `
+  select aa.*
+  from  tic_docdelivery aa
+  where  ${item} = ${objId}
+  `      
+  console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
+
+  let result = await db.query(sqlRecenica);
+  let rows = result.rows;
+  if (Array.isArray(rows)) {
+    return rows;
+  } else {
+    throw new Error(
+      `Greška pri dohvatanju slogova iz baze - abs find: ${rows}`
+    );
+  }
+};
+
+const getCmnSpedicijaByTxtV = async (objName, item, objId, lang) => {
+  const sqlRecenica =  
+  `
+  select a.*
+  from  cmn_partp aa, cmn_parx_v a
+  where  aa.id = a.tp
+  and ${item} = '${objId}'
+  and a.lang = '${lang||'en'}'
+  `      
+  console.log("*-*-*-*-*-*-*-*-*-getCmnSpedicijaByTxtV-1111111111111111", sqlRecenica)
+
+  let result = await db.query(sqlRecenica);
+  let rows = result.rows;
+  if (Array.isArray(rows)) {
+    return rows;
+  } else {
+    throw new Error(
+      `Greška pri dohvatanju slogova iz baze - abs find: ${rows}`
+    );
+  }
+};
+
 const getEventL = async (objName, lang) => {
   const sqlRecenica =  
   `
@@ -930,6 +972,32 @@ const getEventstL = async (objName, objId, lang) => {
   }
 };
 
+const getDocdeliveryL = async (objName, objId, lang) => {
+  const sqlRecenica =  
+  `
+  select a.id, a.site , a.doc , a.courier , a.delivery_adress , a.amount , a.dat , a.datdelivery ,
+  		a.status , a.note , a.parent , b.code cpar, b."text" npar, sum(s.potrazuje) potrazuje
+  from  tic_docdelivery a, tic_doc d, tic_docs s, cmn_parx_v b
+  where  a.doc = d.id 
+  and d.usr = b.id 
+  and b.lang = '${lang||'en'}'
+  group by a.id, a.site , a.doc , a.courier , a.delivery_adress , a.amount , a.dat , a.datdelivery ,
+  		a.status , a.note , a.parent , b.code, b."text"
+  `
+  // where aa.event = ${objId}
+  // `      
+  console.log("*-*-*-*-*-*-*-*-*- getEventstL 1111111111111111", sqlRecenica)
+  let result = await db.query(sqlRecenica);
+  let rows = result.rows;
+  if (Array.isArray(rows)) {
+    return rows;
+  } else {
+    throw new Error(
+      `Greška pri dohvatanju slogova iz baze - abs find: ${rows}`
+    );
+  }
+};
+
 const getObjTree = async (objName, lang) => {
   const sqlRecenica = 
   ` select tree
@@ -1166,4 +1234,7 @@ export default {
   getTicpardiscountcurrF,
   getEventCena,
   getPrivilegecondL,
+  getTicDocdeliveryByNumV,
+  getCmnSpedicijaByTxtV,
+  getDocdeliveryL,
 };
