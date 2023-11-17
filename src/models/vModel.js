@@ -596,6 +596,48 @@ const getTicDocsByNumV = async (item, objId, lang) => {
   }
 };
 
+const getTicDocdeliveryByNumV = async (item, objId, lang) => {
+  const sqlRecenica =  
+  `
+  select aa.*
+  from  tic_docdelivery aa
+  where  ${item} = ${objId}
+  `      
+  console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
+
+  let result = await db.query(sqlRecenica);
+  let rows = result.rows;
+  if (Array.isArray(rows)) {
+    return rows;
+  } else {
+    throw new Error(
+      `Greška pri dohvatanju slogova iz baze - abs find: ${rows}`
+    );
+  }
+};
+
+const getCmnSpedicijaByTxtV = async (objName, item, objId, lang) => {
+  const sqlRecenica =  
+  `
+  select a.*
+  from  cmn_partp aa, cmn_parx_v a
+  where  aa.id = a.tp
+  and ${item} = '${objId}'
+  and a.lang = '${lang||'en'}'
+  `      
+  console.log("*-*-*-*-*-*-*-*-*-getCmnSpedicijaByTxtV-1111111111111111", sqlRecenica)
+
+  let result = await db.query(sqlRecenica);
+  let rows = result.rows;
+  if (Array.isArray(rows)) {
+    return rows;
+  } else {
+    throw new Error(
+      `Greška pri dohvatanju slogova iz baze - abs find: ${rows}`
+    );
+  }
+};
+
 const getEventL = async (objName, lang) => {
   const sqlRecenica =  
   `
@@ -742,7 +784,8 @@ const getEventattL = async (objName, lang) => {
   `
   select aa.id , aa.site , aa.code , aa.text, aa.valid, aa.ddlist,
         aa.lang, aa.grammcase,
-        aa.inputtp, getValueById(aa.inputtp, 'cmn_inputtpx_v', 'code', '${lang||'en'}') cinputtp, getValueById(aa.inputtp, 'cmn_inputtpx_v', 'text', '${lang||'en'}') ninputtp
+        aa.inputtp, getValueById(aa.inputtp, 'cmn_inputtpx_v', 'code', '${lang||'en'}') cinputtp, getValueById(aa.inputtp, 'cmn_inputtpx_v', 'text', '${lang||'en'}') ninputtp,
+        aa.tp, getValueById(aa.tp, 'tic_eventatttpx_v', 'code', '${lang||'en'}') ctp, getValueById(aa.tp, 'tic_eventatttpx_v', 'text', '${lang||'en'}') ntp
   from	tic_eventattx_v aa
   where aa.lang = '${lang||'en'}'
   `      
@@ -763,6 +806,7 @@ const getEventattsL = async (objName, objId, lang) => {
   const sqlRecenica =  
   `select aa.id , aa.site , aa.event , aa.value, aa.valid, a2.ddlist, aa.text,
         a2.inputtp, getValueById(a2.inputtp, 'cmn_inputtpx_v', 'code', '${lang||'en'}') cinputtp, getValueById(a2.inputtp, 'cmn_inputtpx_v', 'text', '${lang||'en'}') ninputtp,
+        a2.tp, getValueById(a2.tp, 'tic_eventatttpx_v', 'code', '${lang||'en'}') cttp, getValueById(a2.tp, 'tic_eventatttpx_v', 'text', '${lang||'en'}') nttp,
         aa.att, a2.code ctp, a2.text ntp
   from	tic_eventatts aa, tic_eventattx_v a2
   where aa.event = ${objId}
@@ -915,6 +959,34 @@ const getEventstL = async (objName, objId, lang) => {
 	   aa.rownum , aa.art, aa.cart, aa.nart, aa.longtext, getTicartpricecurrF(aa.event, aa.art) cena
    from	tic_eventst aa
    where aa.event = 1697215466579562496
+  `
+  // where aa.event = ${objId}
+  // `      
+  console.log("*-*-*-*-*-*-*-*-*- getEventstL 1111111111111111", sqlRecenica)
+  let result = await db.query(sqlRecenica);
+  let rows = result.rows;
+  if (Array.isArray(rows)) {
+    return rows;
+  } else {
+    throw new Error(
+      `Greška pri dohvatanju slogova iz baze - abs find: ${rows}`
+    );
+  }
+};
+
+const getDocdeliveryL = async (objName, objId, lang) => {
+  const sqlRecenica =  
+  `
+  select a.id, a.site , a.doc , a.courier , p."text" ncourier , a.delivery_adress , a.amount , a.dat , a.datdelivery ,
+  		a.status , a.note , a.parent , b.code cpar, b."text" npar, sum(s.potrazuje) potrazuje
+  from  tic_docdelivery a, tic_doc d, tic_docs s, cmn_parx_v b, cmn_parx_v p
+  where  a.doc = d.id 
+  and d.usr = b.id 
+  and a.courier = p.id 
+  and b.lang = '${lang||'en'}'
+  and p.lang = '${lang||'en'}'
+  group by a.id, a.site , a.doc , a.courier , p."text", a.delivery_adress , a.amount , a.dat , a.datdelivery ,
+  		a.status , a.note , a.parent , b.code, b."text"
   `
   // where aa.event = ${objId}
   // `      
@@ -1166,4 +1238,7 @@ export default {
   getTicpardiscountcurrF,
   getEventCena,
   getPrivilegecondL,
+  getTicDocdeliveryByNumV,
+  getCmnSpedicijaByTxtV,
+  getDocdeliveryL,
 };

@@ -63,9 +63,9 @@ const getLista = async (objName, stm, objId, lang) => {
       case "tic_docvr_v":
         result = await vModel.getDocvrL(objName, lang);
         break;
-        case "tic_transaction_v":
-          result = await vModel.getTransactionL(objName, lang);
-          break;        
+      case "tic_transaction_v":
+        result = await vModel.getTransactionL(objName, lang);
+        break;
       case "tic_docs_v":
         result = await vModel.getDocsL(objName, objId, lang);
         break;
@@ -138,6 +138,9 @@ const getLista = async (objName, stm, objId, lang) => {
       case "cmn_objtree_json_v":
         result = await vModel.getObjTree(objName, lang);
         break;
+      case "tic_docdelivery_v":
+        result = await vModel.getDocdeliveryL(objName, objId, lang);
+        break;
       default:
         console.error("vHelper: Pogresan naziv za view-a");
     }
@@ -204,17 +207,11 @@ const getListaById = async (objName, stm, objId, lang) => {
   }
 };
 
-const getListaByText = async (objName, stm, objId, lang) => {
+const getListaByText = async (objName, stm, item, objId, lang) => {
   try {
     switch (stm) {
-      case "cmn_locbytxt_v":
-        var result = await vModel.getCmnLocByTxtV(
-          objName,
-          stm,
-          item,
-          objId,
-          lang
-        );
+      case "cmn_spedicija_v":
+        var result = await vModel.getCmnSpedicijaByTxtV(objName, item, objId, lang);
         break;
       default:
         console.error("Pogresan naziv za view");
@@ -234,6 +231,9 @@ const getListaByNum = async (objName, stm, item, objId, lang) => {
         break;
       case "tic_docsbynum_v":
         var result = await vModel.getTicDocsByNumV(item, objId, lang);
+        break;
+      case "tic_docdelivery_v":
+        var result = await vModel.getTicDocdeliveryByNumV(item, objId, lang);
         break;
       default:
         console.error("Pogresan naziv za view, getListaByNum");
