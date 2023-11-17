@@ -784,7 +784,8 @@ const getEventattL = async (objName, lang) => {
   `
   select aa.id , aa.site , aa.code , aa.text, aa.valid, aa.ddlist,
         aa.lang, aa.grammcase,
-        aa.inputtp, getValueById(aa.inputtp, 'cmn_inputtpx_v', 'code', '${lang||'en'}') cinputtp, getValueById(aa.inputtp, 'cmn_inputtpx_v', 'text', '${lang||'en'}') ninputtp
+        aa.inputtp, getValueById(aa.inputtp, 'cmn_inputtpx_v', 'code', '${lang||'en'}') cinputtp, getValueById(aa.inputtp, 'cmn_inputtpx_v', 'text', '${lang||'en'}') ninputtp,
+        aa.tp, getValueById(aa.tp, 'tic_eventatttpx_v', 'code', '${lang||'en'}') ctp, getValueById(aa.tp, 'tic_eventatttpx_v', 'text', '${lang||'en'}') ntp
   from	tic_eventattx_v aa
   where aa.lang = '${lang||'en'}'
   `      
@@ -805,6 +806,7 @@ const getEventattsL = async (objName, objId, lang) => {
   const sqlRecenica =  
   `select aa.id , aa.site , aa.event , aa.value, aa.valid, a2.ddlist, aa.text,
         a2.inputtp, getValueById(a2.inputtp, 'cmn_inputtpx_v', 'code', '${lang||'en'}') cinputtp, getValueById(a2.inputtp, 'cmn_inputtpx_v', 'text', '${lang||'en'}') ninputtp,
+        a2.tp, getValueById(a2.tp, 'tic_eventatttpx_v', 'code', '${lang||'en'}') cttp, getValueById(a2.tp, 'tic_eventatttpx_v', 'text', '${lang||'en'}') nttp,
         aa.att, a2.code ctp, a2.text ntp
   from	tic_eventatts aa, tic_eventattx_v a2
   where aa.event = ${objId}
@@ -975,13 +977,15 @@ const getEventstL = async (objName, objId, lang) => {
 const getDocdeliveryL = async (objName, objId, lang) => {
   const sqlRecenica =  
   `
-  select a.id, a.site , a.doc , a.courier , a.delivery_adress , a.amount , a.dat , a.datdelivery ,
+  select a.id, a.site , a.doc , a.courier , p."text" ncourier , a.delivery_adress , a.amount , a.dat , a.datdelivery ,
   		a.status , a.note , a.parent , b.code cpar, b."text" npar, sum(s.potrazuje) potrazuje
-  from  tic_docdelivery a, tic_doc d, tic_docs s, cmn_parx_v b
+  from  tic_docdelivery a, tic_doc d, tic_docs s, cmn_parx_v b, cmn_parx_v p
   where  a.doc = d.id 
   and d.usr = b.id 
+  and a.courier = p.id 
   and b.lang = '${lang||'en'}'
-  group by a.id, a.site , a.doc , a.courier , a.delivery_adress , a.amount , a.dat , a.datdelivery ,
+  and p.lang = '${lang||'en'}'
+  group by a.id, a.site , a.doc , a.courier , p."text", a.delivery_adress , a.amount , a.dat , a.datdelivery ,
   		a.status , a.note , a.parent , b.code, b."text"
   `
   // where aa.event = ${objId}

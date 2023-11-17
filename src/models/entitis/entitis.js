@@ -408,7 +408,8 @@ const entitiesInfo =
 			"doc": "number",
 			"paymenttp": "number",
 			"amount": "number",
-			"bcontent": "number"
+			"bcontent": "number",
+			"ccard": "number"
 		}
 	},	
 	"tic_docs": {
@@ -531,6 +532,25 @@ const entitiesInfo =
 		"endda":  "string",
 		"nart": "string",
 		"discount":  "number"
+	  }
+	},
+	"tic_eventatttp": {
+	  "attributes": {
+		"id": "number",
+		"site": "number",
+		"code": "string",
+		"text": "string",
+		"valid": "number"
+	  }
+	},
+	"tic_eventatttpx": {
+	  "attributes": {
+		"id": "number",
+		"site": "number",
+		"tableid": "number",
+		"lang": "string",
+		"grammcase": "number",
+		"text": "string"
 	  }
 	},	
 	"tic_eventatt": {
