@@ -162,7 +162,9 @@ const entitiesInfo =
 		  "objtp": "number",
 		  "obj": "number",
 		  "begda": "string",
-		  "endda": "string"
+		  "endda": "string",
+		  "begtm": "string",
+		  "endtm": "string"
 		}
 	  },	
 	"tic_arttax": {

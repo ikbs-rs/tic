@@ -829,7 +829,7 @@ const getEventattsL = async (objName, objId, lang) => {
 const getEventobjL = async (objName, objId, lang) => {
   const sqlRecenica =  
   `
-  select aa.id , aa.site , aa.event , aa.begda, aa.endda,  a2.lang , a2.grammcase ,
+  select aa.id , aa.site , aa.event , aa.begda, aa.endda, aa.begtm, aa.endtm, a2.lang , a2.grammcase ,
         aa.objtp, getValueById(aa.objtp, 'cmn_objtpx_v', 'code', '${lang||'en'}') cobjtp, getValueById(aa.objtp, 'cmn_objtpx_v', 'text', '${lang||'en'}') nobjtp,
         aa.obj, a2.code cobj, a2.text nobj
   from	tic_eventobj aa, cmn_objx_v a2
