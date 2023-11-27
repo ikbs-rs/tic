@@ -76,6 +76,9 @@ const postFunction = async (
       case "tic_copyevent_s":
         result = await sModel.copyEvent(objId1, objId2, begda, endda);
         break;
+      case "tic_activateevent_s":
+        result = await sModel.activateEvent(objId1);
+        break;
       default:
         console.error("sHelper: Pogresan naziv za view-a - " + stm);
     }

@@ -701,18 +701,45 @@ const getEventProdajaL = async (objName, lang) => {
   select aa.id , aa.site , aa.code , aa.text, aa.text textx, aa.begda, aa.endda, aa.begtm, aa.endtm, aa.status, aa.descript, aa.note, 
         aa.lang, aa.grammcase,
         aa.tp, tp.code ctp, tp.text ntp,
-        aa.event, aa1.code cevent, aa1.text nevent,
+        aa.event, 
         aa.ctg, ctg.code cctg, ctg.text nctg,
         aa.loc
-  from	tic_eventx_v aa, tic_eventx_v aa1, tic_eventtpx_v tp, tic_eventctgx_v ctg
+  from	tic_eventx_v aa, tic_eventtpx_v tp, tic_eventctgx_v ctg
   where aa.lang = '${lang||'en'}'
   and aa.ctg = ctg.id
   and aa.tp = tp.id
-  and aa.event = aa1.id
-  and tp.lang = '${lang||'en'}'
+  and ctg.lang = '${lang||'en'}'
   and tp.lang = '${lang||'en'}'
   `      
+  console.log("**************************getEventProdajaL******************************", sqlRecenica)
+  let result = await db.query(sqlRecenica);
+  let rows = result.rows;
+  if (Array.isArray(rows)) {
+    return rows;
+  } else {
+    throw new Error(
+      `Greška pri dohvatanju slogova iz baze - abs find: ${rows}`
+    );
+  }
+};
 
+const getEventAttsDDL = async (objName, objId, lang) => {
+  console.log(objName, "**************************getEventAttsDDL 00 ******************************", objId)
+  const sqlRecenica =  
+  `
+  select aa.id , aa.site , aa.code , aa.text, aa.text textx, aa.begda, aa.endda, aa.begtm, aa.endtm, aa.status, aa.descript, aa.note, 
+        aa.lang, aa.grammcase,
+        aa.tp, t.code ctp, t.text ntp,
+        aa.event, aa.ctg, aa.loc
+  from	tic_eventx_v aa, tic_event e, tic_eventtp t
+  where aa.lang = '${lang||'en'}'
+  and e.id = ${objId}
+  and aa.par = e.par
+  and aa.tp = t.id
+  and t.code in ('SZN', 'XGRP')
+  and aa.status = 2
+  `      
+  console.log("**************************getEventAttsDDL 01 ******************************", sqlRecenica)
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
   if (Array.isArray(rows)) {
@@ -1241,4 +1268,5 @@ export default {
   getTicDocdeliveryByNumV,
   getCmnSpedicijaByTxtV,
   getDocdeliveryL,
+  getEventAttsDDL,
 };

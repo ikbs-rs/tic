@@ -1,5 +1,5 @@
 import abstractModel from "../models/Abstruct.js";
-import { uniqueId } from "../middleware/utility.js";
+import { uniqueId, uniqiueUUID, transactionId } from "../middleware/utility.js";
 import abstructQuery from "../middleware/model/abstructQuery.js";
 import { getToken } from "../security/jwt/tokenJWT.js";
 import bcrypt from "bcryptjs";
@@ -10,19 +10,30 @@ const add = async (objName, objData) => {
   try {
     console.log(objData.id, "***********AbstructHelper****************")
     if (!objData.id || objData.id == null) {
-        objData.id = await uniqueId();
+      objData.id = await uniqueId();
+      if (objName === "tic_doc") {
+        objData.broj = await transactionId(objData.par);
+      //   for (let i = 0; i < 50; i++) {
+      //     const timestamp = Date.now().toString();
+      //     console.log(`Broj ${i + 1}: ${timestamp} `,transactionId(objData.par));
+      // }
+      }
     }
     // Mozda mi ovo ne treba jer dolazi sa fronta !!!
     if (objName === "adm_user") {
       const hashedPassword = await bcrypt.hash(objData.password, saltRounds);
       objData.password = hashedPassword;
     }
-    console.log(objData, "***************1111************", objName)
+
     const sqlQuery = await abstructQuery.getInsertQuery(objName, objData);
-    console.log(objData, "***************2222222222222************", sqlQuery)
+
     const result = await abstractModel.add(sqlQuery);
-    console.log(result, "***************3333333333333************")
-    return objData.id; //result;
+
+    if (objName === "tic_doc" || objName === "tic_eventatts") {
+      return objData
+    } else {
+      return objData.id;
+    } 
   } catch (err) {
     console.log(err);
     throw err;

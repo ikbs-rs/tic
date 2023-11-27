@@ -141,6 +141,9 @@ const getLista = async (objName, stm, objId, lang) => {
       case "tic_docdelivery_v":
         result = await vModel.getDocdeliveryL(objName, objId, lang);
         break;
+        case "tic_eventattsdd_v":
+          result = await vModel.getEventAttsDDL(objName, objId, lang);
+          break;        
       default:
         console.error("vHelper: Pogresan naziv za view-a");
     }
