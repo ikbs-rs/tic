@@ -53,7 +53,8 @@ const postFunction = async (
   stm,
   begda,
   endda,
-  lang
+  lang,
+  requestBody
 ) => {
   try {
     console.log("*******Helper*********", stm);
@@ -79,9 +80,13 @@ const postFunction = async (
       case "tic_activateevent_s":
         result = await sModel.activateEvent(objId1);
         break;
+      case "tic_grpeventatts_s":
+        result = await sModel.copyGrpEvent(objId1, requestBody);
+        break;
       default:
         console.error("sHelper: Pogresan naziv za view-a - " + stm);
     }
+
     return result;
   } catch (err) {
     console.log(err);

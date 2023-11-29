@@ -53,7 +53,9 @@ const entitiesInfo =
 		"eancode": "string",
 		"qrcode": "string",
 		"valid": "number",
-		"grp": "number"
+		"grp": "number",
+		"color": "string",
+    	"icon": "string"
 	  }
 	},
 	"tic_artcena": {
@@ -164,7 +166,9 @@ const entitiesInfo =
 		  "begda": "string",
 		  "endda": "string",
 		  "begtm": "string",
-		  "endtm": "string"
+		  "endtm": "string",
+		  "color": "string",
+		  "icon": "string"
 		}
 	  },	
 	"tic_arttax": {
@@ -213,7 +217,9 @@ const entitiesInfo =
 		"code": "string",
 		"text": "string",
 		"tp": "number",
-		"valid": "number"
+		"valid": "number",
+		"color": "string",
+    	"icon": "string"
 	  }
 	},
 	"tic_cenatp": {
@@ -533,7 +539,9 @@ const entitiesInfo =
 		"begda": "string",
 		"endda":  "string",
 		"nart": "string",
-		"discount":  "number"
+		"discount":  "number",
+		"color": "string",
+    	"icon": "string"
 	  }
 	},
 	"tic_eventatttp": {
@@ -574,7 +582,9 @@ const entitiesInfo =
 		  "att": "number",
 		  "value": "string",
 		  "valid": "number",
-		  "text": "string"
+		  "text": "string",
+		  "color": "string",
+		  "icon": "string"
 		}
 	  },
 	"tic_eventattx": {
@@ -632,7 +642,9 @@ const entitiesInfo =
 		"event": "number",
 		"loc": "number",
 		"begda": "string",
-		"endda": "string"
+		"endda": "string",
+		"color": "string",
+    	"icon": "string"
 	  }
 	},
 	"tic_events": {
