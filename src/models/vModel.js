@@ -81,7 +81,7 @@ const getAgendaL = async (objName, lang) => {
 
 const getArtL = async (objName, lang) => {
   const sqlRecenica =  
-  `select aa.id, aa.site, aa.code, aa.text,  aa.eancode, aa.qrcode, aa.valid, aa.lang, aa.grammcase,
+  `select aa.id, aa.site, aa.code, aa.text,  aa.eancode, aa.qrcode, aa.valid, aa.lang, aa.grammcase, color, icon,
         aa.tp, p.code ctp, p."text" ntp, 
         aa.um, u.code cum, u.text num,
         aa.tgp,t.code ctgp, t.text ntgp,
@@ -300,7 +300,7 @@ const getDocpaymentL = async (objName, objId, lang) => {
 
 const getCenaL = async (objName, lang) => {
   const sqlRecenica =  
-  `select aa.id , aa.site , aa.code , text, aa.valid, aa.lang, aa.grammcase,
+  `select aa.id , aa.site , aa.code , text, aa.valid, aa.lang, aa.grammcase, aa.color, aa.icon,
 	      aa.tp, getValueById(aa.tp, 'tic_cenatpx_v', 'code', '${lang||'en'}') ctp , getValueById(aa.tp, 'tic_cenatpx_v', 'text', '${lang||'en'}') ntp
   from	tic_cenax_v aa
   where aa.lang = '${lang||'en'}'`      
@@ -642,7 +642,7 @@ const getEventL = async (objName, lang) => {
   const sqlRecenica =  
   `
   select aa.id , aa.site , aa.code , aa.text, aa.text textx, aa.begda, aa.endda, aa.begtm, aa.endtm, aa.status, aa.descript, aa.note, 
-        aa.lang, aa.grammcase, aa.loc, aa.tmp,
+        aa.lang, aa.grammcase, aa.loc, aa.tmp, aa.season,
         aa.tp, tp.code ctp, tp.text ntp,
         aa.event, getValueById(aa.event, 'tic_eventx_v', 'code', '${lang||'en'}') cevent , getValueById(aa.event, 'tic_eventx_v', 'text', '${lang||'en'}') nevent,
         aa.ctg, ctg.code cctg, ctg.text nctg,
@@ -831,7 +831,7 @@ const getEventattL = async (objName, lang) => {
 
 const getEventattsL = async (objName, objId, lang) => {
   const sqlRecenica =  
-  `select aa.id , aa.site , aa.event , aa.value, aa.valid, a2.ddlist, aa.text,
+  `select aa.id , aa.site , aa.event , aa.value, aa.valid, a2.ddlist, aa.text, aa.color, aa.icon,
         a2.inputtp, getValueById(a2.inputtp, 'cmn_inputtpx_v', 'code', '${lang||'en'}') cinputtp, getValueById(a2.inputtp, 'cmn_inputtpx_v', 'text', '${lang||'en'}') ninputtp,
         a2.tp, getValueById(a2.tp, 'tic_eventatttpx_v', 'code', '${lang||'en'}') cttp, getValueById(a2.tp, 'tic_eventatttpx_v', 'text', '${lang||'en'}') nttp,
         aa.att, a2.code ctp, a2.text ntp
@@ -856,7 +856,7 @@ const getEventattsL = async (objName, objId, lang) => {
 const getEventobjL = async (objName, objId, lang) => {
   const sqlRecenica =  
   `
-  select aa.id , aa.site , aa.event , aa.begda, aa.endda, aa.begtm, aa.endtm, a2.lang , a2.grammcase ,
+  select aa.id , aa.site , aa.event , aa.begda, aa.endda, aa.begtm, aa.endtm, a2.lang , a2.grammcase , aa.color, aa.icon,
         aa.objtp, getValueById(aa.objtp, 'cmn_objtpx_v', 'code', '${lang||'en'}') cobjtp, getValueById(aa.objtp, 'cmn_objtpx_v', 'text', '${lang||'en'}') nobjtp,
         aa.obj, a2.code cobj, a2.text nobj
   from	tic_eventobj aa, cmn_objx_v a2

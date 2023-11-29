@@ -276,7 +276,7 @@ const copyEvent = async (eventId, tmpId, begda, endda) => {
 };
 
 const activateEvent = async (eventId) => {
-  
+
   const client = await db.connect(); // Povežite se s bazom podataka koristeći klijenta
 
   try {
@@ -286,7 +286,7 @@ const activateEvent = async (eventId) => {
     // Setuje se status 
     await client.query("UPDATE tic_event set status = 2 WHERE event = $1", [eventId]);
     console.log("***********************00****************************")
-    
+
     // Create row for tic_doc
     const docRows = await db.query(`
       SELECT nextval('tic_table_id_seq') id , null site, to_char(NOW(), 'YYYYMMDD') "date", to_char(NOW(), 'YYYYMMDDHH24MISS') tm, 1 curr, 1 currrate, 
@@ -295,9 +295,9 @@ const activateEvent = async (eventId) => {
       WHERE a.id = $2
     `,
       [eventId, eventId]);
-      console.log("***********************01****************************")
-      let i = 0
-      const docvr = "1683550594276921344"
+    console.log("***********************01****************************")
+    let i = 0
+    const docvr = "1683550594276921344"
     for (const row of docRows.rows) {
       console.log(eventId, "***********************02********************row********", row)
       // Insertuje se zaglavlje dokumenta - kupac organizator
@@ -306,10 +306,10 @@ const activateEvent = async (eventId) => {
           INSERT INTO tic_doc (id , site, date, tm, curr, currrate, usr, status, docobj, broj, obj2, opis, timecreation, storno, year, docvr)
           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
         `, [docId, row.site, row.date, row.tm, row.curr, row.currrate, row.usr, row.status, row.docobj, row.broj, row.obj2, row.opis, row.timecreation, row.storno, row.year, docvr]);
-        console.log(docId, "***********************02****************************", ++i)
+      console.log(docId, "***********************02****************************", ++i)
       // Upit za sezonske doga]aje koji se primenjuju na pojedinacni
       // Ako se kupac prijavljuje onda je to rezervacija u suprotnom je odmah racun
-    
+
       const docsRows = await db.query(`
           SELECT nextval('tic_table_id_seq') id, site, $1 doc, $2 event, loc, art, tgp, taxrate, 0 price, input, output, 0 discount, curr, currrate, 0 duguje, 0 potrazuje, 0 leftcurr,
           0 rightcurr, to_char(NOW(), 'YYYYMMDDHH24MISS') begtm, '99991231000000' endtm, 1 status, 0 fee, par, ' ' descript
@@ -323,7 +323,7 @@ const activateEvent = async (eventId) => {
           ) 
         `,
         [row.id, eventId, eventId]);
-        console.log("***********************03****************************", docId)
+      console.log("***********************03****************************", docId)
       for (const row1 of docsRows.rows) {
         console.log("***********************04****************************", row.id)
         //Insert stavki sezonskih karti. Cena i iznos se neupisuju.
@@ -331,9 +331,9 @@ const activateEvent = async (eventId) => {
           INSERT INTO tic_docs (id, site, doc, event, loc, art, tgp, taxrate, price, input, output, discount, curr, currrate, duguje, potrazuje,
             leftcurr, rightcurr, begtm, endtm, status, fee, par, descript)
           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24)
-          `, [row1.id, row1.site, row.id, row1.event, row1.loc, row1.art, row1.tgp, row1.taxrate, row1.price, row1.input, 
-            row1.output, row1.discount, row1.curr, row1.currrate, row1.duguje, row1.potrazuje,
-            row1.leftcurr, row1.rightcurr, row1.begtm, row1.endtm, row1.status, row1.fee, row1.par, row1.descript]);
+          `, [row1.id, row1.site, row.id, row1.event, row1.loc, row1.art, row1.tgp, row1.taxrate, row1.price, row1.input,
+        row1.output, row1.discount, row1.curr, row1.currrate, row1.duguje, row1.potrazuje,
+        row1.leftcurr, row1.rightcurr, row1.begtm, row1.endtm, row1.status, row1.fee, row1.par, row1.descript]);
       }
     }
 
@@ -349,6 +349,48 @@ const activateEvent = async (eventId) => {
   }
 };
 
+const copyGrpEvent = async (eventId, requestBody) => {
+  try {
+    console.log(eventId, requestBody.jsonObj, "***************************copyGrpEvent*******************************")
+    let ok = false;
+    let uId = '11111111111111111111'
+    await db.query("BEGIN");
+
+    await db.query(
+      `
+      delete from tic_eventatts
+      where event = $1
+    `, [eventId]);
+
+     // Iteriramo kroz objekte u requestBody
+    // Pretvorite string u niz objekata
+    const parsedBody = JSON.parse(requestBody.jsonObj);
+
+    // Provera da li parsedBody ima svojstvo koje sadrži niz objekata
+    if (parsedBody && Array.isArray(parsedBody)) {
+      // Iteriramo kroz objekte u parsedBody
+      for (const obj of parsedBody) {
+        uId = await uniqueId();
+
+        // Insert rows into tic_eventatts using obj.id
+        await db.query(`
+          INSERT INTO tic_eventatts (id, site, event, att, value, valid, text)
+          VALUES ($1, NULL, $2, $3, '', 1, '')
+        `, [uId, eventId, obj.id]);
+      }
+    }
+    await db.query("COMMIT"); // Confirm the transaction
+    ok = true;
+
+    return ok;
+  } catch (error) {
+    if (db) {
+      await db.query("ROLLBACK"); // Rollback the transaction in case of an error
+    }
+    throw error;
+  }
+};
+
 export default {
   getAgendaL,
   getArtL,
@@ -357,4 +399,5 @@ export default {
   autoEventatts,
   copyEvent,
   activateEvent,
+  copyGrpEvent,
 };
