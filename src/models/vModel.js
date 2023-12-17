@@ -136,7 +136,7 @@ const getEventartL = async (objName, objId, lang) => {
   const sqlRecenica =  
   `
   select ea.id, ea.site, ea."event", ea.discount, ea.descript, ea.begda, ea.endda , aa.site, aa.code, aa.text, aa.eancode, aa.qrcode, aa.valid, aa.lang, aa.grammcase,
-        ea.art, aa.code cart, ea.nart,
+        ea.art, aa.code cart, ea.nart, aa.color,
         aa.tgp,t.code ctgp, t.text ntgp,
         aa.code||' '||aa.text cnart
   from tic_eventart ea, tic_artx_v aa, cmn_tgpx_v t
