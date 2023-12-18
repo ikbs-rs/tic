@@ -35,7 +35,7 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next) => { 
-  console.log("************TIC**************", req.url)
+  //console.log("************TIC**************", req.url)
   next();
 });
 

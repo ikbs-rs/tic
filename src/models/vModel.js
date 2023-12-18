@@ -725,7 +725,7 @@ const getEventProdajaL = async (objName, lang) => {
 };
 
 const getEventAttsDDL = async (objName, objId, lang) => {
-  console.log(objName, "**************************getEventAttsDDL 00 ******************************", objId)
+  //console.log(objName, "**************************getEventAttsDDL 00 ******************************", objId)
   const sqlRecenica =  
   `
   select aa.id , aa.site , aa.code , aa.text, aa.text textx, aa.begda, aa.endda, aa.begtm, aa.endtm, aa.status, aa.descript, aa.note, 
@@ -740,7 +740,7 @@ const getEventAttsDDL = async (objName, objId, lang) => {
   and t.code in ('SZN', 'XGRP')
   and aa.status = 2
   `      
-  console.log("**************************getEventAttsDDL 01 ******************************", sqlRecenica)
+  //console.log("**************************getEventAttsDDL 01 ******************************", sqlRecenica)
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
   if (Array.isArray(rows)) {

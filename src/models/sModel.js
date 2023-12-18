@@ -349,20 +349,22 @@ const activateEvent = async (eventId) => {
   }
 };
 
-const copyGrpEvent = async (eventId, requestBody) => {
+const copyGrpEvent = async (eventId, par1, requestBody) => {
   try {
-    console.log(eventId, requestBody.jsonObj, "***************************copyGrpEvent*******************************")
+    console.log(par1, "***************************copyGrpEvent*******************************")
     let ok = false;
     let uId = '11111111111111111111'
     await db.query("BEGIN");
 
-    await db.query(
-      `
+    if (!(par1=='true')) {
+      await db.query(
+        `
       delete from tic_eventatts
       where event = $1
     `, [eventId]);
+    }
 
-     // Iteriramo kroz objekte u requestBody
+    // Iteriramo kroz objekte u requestBody
     // Pretvorite string u niz objekata
     const parsedBody = JSON.parse(requestBody.jsonObj);
 

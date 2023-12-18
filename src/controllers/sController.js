@@ -35,6 +35,7 @@ const postFunction = async (req, res) => {
         req.query.begda||0, 
         req.query.endda||0, 
         req.query.sl||'en',
+        req.query.par1||null,
         requestBody
          );
     res.status(200).json({ item }); 

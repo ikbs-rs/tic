@@ -24,7 +24,7 @@ const getListaC = async (objName, stm, sqlstmt, lang) => {
 
 const getLista = async (objName, stm, objId, lang) => {
   try {
-    console.log(objId, "*******Helper!!!!!!*********", stm);
+    //console.log(objId, "*******Helper!!!!!!*********", stm);
     let result = {};
     switch (stm) {
       case "tic_agenda_v":

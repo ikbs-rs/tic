@@ -54,6 +54,7 @@ const postFunction = async (
   begda,
   endda,
   lang,
+  par1,
   requestBody
 ) => {
   try {
@@ -81,7 +82,7 @@ const postFunction = async (
         result = await sModel.activateEvent(objId1);
         break;
       case "tic_grpeventatts_s":
-        result = await sModel.copyGrpEvent(objId1, requestBody);
+        result = await sModel.copyGrpEvent(objId1, par1, requestBody);
         break;
       default:
         console.error("sHelper: Pogresan naziv za view-a - " + stm);
