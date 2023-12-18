@@ -350,6 +350,7 @@ const activateEvent = async (eventId) => {
 };
 
 const copyGrpEvent = async (eventId, par1, requestBody) => {
+  
   try {
     console.log(par1, "***************************copyGrpEvent*******************************")
     let ok = false;
