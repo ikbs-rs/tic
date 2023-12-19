@@ -56,7 +56,7 @@ const entitiesInfo =
 		"grp": "number",
 		"color": "string",
     	"icon": "string",
-    	"amount": "string"
+    	"amount": "number"
 	  }
 	},
 	"tic_artcena": {
