@@ -55,7 +55,8 @@ const entitiesInfo =
 		"valid": "number",
 		"grp": "number",
 		"color": "string",
-    	"icon": "string"
+    	"icon": "string",
+    	"amount": "number"
 	  }
 	},
 	"tic_artcena": {
@@ -585,7 +586,8 @@ const entitiesInfo =
 		  "valid": "number",
 		  "text": "string",
 		  "color": "string",
-		  "icon": "string"
+		  "icon": "string",
+		  "condition": "string"
 		}
 	  },
 	"tic_eventattx": {

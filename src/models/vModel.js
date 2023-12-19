@@ -832,7 +832,7 @@ const getEventattL = async (objName, lang) => {
 
 const getEventattsL = async (objName, objId, lang) => {
   const sqlRecenica =  
-  `select aa.id , aa.site , aa.event , aa.value, aa.valid, a2.ddlist, aa.text, aa.color, aa.icon,
+  `select aa.id , aa.site , aa.event , aa.value, aa.valid, a2.ddlist, aa.text, aa.color, aa.icon,aa.condition,
         a2.inputtp, getValueById(a2.inputtp, 'cmn_inputtpx_v', 'code', '${lang||'en'}') cinputtp, getValueById(a2.inputtp, 'cmn_inputtpx_v', 'text', '${lang||'en'}') ninputtp,
         a2.tp, getValueById(a2.tp, 'tic_eventatttpx_v', 'code', '${lang||'en'}') cttp, getValueById(a2.tp, 'tic_eventatttpx_v', 'text', '${lang||'en'}') nttp,
         aa.att, a2.code ctp, a2.text ntp
