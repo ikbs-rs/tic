@@ -407,7 +407,10 @@ const entitiesInfo =
 			"datdelivery": "string",
 			"status": "string",
 			"note": "string",
-			"parent": "number"
+			"parent": "number",
+			"country": "number",
+			"zip": "string",
+			"city": "number"  
 		}
 	},	
 	"tic_docpayment": {
