@@ -401,7 +401,7 @@ const entitiesInfo =
 			"site": "number",
 			"doc": "number",
 			"courier": "number",
-			"delivery_adress": "string",
+			"adress": "string",
 			"amount": "number",
 			"dat": "string",
 			"datdelivery": "string",

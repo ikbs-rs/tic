@@ -840,6 +840,7 @@ const getEventattsL = async (objName, objId, lang) => {
   where aa.event = ${objId}
   and   aa.att = a2.id
   and   a2.lang = '${lang||'en'}'
+  order by a2.code
   `      
   console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
  
@@ -1005,7 +1006,7 @@ const getEventstL = async (objName, objId, lang) => {
 const getDocdeliveryL = async (objName, objId, lang) => {
   const sqlRecenica =  
   `
-  select a.id, a.site , a.doc , a.courier , p."text" ncourier , a.delivery_adress , a.amount , a.dat , a.datdelivery ,
+  select a.id, a.site , a.doc , a.courier , p."text" ncourier , a.adress , a.amount , a.dat , a.datdelivery ,
   		a.status , a.note , a.parent , b.code cpar, b."text" npar, sum(s.potrazuje) potrazuje
   from  tic_docdelivery a, tic_doc d, tic_docs s, cmn_parx_v b, cmn_parx_v p
   where  a.doc = d.id 
@@ -1013,7 +1014,7 @@ const getDocdeliveryL = async (objName, objId, lang) => {
   and a.courier = p.id 
   and b.lang = '${lang||'en'}'
   and p.lang = '${lang||'en'}'
-  group by a.id, a.site , a.doc , a.courier , p."text", a.delivery_adress , a.amount , a.dat , a.datdelivery ,
+  group by a.id, a.site , a.doc , a.courier , p."text", a.adress , a.amount , a.dat , a.datdelivery ,
   		a.status , a.note , a.parent , b.code, b."text"
   `
   // where aa.event = ${objId}
