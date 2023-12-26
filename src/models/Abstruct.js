@@ -13,6 +13,7 @@ const add = async (sqlQuery) => {
 //# find function
 const find = async (objName) => {
   const sqlRecenic = `SELECT * FROM ${objName}`;
+  console.log("*************find**********", sqlQuery)
   //const [rows] = await db.query(sqlRecenic);
   const result = await db.query(sqlRecenic);
   const rows = result.rows;

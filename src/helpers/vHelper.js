@@ -22,7 +22,7 @@ const getListaC = async (objName, stm, sqlstmt, lang) => {
   }
 };
 
-const getLista = async (objName, stm, objId, lang) => {
+const getLista = async (objName, stm, objId, par1, lang) => {
   try {
     //console.log(objId, "*******Helper!!!!!!*********", stm);
     let result = {};
@@ -87,6 +87,9 @@ const getLista = async (objName, stm, objId, lang) => {
       case "tic_eventartcena_v":
         result = await vModel.getEventartcenaL(objName, objId, lang);
         break;
+      case "tic_eventartcenat_v":
+        result = await vModel.getEventartcenaTL(objName, objId, par1, lang);
+        break;
       case "tic_eventobj_v":
         result = await vModel.getEventobjL(objName, objId, lang);
         break;
@@ -95,6 +98,9 @@ const getLista = async (objName, stm, objId, lang) => {
         break;
       case "tic_eventatts_v":
         result = await vModel.getEventattsL(objName, objId, lang);
+        break;
+      case "tic_eventattstp_v":
+        result = await vModel.getEventattstpL(objName, objId, par1, lang);
         break;
       case "tic_eventtps_v":
         result = await vModel.getEventtpsL(objName, objId, lang);
@@ -141,9 +147,9 @@ const getLista = async (objName, stm, objId, lang) => {
       case "tic_docdelivery_v":
         result = await vModel.getDocdeliveryL(objName, objId, lang);
         break;
-        case "tic_eventattsdd_v":
-          result = await vModel.getEventAttsDDL(objName, objId, lang);
-          break;        
+      case "tic_eventattsdd_v":
+        result = await vModel.getEventAttsDDL(objName, objId, lang);
+        break;
       default:
         console.error("vHelper: Pogresan naziv za view-a");
     }

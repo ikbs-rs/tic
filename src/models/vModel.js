@@ -253,6 +253,29 @@ const getEventartcenaL = async (objName, objId, lang) => {
   }
 };
 
+const getEventartcenaTL = async (objName, objId, par1, lang) => {
+  const sqlRecenica =  
+  `
+  select aa.id , aa.att, aa.value, aa.text, a2.code catt, a2.text natt, aa.condition textx
+  from	tic_eventatts aa, tic_eventattx_v a2
+  where a2.code = '${par1}'
+  and aa.att = a2.id
+  and aa.event = ${objId}
+  `  
+  console.log(sqlRecenica, "*******************getEventartcenaTL*********************"  )    
+  //const [rows] = await db.query(sqlRecenic);
+
+  let result = await db.query(sqlRecenica);
+  let rows = result.rows;
+  if (Array.isArray(rows)) {
+    return rows;
+  } else {
+    throw new Error(
+      `Greška pri dohvatanju slogova iz baze - abs find: ${rows}`
+    );
+  }
+};
+
 const getArtlinkL = async (objName, objId, lang) => {
   const sqlRecenica =  
   `
@@ -855,6 +878,32 @@ const getEventattsL = async (objName, objId, lang) => {
   }
 };
 
+const getEventattstpL = async (objName, objId, par1, lang) => {
+  const sqlRecenica =  
+  `select aa.id , aa.site , aa.event , aa.value, aa.valid, a2.ddlist, aa.text, aa.color, aa.icon,aa.condition,
+        a2.inputtp, getValueById(a2.inputtp, 'cmn_inputtpx_v', 'code', '${lang||'en'}') cinputtp, getValueById(a2.inputtp, 'cmn_inputtpx_v', 'text', '${lang||'en'}') ninputtp,
+        a2.tp, getValueById(a2.tp, 'tic_eventatttpx_v', 'code', '${lang||'en'}') cttp, getValueById(a2.tp, 'tic_eventatttpx_v', 'text', '${lang||'en'}') nttp,
+        aa.att, a2.code ctp, a2.text ntp
+  from	tic_eventatts aa, tic_eventattx_v a2
+  where aa.event = ${objId}
+  and   case ${par1} when '-1' then a2.tp else ${par1} end = a2.tp
+  and   aa.att = a2.id
+  and   a2.lang = '${lang||'en'}'
+  order by a2.code
+  `      
+  console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
+ 
+  let result = await db.query(sqlRecenica);
+  let rows = result.rows;
+  if (Array.isArray(rows)) {
+    return rows;
+  } else {
+    throw new Error(
+      `Greška pri dohvatanju slogova iz baze - abs find: ${rows}`
+    );
+  }
+};
+
 const getEventobjL = async (objName, objId, lang) => {
   const sqlRecenica =  
   `
@@ -1232,6 +1281,7 @@ export default {
   getEventartL,
   getEventartlinkL,
   getEventartcenaL,
+  getEventartcenaTL,
   getLocartL,
   getArtcenaL,
   getArtlinkL,
@@ -1250,6 +1300,7 @@ export default {
   getEventobjL,
   getEventattL,
   getEventattsL,
+  getEventattstpL,
   getEventtpsL,
   getEventagendaL,
   getEventlocL,

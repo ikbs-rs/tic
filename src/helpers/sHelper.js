@@ -84,6 +84,9 @@ const postFunction = async (
       case "tic_grpeventatts_s":
         result = await sModel.copyGrpEvent(objId1, par1, requestBody);
         break;
+      case "tic_copyeventatts_s":
+        result = await sModel.copyEventatts(objId1, requestBody);
+        break;
       default:
         console.error("sHelper: Pogresan naziv za view-a - " + stm);
     }

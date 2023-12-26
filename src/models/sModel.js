@@ -350,14 +350,14 @@ const activateEvent = async (eventId) => {
 };
 
 const copyGrpEvent = async (eventId, par1, requestBody) => {
-  
+
   try {
     console.log(par1, "***************************copyGrpEvent*******************************")
     let ok = false;
     let uId = '11111111111111111111'
     await db.query("BEGIN");
 
-    if (!(par1=='true')) {
+    if (!(par1 == 'true')) {
       await db.query(
         `
       delete from tic_eventatts
@@ -393,6 +393,32 @@ const copyGrpEvent = async (eventId, par1, requestBody) => {
     throw error;
   }
 };
+const copyEventatts = async (eventId, requestBody) => {
+  try {
+    let ok = false;
+    let uId = '11111111111111111111'
+    await db.query("BEGIN");
+    const parsedBody = JSON.parse(requestBody.jsonObj);
+    console.log(parsedBody, "***************************copyGrpEvent*******************************")
+    uId = await uniqueId();
+    // Insert rows into tic_eventatts using obj.id
+    await db.query(`
+          INSERT INTO tic_eventatts (id, site, event, att, value, valid, text)
+          VALUES ($1, NULL, $2, $3, '', 1, '')
+        `, [uId, parsedBody.event, parsedBody.att]);
+
+    await db.query("COMMIT"); // Confirm the transaction
+    ok = true;
+
+    return ok;
+  } catch (error) {
+    if (db) {
+      await db.query("ROLLBACK"); // Rollback the transaction in case of an error
+    }
+    throw error;
+  }
+};
+
 
 export default {
   getAgendaL,
@@ -403,4 +429,5 @@ export default {
   copyEvent,
   activateEvent,
   copyGrpEvent,
+  copyEventatts,
 };
