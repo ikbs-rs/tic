@@ -449,7 +449,8 @@ const entitiesInfo =
 		"status": "string",
 		"fee": "number",
 		"par": "number",
-		"descript": "string"
+		"descript": "string",
+		"storno": "string"
 	  }
 	},
 	"tic_docslink": {
