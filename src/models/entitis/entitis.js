@@ -730,7 +730,11 @@ const entitiesInfo =
 		"text": "string",
 		"tp": "number",
 		"limitirano": "number",
-		"valid": "number"
+		"valid": "number",
+		"popust": "number",
+		"vrednost": "number",
+		"uslov": "number",
+		"domen": "number"
 	  }
 	},
 	"tic_privilegecond": {
