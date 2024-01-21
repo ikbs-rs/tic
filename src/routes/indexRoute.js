@@ -2,6 +2,7 @@ import express from 'express'
 import abstruct from './models/abstructRoute.js'
 import abstructX from "./models/abstructXRoute.js";
 import fileRouter from "./services/fileRouter.js";
+import esirRouter from "./services/esirRouter.js";
 //import servicesRoute from './services/servicesRoute.js'
 import { checkJwt, checkPermissions, checkPermissionsEx } from '../security/interceptors.js'
 
@@ -70,7 +71,8 @@ router.use('/tic/eventloc', checkPermissions(), abstruct)
 router.use('/tic/eventobj', checkPermissions(), abstruct)
 router.use('/tic/events', checkPermissions(), abstruct) 
 router.use('/tic/eventtps', checkPermissions(), abstruct)
-router.use('/tic/file', checkPermissions(), fileRouter)  
+router.use('/tic/file', checkPermissions(), fileRouter)
+router.use('/tic/esir', checkPermissions(), esirRouter)
 router.use('/tic/naime', checkPermissions(), abstruct) 
 router.use('/tic/parprivilege', checkPermissions(), abstruct) 
 
