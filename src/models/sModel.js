@@ -133,7 +133,7 @@ const autoEventatts = async (eventId) => {
 
     // Fetch rows from tic_eventatt
     const eventAttRows = await db.query(`
-      SELECT id, code, text
+      SELECT id, code, text, link
       FROM tic_eventatt
       WHERE valid = 1
     `);
@@ -143,9 +143,9 @@ const autoEventatts = async (eventId) => {
       //console.log("***", uId)
       // Insert rows into tic_eventatts
       await db.query(`
-        INSERT INTO tic_eventatts (id, site, event, att, value, valid, text)
-        VALUES ($1, NULL, $2, $3, '', 1, '')
-      `, [uId, eventId, row.id]);
+        INSERT INTO tic_eventatts (id, site, event, att, value, valid, text, link)
+        VALUES ($1, NULL, $2, $3, '', 1, '', $4)
+      `, [uId, eventId, row.id, row.link]);
       //}
     }
     await db.query("COMMIT"); // Confirm the transaction
@@ -184,8 +184,8 @@ const copyEvent = async (eventId, tmpId, begda, endda) => {
     console.log("Inser  tic_eventatts")
     await client.query(
       `
-      INSERT INTO tic_eventatts (id, site, event, att, value, valid, text)
-      SELECT nextval('iis.tic_table_id_seq'), site, $1, att, value, valid, text
+      INSERT INTO tic_eventatts (id, site, event, att, value, valid, text, link)
+      SELECT nextval('iis.tic_table_id_seq'), site, $1, att, value, valid, text, link
       FROM tic_eventatts
       WHERE event = $2
     `,
@@ -377,9 +377,9 @@ const copyGrpEvent = async (eventId, par1, requestBody) => {
 
         // Insert rows into tic_eventatts using obj.id
         await db.query(`
-          INSERT INTO tic_eventatts (id, site, event, att, value, valid, text)
-          VALUES ($1, NULL, $2, $3, '', 1, '')
-        `, [uId, eventId, obj.id]);
+          INSERT INTO tic_eventatts (id, site, event, att, value, valid, text, link)
+          VALUES ($1, NULL, $2, $3, '', 1, '',$4)
+        `, [uId, eventId, obj.id, obj.link]);
       }
     }
     await db.query("COMMIT"); // Confirm the transaction
@@ -403,9 +403,9 @@ const copyEventatts = async (eventId, requestBody) => {
     uId = await uniqueId();
     // Insert rows into tic_eventatts using obj.id
     await db.query(`
-          INSERT INTO tic_eventatts (id, site, event, att, value, valid, text)
-          VALUES ($1, NULL, $2, $3, '', 1, '')
-        `, [uId, parsedBody.event, parsedBody.att]);
+          INSERT INTO tic_eventatts (id, site, event, att, value, valid, text, link)
+          VALUES ($1, NULL, $2, $3, '', 1, '', $4)
+        `, [uId, parsedBody.event, parsedBody.att, parsedBody.link]);
 
     await db.query("COMMIT"); // Confirm the transaction
     ok = true;

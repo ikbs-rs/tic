@@ -833,7 +833,7 @@ const getEventCena = async (objName, objId, lang) => {
 const getEventattL = async (objName, lang) => {
   const sqlRecenica =  
   `
-  select aa.id , aa.site , aa.code , aa.text, aa.valid, aa.ddlist,
+  select aa.id , aa.site , aa.code , aa.text, aa.valid, aa.ddlist, aa.link, aa.linktp,
         aa.lang, aa.grammcase,
         aa.inputtp, getValueById(aa.inputtp, 'cmn_inputtpx_v', 'code', '${lang||'en'}') cinputtp, getValueById(aa.inputtp, 'cmn_inputtpx_v', 'text', '${lang||'en'}') ninputtp,
         aa.tp, getValueById(aa.tp, 'tic_eventatttpx_v', 'code', '${lang||'en'}') ctp, getValueById(aa.tp, 'tic_eventatttpx_v', 'text', '${lang||'en'}') ntp
@@ -880,7 +880,7 @@ const getEventattsL = async (objName, objId, lang) => {
 
 const getEventattstpL = async (objName, objId, par1, lang) => {
   const sqlRecenica =  
-  `select aa.id , aa.site , aa.event , aa.value, aa.valid, a2.ddlist, aa.text, aa.color, aa.icon,aa.condition,
+  `select aa.id , aa.site , aa.event , aa.value, aa.valid, a2.ddlist, aa.text, aa.color, aa.icon,aa.condition, aa.link,
         a2.inputtp, getValueById(a2.inputtp, 'cmn_inputtpx_v', 'code', '${lang||'en'}') cinputtp, getValueById(a2.inputtp, 'cmn_inputtpx_v', 'text', '${lang||'en'}') ninputtp,
         a2.tp, getValueById(a2.tp, 'tic_eventatttpx_v', 'code', '${lang||'en'}') cttp, getValueById(a2.tp, 'tic_eventatttpx_v', 'text', '${lang||'en'}') nttp,
         aa.att, a2.code ctp, a2.text ntp

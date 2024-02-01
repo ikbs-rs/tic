@@ -577,7 +577,9 @@ const entitiesInfo =
 		"valid": "number",
 		"inputtp": "number",
 		"ddlist": "string",
-		"tp": "number"
+		"tp": "number",
+		"link": "number",
+		"linktp": "number"
 	  }
 	},
 	"tic_eventatts": {
@@ -591,7 +593,8 @@ const entitiesInfo =
 		  "text": "string",
 		  "color": "string",
 		  "icon": "string",
-		  "condition": "string"
+		  "condition": "string",
+		  "link": "number"
 		}
 	  },
 	"tic_eventattx": {
