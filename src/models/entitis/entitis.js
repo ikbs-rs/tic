@@ -56,7 +56,8 @@ const entitiesInfo =
 		"grp": "number",
 		"color": "string",
     	"icon": "string",
-    	"amount": "number"
+    	"amount": "number",
+    	"combining": "number"
 	  }
 	},
 	"tic_artcena": {
@@ -594,7 +595,8 @@ const entitiesInfo =
 		  "color": "string",
 		  "icon": "string",
 		  "condition": "string",
-		  "link": "number"
+		  "link": "number",
+		  "minfee": "number"
 		}
 	  },
 	"tic_eventattx": {

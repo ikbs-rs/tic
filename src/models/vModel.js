@@ -85,7 +85,8 @@ const getArtL = async (objName, lang) => {
         aa.tp, p.code ctp, p."text" ntp, 
         aa.um, u.code cum, u.text num,
         aa.tgp,t.code ctgp, t.text ntgp,
-        aa.grp, g.code cgrp, g.text ngrp
+        aa.grp, g.code cgrp, g.text ngrp,
+        aa.amount, aa.combining
   from tic_artx_v aa, tic_arttpx_v p, cmn_umx_v u, cmn_tgpx_v t, tic_artgrpx_v g
   where aa.lang = '${lang||'en'}'
   and aa.tp = p.id 
@@ -138,7 +139,8 @@ const getEventartL = async (objName, objId, lang) => {
   select ea.id, ea.site, ea."event", ea.discount, ea.descript, ea.begda, ea.endda , aa.site, aa.code, aa.text, aa.eancode, aa.qrcode, aa.valid, aa.lang, aa.grammcase,
         ea.art, aa.code cart, ea.nart, aa.color,
         aa.tgp,t.code ctgp, t.text ntgp,
-        aa.code||' '||aa.text cnart
+        aa.code||' '||aa.text cnart,
+        aa.combining
   from tic_eventart ea, tic_artx_v aa, cmn_tgpx_v t
   where ea.event = ${objId}
   and ea.art = aa.id
@@ -855,7 +857,7 @@ const getEventattL = async (objName, lang) => {
 
 const getEventattsL = async (objName, objId, lang) => {
   const sqlRecenica =  
-  `select aa.id , aa.site , aa.event , aa.value, aa.valid, a2.ddlist, aa.text, aa.color, aa.icon,aa.condition,
+  `select aa.id , aa.site , aa.event , aa.value, aa.valid, a2.ddlist, aa.text, aa.color, aa.icon,aa.condition, aa.link, aa.minfee,
         a2.inputtp, getValueById(a2.inputtp, 'cmn_inputtpx_v', 'code', '${lang||'en'}') cinputtp, getValueById(a2.inputtp, 'cmn_inputtpx_v', 'text', '${lang||'en'}') ninputtp,
         a2.tp, getValueById(a2.tp, 'tic_eventatttpx_v', 'code', '${lang||'en'}') cttp, getValueById(a2.tp, 'tic_eventatttpx_v', 'text', '${lang||'en'}') nttp,
         aa.att, a2.code ctp, a2.text ntp
@@ -880,7 +882,7 @@ const getEventattsL = async (objName, objId, lang) => {
 
 const getEventattstpL = async (objName, objId, par1, lang) => {
   const sqlRecenica =  
-  `select aa.id , aa.site , aa.event , aa.value, aa.valid, a2.ddlist, aa.text, aa.color, aa.icon,aa.condition, aa.link,
+  `select aa.id , aa.site , aa.event , aa.value, aa.valid, a2.ddlist, aa.text, aa.color, aa.icon,aa.condition, aa.link, aa.minfee,
         a2.inputtp, getValueById(a2.inputtp, 'cmn_inputtpx_v', 'code', '${lang||'en'}') cinputtp, getValueById(a2.inputtp, 'cmn_inputtpx_v', 'text', '${lang||'en'}') ninputtp,
         a2.tp, getValueById(a2.tp, 'tic_eventatttpx_v', 'code', '${lang||'en'}') cttp, getValueById(a2.tp, 'tic_eventatttpx_v', 'text', '${lang||'en'}') nttp,
         aa.att, a2.code ctp, a2.text ntp
