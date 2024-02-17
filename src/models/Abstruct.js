@@ -41,6 +41,7 @@ const update = async (sqlQuery) => {
 //# delete function
 const remove = async (objName, id) => {
   try {
+    console.log(`DELETE FROM ${objName} WHERE id = ${id}`, "**************remove***************")
     const result = await db.query(`DELETE FROM ${objName} WHERE id = ${id}`);
     return result.rowCount;
   } catch (err) {

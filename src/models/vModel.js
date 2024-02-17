@@ -416,7 +416,7 @@ const getDocvrL = async (objName, lang) => {
 
 const getPrivilegeL = async (objName, lang) => {
   const sqlRecenica =  
-  `select aa.id , aa.site , aa.code , text, aa.limitirano, aa.valid, aa.lang, aa.grammcase,
+  `select aa.id , aa.site , aa.code , text, aa.limitirano, aa.valid, aa.lang, aa.popust, aa.domen, aa.uslov, aa.vrednost, aa.grammcase,
 	      aa.tp, getValueById(aa.tp, 'tic_privilegetpx_v', 'code', '${lang||'en'}') ctp , getValueById(aa.tp, 'tic_privilegetpx_v', 'text', '${lang||'en'}') ntp
   from	tic_privilegex_v aa
   where aa.lang = '${lang||'en'}'`     
