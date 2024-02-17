@@ -18,7 +18,7 @@ DB_USER = 'iis'
 DB_PASSWORD = 'iis'
 DB_DATABASE = 'ikbs'
 
-JWT_URL = 'http://192.168.72.96/badm/adm/services'
+JWT_URL = 'http://localhost/badm/adm/services'
 #JWT_URL = 'http://82.117.213.106/badm/adm/services'
 
 URL_BASE = '/ticketlines/api' #ne radi trenutno kada se prosledjuje route nije bitno sada
