@@ -353,7 +353,7 @@ const getDocsL = async (objName, objId, lang) => {
   where aa.doc = ${objId}
   and aa.doc = d.id
   `     
-  console.log(objId, "*-*-*-*-*-*-*-*-*-1111111 objId 111111111", sqlRecenica)
+  console.log(objId, "*-*-*-*-*-*-*-*-*-@@@@@@@@@ getDocsL @@@@@@@@@@@", sqlRecenica)
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
   if (Array.isArray(rows)) {
@@ -749,7 +749,7 @@ const getEventProdajaL = async (objName, lang) => {
   }
 };
 
-const getEventAttsDDL = async (objName, objId, lang) => {
+const getEventAttsDDL = async (objName, objId, par1, lang) => {
   //console.log(objName, "**************************getEventAttsDDL 00 ******************************", objId)
   const sqlRecenica =  
   `
@@ -762,10 +762,10 @@ const getEventAttsDDL = async (objName, objId, lang) => {
   and e.id = ${objId}
   and aa.par = e.par
   and aa.tp = t.id
-  and t.code in ('SZN', 'XGRP')
-  and aa.status = 2
+  and t.code = '${par1}'
+  and aa.status = 1
   `      
-  //console.log("**************************getEventAttsDDL 01 ******************************", sqlRecenica)
+  console.log("@@@@@@@@**************************getEventAttsDDL 01 ******************************@@@@@@", sqlRecenica)
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
   if (Array.isArray(rows)) {
@@ -982,6 +982,29 @@ const getEventlocL = async (objName, objId, lang) => {
         aa.loc, getValueById(aa.loc, 'cmn_locx_v', 'code', '${lang||'en'}') cloc, getValueById(aa.loc, 'cmn_locx_v', 'text', '${lang||'en'}') nloc
   from	tic_eventloc aa
   where aa.event = ${objId}`      
+  let result = await db.query(sqlRecenica);
+  let rows = result.rows;
+  if (Array.isArray(rows)) {
+    return rows;
+  } else {
+    throw new Error(
+      `Greška pri dohvatanju slogova iz baze - abs find: ${rows}`
+    );
+  }
+};
+
+const getEventlocTpL = async (objName, objId, par1, lang) => {
+  const sqlRecenica =  
+  `select aa.id , aa.site , aa.event , aa.begda, aa.endda, aa.loc,
+        b.code cloc, b.text nloc, b.valid, b.graftp, b.latlongs, b.radius, b.color, b.fillcolor, b.originfillcolor, b.rownum, b.grammcase, b.text textx,
+        b.tp loctp, getValueById(b.tp, 'cmn_loctpx_v', 'code', '${lang||'en'}') cloctp, getValueById(b.tp, 'cmn_loctpx_v', 'text', '${lang||'en'}') nloctp
+  from  tic_eventloc aa, cmn_locx_v b
+  where aa.event = ${objId}
+  and aa.loc = b.id
+  and ( b.tp = CASE WHEN ${par1} = -1 THEN b.tp  ELSE ${par1}  END )
+  and b.lang = '${lang||'en'}'`    
+  
+  console.log("*-*-*-*-*-*-*-*-*- getEventstL @@@@@@@@@@@@@@@@@", sqlRecenica)
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
   if (Array.isArray(rows)) {
@@ -1306,6 +1329,7 @@ export default {
   getEventtpsL,
   getEventagendaL,
   getEventlocL,
+  getEventlocTpL,
   getEventcenatpL,
   getObjTree,
   getPrivilegeL,

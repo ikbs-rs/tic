@@ -78,11 +78,17 @@ const postFunction = async (
       case "tic_copyevent_s":
         result = await sModel.copyEvent(objId1, objId2, begda, endda);
         break;
+      case "tic_copyeventsettings_s":
+        result = await sModel.copyEventSettings(objId1, objId2, begda, endda);
+        break;
       case "tic_activateevent_s":
         result = await sModel.activateEvent(objId1);
         break;
       case "tic_grpeventatts_s":
         result = await sModel.copyGrpEvent(objId1, par1, requestBody);
+        break;
+      case "tic_tpeventloc_s":
+        result = await sModel.copyTpEventloc(objId1, par1, requestBody);
         break;
       case "tic_copyeventatts_s":
         result = await sModel.copyEventatts(objId1, requestBody);
