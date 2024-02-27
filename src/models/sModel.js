@@ -275,6 +275,52 @@ const copyEvent = async (eventId, tmpId, begda, endda) => {
   }
 };
 
+/*  copyEventSettings *********************************************************************************************/
+
+const copyEventSettings = async (eventId, tmpId, begda, endda) => {
+
+  console.log(tmpId, "*********copyEvent*******", eventId)
+  const client = await db.connect(); // Povežite se s bazom podataka koristeći klijenta
+
+  try {
+    await client.query("BEGIN"); // Početak transakcije
+    let ok = false;
+
+    // Prvo obrišite podatke
+    console.log("Brisem tic_eventatts")
+    // await client.query("DELETE FROM tic_eventatts WHERE event = $1", [eventId]);
+
+
+    // Fetch rows from tic_eventatts
+    const eventAttsRows = await db.query(`
+    SELECT nextval('iis.tic_table_id_seq') id, site, $1 event, att, value, valid, text, color, icon, "condition", link, minfee 
+    FROM tic_eventatts
+    WHERE event = $2
+  `,
+      [eventId, tmpId]
+    );
+
+    for (const row of eventAttsRows.rows) {
+      await db.query(`
+        INSERT INTO tic_eventatts (id, site, event, att, value, valid, text, color, icon, "condition", link, minfee )
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+        `, [row.id, row.site, row.event, row.att, row.value, row.valid, row.text, row.color, row.icon, row.condition, row.link, row.minfee]);
+    }
+
+    await client.query("COMMIT"); // Potvrdite transakciju
+    ok = true;
+
+    return ok;
+  } catch (error) {
+    await client.query("ROLLBACK"); // Poništite transakciju u slučaju greške
+    throw error;
+  } finally {
+    client.release(); // Oslobodite klijenta
+  }
+};
+
+/*  activateEvent *********************************************************************************************/
+
 const activateEvent = async (eventId) => {
 
   const client = await db.connect(); // Povežite se s bazom podataka koristeći klijenta
@@ -348,6 +394,57 @@ const activateEvent = async (eventId) => {
     client.release(); // Oslobodite klijenta
   }
 };
+
+const copyTpEventloc = async (eventId, par1, lang) => {
+  const client = await db.connect(); 
+  try {
+
+    console.log(par1, "*00**************************copyGrpEvent*******************************")
+    let ok = false;
+    let uId = '11111111111111111111'
+    await client.query("BEGIN");
+
+    if (!(par1 == 'true')) {
+      await client.query(
+        `
+      delete from tic_eventloc
+      where event = $1
+      and loc in (
+        select id
+        from  cmn_loc l
+        where ( l.tp = CASE WHEN ${par1} = -1 THEN l.tp  ELSE ${par1}  END )
+      )
+    `, [eventId]);
+    }
+
+    console.log(par1, "*02**************************DELETE*******************************", eventId)    
+    // Iteriramo kroz objekte u requestBody
+    // Pretvorite string u niz objekata
+    await client.query(
+    `
+      INSERT INTO tic_eventloc (id, site, event, loc, begda, endda, color, icon)
+      SELECT nextval('iis.tic_table_id_seq') id, null site, e.id event, l.id loc, e.begda, e.endda, ll.color, ll.icon
+      FROM tic_event e, cmn_loclink ll, cmn_loc l
+      WHERE e.id = $1
+      and e.loc = ll.loc2
+      and ll.loc1 = l.id 
+      and ( l.tp = CASE WHEN ${par1} = -1 THEN l.tp  ELSE ${par1}  END )
+    `,
+      [eventId]
+    );
+
+    await client.query("COMMIT"); // Confirm the transaction
+    ok = true;
+
+    return ok;
+  } catch (error) {
+      await client.query("ROLLBACK"); // Rollback the transaction in case of an error
+    throw error;
+  } finally {
+    client.release(); // Oslobodite klijenta
+  }
+};
+
 
 const copyGrpEvent = async (eventId, par1, requestBody) => {
 
@@ -427,7 +524,9 @@ export default {
   getEventartCena,
   autoEventatts,
   copyEvent,
+  copyEventSettings,
   activateEvent,
   copyGrpEvent,
   copyEventatts,
+  copyTpEventloc,
 };

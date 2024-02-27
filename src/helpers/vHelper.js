@@ -111,6 +111,9 @@ const getLista = async (objName, stm, objId, par1, lang) => {
       case "tic_eventloc_v":
         result = await vModel.getEventlocL(objName, objId, lang);
         break;
+      case "tic_eventloctp_v":
+        result = await vModel.getEventlocTpL(objName, objId, par1, lang);
+        break;
       case "tic_eventcenatp_v":
         result = await vModel.getEventcenatpL(objName, objId, lang);
         break;
@@ -148,7 +151,7 @@ const getLista = async (objName, stm, objId, par1, lang) => {
         result = await vModel.getDocdeliveryL(objName, objId, lang);
         break;
       case "tic_eventattsdd_v":
-        result = await vModel.getEventAttsDDL(objName, objId, lang);
+        result = await vModel.getEventAttsDDL(objName, objId, par1, lang);
         break;
       default:
         console.error("vHelper: Pogresan naziv za view-a");
