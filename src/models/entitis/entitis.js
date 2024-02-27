@@ -367,7 +367,8 @@ const entitiesInfo =
 		"opis": "string",
 		"timecreation": "string",
 		"storno": "number",
-		"year": "number"
+		"year": "number",
+		"channel": "number"
 	  }
 	},
 	"tic_docb": {

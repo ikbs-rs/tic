@@ -580,7 +580,7 @@ where aa.lang = '${lang || 'en'}'`
 const getTicDocByNumV = async (item, objId, lang) => {
   const sqlRecenica =
     `
-  select aa.id, aa.site, aa.date, aa.tm , aa.status, aa.docobj , aa.broj , aa.storno, aa.obj2 , aa.opis, aa.timecreation, aa.storno, aa.year, aa.currrate,
+  select aa.id, aa.site, aa.date, aa.tm , aa.status, aa.docobj , aa.broj , aa.storno, aa.obj2 , aa.opis, aa.timecreation, aa.storno, aa.year, aa.currrate, aa.channel,
 	aa.usr , p.code cpar, p.text npar,
 	aa.curr, c.code ccurr, c.text ncurr,
 	aa.docvr, v.code cdocvr, v.text ndocvr
