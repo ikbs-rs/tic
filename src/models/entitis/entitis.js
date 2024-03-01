@@ -661,6 +661,25 @@ const entitiesInfo =
     	"icon": "string"
 	  }
 	},
+	"tic_loclink": {
+	  "attributes": {
+		"id": "number",
+		"site": "number",
+		"event": "number",
+		"tp": "number",
+		"loctp1": "number",
+		"loc1": "number",
+		"loctp2": "number",
+		"loc2": "number",
+		"val": "string",
+		"hijerarhija": "number",
+		"onoff": "number",
+		"begda": "string",
+		"endda": "string",
+		"color": "string",
+		"icon": "string"
+	  }
+	},
 	"tic_events": {
 	  "attributes": {
 		"id": "number",
