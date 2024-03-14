@@ -9,8 +9,8 @@ const assembleEsirInvoicesRequestBody = (body) => {
             dateAndTimeOfIssue: body?.date,  //tic_doc.date
             invoiceNumber: body?.broj,     //tic_doc.broj
             invoiceType: "Normal", //??
-            referentDocumentDT: null,     //?
-            referentDocumentNumber: null,     //?
+            referentDocumentDT: null,     //?  vreme originalnog računa, ovo se popunjava za transactionType Refund
+            referentDocumentNumber: null,  //broj originalnog računa, ovo se popunjava za transactionType Refund
             transactionType: "Sale", //??
             items: body.tic_docs.map(tic_doc => {
                 return {
@@ -20,15 +20,20 @@ const assembleEsirInvoicesRequestBody = (body) => {
                     ],
                     name: tic_doc.art,// (tic_docs.art) -> tic_art.text
                     quantity: tic_doc.output,      // tic_docs.output
-                    totalAmount: tic_doc.totalAmount, //??
+                    totalAmount: tic_doc.totalAmount, //?? unitPrice * quantity
                     unitPrice: tic_doc.price   // tic_docs.price
                 }
             }),
             payment: [
                 {
-                    "amount": body?.amount,   // Ovo mora da se izracuna
+                    "amount": body?.amountCard,   // Ovo je ukupna suma na racunu placena   karticom
                     "paymentType": "Card"
+                },
+                {
+                    "amount": body?.amountCash,  // Ovo je ukupna suma na racunu placena   kesom ????
+                    "paymentType": "Cash"
                 }
+
             ]
         }
     };
