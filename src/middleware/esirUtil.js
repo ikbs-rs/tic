@@ -1,18 +1,18 @@
-const assembleEsirInvoicesRequestBody = (body) => {
+const assembleEsirInvoicesRequestBody = (ticInvoice) => {
     return {
         advancePaid: null,  //?? Koristi se za izdavanje zavrsnog avansnog racuna, opcioni parametar, sadrzi ukupno placeni avans
         advanceTax: null,  //?? Koristi se za izdavanje zavrsnog avansnog racuna, opcioni parametar, sadrzi vrednost poreza na avans
         invoiceRequest: {
-            buyerCostCenterId: body?.buyerCostCenterId, //??
-            buyerId: body?.userId,//??
-            cashier: body?.cashier,//??
-            dateAndTimeOfIssue: body?.date,  //tic_doc.date
-            invoiceNumber: body?.broj,     //tic_doc.broj
+            buyerCostCenterId: ticInvoice?.buyerCostCenterId, //??
+            buyerId: ticInvoice?.userId,//??
+            cashier: ticInvoice?.cashier,//??
+            dateAndTimeOfIssue: ticInvoice?.date,  //tic_doc.date
+            invoiceNumber: ticInvoice?.broj,     //tic_doc.broj
             invoiceType: "Normal", //??
             referentDocumentDT: null,     //?  vreme originalnog računa, ovo se popunjava za transactionType Refund
             referentDocumentNumber: null,  //broj originalnog računa, ovo se popunjava za transactionType Refund
             transactionType: "Sale", //??
-            items: body.tic_docs.map(tic_doc => {
+            items: ticInvoice.tic_docs.map(tic_doc => {
                 return {
                     gtin: tic_doc.id,       // (tic_docs.id)
                     labels: [
@@ -26,11 +26,11 @@ const assembleEsirInvoicesRequestBody = (body) => {
             }),
             payment: [
                 {
-                    "amount": body?.amountCard,   // Ovo je ukupna suma na racunu placena   karticom
+                    "amount": ticInvoice?.amountCard,   // Ovo je ukupna suma na racunu placena   karticom
                     "paymentType": "Card"
                 },
                 {
-                    "amount": body?.amountCash,  // Ovo je ukupna suma na racunu placena   kesom ????
+                    "amount": ticInvoice?.amountCash,  // Ovo je ukupna suma na racunu placena   kesom ????
                     "paymentType": "Cash"
                 }
 
