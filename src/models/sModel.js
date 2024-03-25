@@ -445,6 +445,125 @@ const copyTpEventloc = async (eventId, par1, lang) => {
   }
 };
 
+/***************************************************************************************************** */
+const copyGrpEventloc = async (eventId, par1, par2, par3, begda, endda, requestBody) => {
+
+  try {
+    console.log(par1, "***************************copyGrpEvent*******************************")
+    let ok = false;
+    let uId = '11111111111111111111'
+    await db.query("BEGIN");
+
+    if (!(par1 == 'true')) {
+      console.log(par1, "***************************copyGrpEvent - delete *******************************")
+      await db.query(
+        `
+      delete from tic_eventatts
+      where event = $1
+    `, [eventId]);
+    }
+
+    // Iteriramo kroz objekte u requestBody
+    // Pretvorite string u niz objekata
+    const parsedBody = JSON.parse(requestBody.jsonObj);
+    console.log(par1, "***************************copyGrpEvent 00 *******************************")
+    // Provera da li parsedBody ima svojstvo koje sadrži niz objekata
+    if (parsedBody && Array.isArray(parsedBody)) {
+      // Iteriramo kroz objekte u parsedBody
+      for (const obj of parsedBody) {
+        uId = await uniqueId();
+        // id numeric(20) NOT NULL,
+        // site numeric(20) NULL,
+        // "event" numeric(20) NULL,
+        // tp numeric(20) NOT NULL,
+        // loctp1 numeric(20) NOT NULL,
+        // loc1 numeric(20) NOT NULL,
+        // loctp2 numeric(20) NOT NULL,
+        // loc2 numeric(20) NOT NULL,
+        // val varchar(2500) NULL,
+        // begda varchar(10) NOT NULL,
+        // endda varchar(10) NOT NULL,
+        // hijerarhija numeric(1) DEFAULT 0 NULL,
+        // onoff numeric(1) DEFAULT 1 NULL,
+        // color varchar(100) NULL,
+        // icon varchar(100) NULL, 
+        // Insert rows into tic_eventatts using obj.id
+        console.log(
+          eventId, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+
+        await db.query(`
+          INSERT INTO tic_loclink (
+            id, site, event, tp, loctp1, loc1, loctp2, loc2, val, begda, endda, hijerarhija, onoff, color, icon)
+            VALUES ($1, NULL, $2, $3, $4, $5, $6, $7, '', $8, $9, 1, 0, $10, $11)
+        `, [uId, eventId, obj.tp, obj.tp, obj.id, par3, par2, begda, endda, obj.color, obj.icon]);
+      }
+    }
+    console.log(
+      eventId, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+
+    await db.query("COMMIT"); // Confirm the transaction
+    ok = true;
+
+    return ok;
+  } catch (error) {
+    if (db) {
+      await db.query("ROLLBACK"); // Rollback the transaction in case of an error
+    }
+    throw error;
+  }
+};
+
+
+const copyGrpLoclink = async (table, par1, par2, par3, begda, endda, requestBody) => {
+
+  try {
+    const tableObj = JSON.parse(table);
+    
+    let ok = false;
+    let uId = '11111111111111111111'
+    await db.query("BEGIN");
+    if (par1 == 'true') {
+      await db.query(
+        `
+      delete from cmn_loclink
+      where loc2 = $1
+    `, [tableObj.id]);
+    }
+
+    // Iteriramo kroz objekte u requestBody
+    // Pretvorite string u niz objekata
+    const parsedBody = JSON.parse(requestBody.jsonObj);
+    // Provera da li parsedBody ima svojstvo koje sadrži niz objekata
+    if (parsedBody && Array.isArray(parsedBody)) {
+
+      // Iteriramo kroz objekte u parsedBody
+      for (const obj of parsedBody) {
+        uId = await uniqueId();
+        await db.query(
+          `
+          INSERT INTO cmn_loclink (
+            id, site, tp, loctp1, loc1, loctp2, loc2, val, begda, endda, hijerarhija, onoff, color, icon)
+          VALUES 
+            ($1, NULL, $2, $3, $4, $5, $6, '', $7, $8, 1, 0, $9, $10)
+          `, 
+          [  uId, tableObj.tp, obj.tp, obj.id, tableObj.tp, tableObj.id,  begda, endda, obj.color, obj.icon]
+          );
+      }
+    }
+
+    await db.query("COMMIT"); // Confirm the transaction
+    ok = true;
+
+    return ok;
+  } catch (error) {
+    if (db) {
+      await db.query("ROLLBACK"); // Rollback the transaction in case of an error
+    }
+    throw error;
+  }
+};
+/****************************************************************************** */
+
 
 const copyGrpEvent = async (eventId, par1, requestBody) => {
 
@@ -527,6 +646,7 @@ export default {
   copyEventSettings,
   activateEvent,
   copyGrpEvent,
+  copyGrpEventloc,
   copyEventatts,
   copyTpEventloc,
 };

@@ -716,13 +716,15 @@ const getEventL = async (objName, lang) => {
         aa.event, getValueById(aa.event, 'tic_eventx_v', 'code', '${lang || 'en'}') cevent , getValueById(aa.event, 'tic_eventx_v', 'text', '${lang || 'en'}') nevent,
         aa.ctg, ctg.code cctg, ctg.text nctg,
         aa.par, getValueById(aa.par, 'cmn_parx_v', 'code', '${lang || 'en'}') cpar , getValueById(aa.par, 'cmn_parx_v', 'text', '${lang || 'en'}') npar,
-        aa.loc, getValueById(aa.loc, 'cmn_locx_v', 'code', '${lang || 'en'}') cloc , getValueById(aa.loc, 'cmn_locx_v', 'text', '${lang || 'en'}') nloc
-  from	tic_eventx_v aa, tic_eventtpx_v tp, tic_eventctgx_v ctg
+        aa.loc, l.code cloc , l.text nloc, l.tp tploc
+  from	tic_eventx_v aa, tic_eventtpx_v tp, tic_eventctgx_v ctg, cmn_locx_v l
   where aa.lang = '${lang || 'en'}'
   and aa.ctg = ctg.id
   and aa.tp = tp.id
+  and aa.loc = l.id
   and tp.lang = '${lang || 'en'}'
   and ctg.lang = '${lang || 'en'}'
+  and l.lang = '${lang || 'en'}'
   `
   console.log("**************************getEventL******************************", sqlRecenica)
   let result = await db.query(sqlRecenica);
