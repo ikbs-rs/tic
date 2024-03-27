@@ -9,8 +9,8 @@ const assembleEsirInvoicesRequestBody = (ticInvoice) => {
             dateAndTimeOfIssue: ticInvoice?.date,  //tic_doc.date
             invoiceNumber: ticInvoice?.broj,     //tic_doc.broj
             invoiceType: "Normal", //??
-            referentDocumentDT: null,     //?  vreme originalnog računa, ovo se popunjava za transactionType Refund
-            referentDocumentNumber: null,  //broj originalnog računa, ovo se popunjava za transactionType Refund
+            referentDocumentDT: ticInvoice?.referentDocumentDT,     //?  vreme originalnog računa, ovo se popunjava za transactionType Refund
+            referentDocumentNumber: ticInvoice?.referentDocumentNumber,  //broj originalnog računa, ovo se popunjava za transactionType Refund
             transactionType:  ticInvoice?.transactionType, //(Sale or Refund)
             items: ticInvoice.tic_docs.map(tic_doc => {
                 return {
