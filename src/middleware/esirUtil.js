@@ -15,9 +15,7 @@ const assembleEsirInvoicesRequestBody = (ticInvoice) => {
             items: ticInvoice.tic_docs.map(tic_doc => {
                 return {
                     gtin: tic_doc.id,       // (tic_docs.id)
-                    labels: [
-                        "A"
-                    ],
+                    labels: tic_doc.labels,
                     name: tic_doc.art,// (tic_docs.art) -> tic_art.text
                     quantity: tic_doc.output,      // tic_docs.output
                     totalAmount: tic_doc.totalAmount, //?? unitPrice * quantity
