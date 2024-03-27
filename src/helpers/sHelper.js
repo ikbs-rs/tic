@@ -55,6 +55,8 @@ const postFunction = async (
   endda,
   lang,
   par1,
+  par2,
+  par3,
   requestBody
 ) => {
   try {
@@ -86,6 +88,9 @@ const postFunction = async (
         break;
       case "tic_grpeventatts_s":
         result = await sModel.copyGrpEvent(objId1, par1, requestBody);
+        break;
+      case "tic_grpeventloc_s":
+        result = await sModel.copyGrpEventloc(objId1, par1, par2, par3, begda, endda, requestBody);
         break;
       case "tic_tpeventloc_s":
         result = await sModel.copyTpEventloc(objId1, par1, requestBody);
