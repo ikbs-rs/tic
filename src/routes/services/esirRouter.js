@@ -8,6 +8,7 @@ const router = express.Router();
 router.use("/", (req, res, next) => {
     router.post("/invoices", checkPermissions(), async () => {
         try {
+            console.log("ESIR_API_KLJUC")
             const ESIR_API_KLJUC = process.env.ESIR_API_KLJUC;
             const config = {
                 headers: {

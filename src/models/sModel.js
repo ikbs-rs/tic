@@ -330,7 +330,7 @@ const activateEvent = async (eventId) => {
     let ok = false;
     console.log("***********************-00****************************")
     // Setuje se status 
-    await client.query("UPDATE tic_event set status = 2 WHERE event = $1", [eventId]);
+    await client.query("UPDATE tic_event set status = 1 WHERE event = $1", [eventId]);
     console.log("***********************00****************************")
 
     // Create row for tic_doc
@@ -341,7 +341,7 @@ const activateEvent = async (eventId) => {
       WHERE a.id = $2
     `,
       [eventId, eventId]);
-    console.log("***********************01****************************")
+    console.log("***********************01*************************** eventId = ", eventId)
     let i = 0
     const docvr = "1683550594276921344"
     for (const row of docRows.rows) {
