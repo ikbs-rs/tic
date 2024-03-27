@@ -1,20 +1,23 @@
 const assembleEsirInvoicesRequestBody = (ticInvoice) => {
     return {
-        advancePaid: null,  //?? Koristi se za izdavanje zavrsnog avansnog racuna, opcioni parametar, sadrzi ukupno placeni avans
-        advanceTax: null,  //?? Koristi se za izdavanje zavrsnog avansnog racuna, opcioni parametar, sadrzi vrednost poreza na avans
+        // advancePaid: null,  //?? Koristi se za izdavanje zavrsnog avansnog racuna, opcioni parametar, sadrzi ukupno placeni avans
+        // advanceTax: null,  //?? Koristi se za izdavanje zavrsnog avansnog racuna, opcioni parametar, sadrzi vrednost poreza na avans
+        print: ticInvoice?.print,//da li treba štampati račun nakon fiskalizacije
+        email: ticInvoice?.email,//email na koji treba poslati račun nakon fiskalizacije
+        receiptImageFormat: ticInvoice?.receiptImageFormat,// vrednost Png za png format odnosno Pdf za pdf format
         invoiceRequest: {
-            buyerCostCenterId: ticInvoice?.buyerCostCenterId, //??
+            // buyerCostCenterId: ticInvoice?.buyerCostCenterId, //??
             buyerId: ticInvoice?.userId,//??
             cashier: ticInvoice?.cashier,//??
-            dateAndTimeOfIssue: ticInvoice?.date,  //tic_doc.date
+            // dateAndTimeOfIssue: ticInvoice?.date,  //tic_doc.date
             invoiceNumber: ticInvoice?.broj,     //tic_doc.broj
             invoiceType: "Normal", //??
             referentDocumentDT: ticInvoice?.referentDocumentDT,     //?  vreme originalnog računa, ovo se popunjava za transactionType Refund
             referentDocumentNumber: ticInvoice?.referentDocumentNumber,  //broj originalnog računa, ovo se popunjava za transactionType Refund
-            transactionType:  ticInvoice?.transactionType, //(Sale or Refund)
+            transactionType: ticInvoice?.transactionType, //(Sale or Refund)
             items: ticInvoice.tic_docs.map(tic_doc => {
                 return {
-                    gtin: tic_doc.id,       // (tic_docs.id)
+                    // gtin: tic_doc.id,       // (tic_docs.id)
                     labels: tic_doc.labels,
                     name: tic_doc.art,// (tic_docs.art) -> tic_art.text
                     quantity: tic_doc.output,      // tic_docs.output
