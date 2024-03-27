@@ -24,7 +24,7 @@ const getListaC = async (objName, stm, sqlstmt, lang) => {
 
 const getLista = async (objName, stm, objId, par1, lang) => {
   try {
-    //console.log(objId, "*******Helper!!!!!!*********", stm);
+    console.log(objId, "*******Helper!!!!!!*********", stm);
     let result = {};
     switch (stm) {
       case "tic_agenda_v":
@@ -152,6 +152,12 @@ const getLista = async (objName, stm, objId, par1, lang) => {
         break;
       case "tic_eventattsdd_v":
         result = await vModel.getEventAttsDDL(objName, objId, par1, lang);
+        break;
+      case "tic_locll_v":
+        result = await vModel.getLocLLV(objName, objId, par1, lang);
+        break;
+      case "tic_loclinkll_v":
+        result = await vModel.getTicLoclinkV(objName, objId, par1, lang);
         break;
       default:
         console.error("vHelper: Pogresan naziv za view-a");

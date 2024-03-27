@@ -1,7 +1,7 @@
 import express from "express";
 import {checkPermissions} from "../../security/interceptors.js";
 import axios from "axios";
-import esirUtil from "../../middleware/esirUtil";
+import esirUtil from "../../middleware/esirUtil.js";
 
 const router = express.Router();
 

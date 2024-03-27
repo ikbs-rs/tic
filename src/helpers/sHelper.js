@@ -60,7 +60,7 @@ const postFunction = async (
   requestBody
 ) => {
   try {
-    console.log("*******Helper*********", stm);
+    console.log(par1, "* par1 ******Helper*********", stm);
     let result = {};
     switch (stm) {
       case "tic_eventtpatt_s":
@@ -91,6 +91,9 @@ const postFunction = async (
         break;
       case "tic_grpeventloc_s":
         result = await sModel.copyGrpEventloc(objId1, par1, par2, par3, begda, endda, requestBody);
+        break;
+      case "tic_grpeventlocl_s":
+        result = await sModel.copyGrpEventlocl(objId1, par1, par2, par3, begda, endda, requestBody, objId2);
         break;
       case "tic_tpeventloc_s":
         result = await sModel.copyTpEventloc(objId1, par1, requestBody);

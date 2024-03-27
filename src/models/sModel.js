@@ -336,7 +336,7 @@ const activateEvent = async (eventId) => {
     // Create row for tic_doc
     const docRows = await db.query(`
       SELECT nextval('tic_table_id_seq') id , null site, to_char(NOW(), 'YYYYMMDD') "date", to_char(NOW(), 'YYYYMMDDHH24MISS') tm, 1 curr, 1 currrate, 
-      a.par usr, 1 status, 1 docobj, a.id broj, $1 obj2, ' ' opis, to_char(NOW(), 'YYYYMMDDHH24MISS') timecreation, 0 storno, to_char(NOW(), 'YYYY') "year"
+      a.par usr, 1 status, 1 docobj, a.id broj, $1 obj2, '$$NADREDJENI$$ ' opis, to_char(NOW(), 'YYYYMMDDHH24MISS') timecreation, 0 storno, to_char(NOW(), 'YYYY') "year"
       FROM tic_event a
       WHERE a.id = $2
     `,
@@ -365,7 +365,7 @@ const activateEvent = async (eventId) => {
             from	tic_eventatts a, tic_eventatt b
             where a.event = $3
             and a.att = b.id 
-            and b.code  in ('SZN', 'XGRP')
+            and b.code  in ('00.01.', '00.02.')
           ) 
         `,
         [row.id, eventId, eventId]);
@@ -446,7 +446,7 @@ const copyTpEventloc = async (eventId, par1, lang) => {
 };
 
 /***************************************************************************************************** */
-const copyGrpEventloc = async (eventId, par1, par2, par3, begda, endda, requestBody) => {
+const copyGrpEventloc = async (eventId, par1, loc, tploc, begda, endda, requestBody) => {
 
   try {
     console.log(par1, "***************************copyGrpEvent*******************************")
@@ -454,11 +454,11 @@ const copyGrpEventloc = async (eventId, par1, par2, par3, begda, endda, requestB
     let uId = '11111111111111111111'
     await db.query("BEGIN");
 
-    if (!(par1 == 'true')) {
+    if (par1 == 'true') {
       console.log(par1, "***************************copyGrpEvent - delete *******************************")
       await db.query(
         `
-      delete from tic_eventatts
+      delete from tic_eventloc
       where event = $1
     `, [eventId]);
     }
@@ -471,6 +471,7 @@ const copyGrpEventloc = async (eventId, par1, par2, par3, begda, endda, requestB
     if (parsedBody && Array.isArray(parsedBody)) {
       // Iteriramo kroz objekte u parsedBody
       for (const obj of parsedBody) {
+        console.log(obj, "***************************copyGrpEvent 01 *******************************")
         uId = await uniqueId();
         // id numeric(20) NOT NULL,
         // site numeric(20) NULL,
@@ -489,17 +490,16 @@ const copyGrpEventloc = async (eventId, par1, par2, par3, begda, endda, requestB
         // icon varchar(100) NULL, 
         // Insert rows into tic_eventatts using obj.id
         console.log(
-          eventId, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+          eventId, "@@@@@@@@@@@@@@@ BMV @@@@@@@@@@@@@@@")
 
         await db.query(`
-          INSERT INTO tic_loclink (
-            id, site, event, tp, loctp1, loc1, loctp2, loc2, val, begda, endda, hijerarhija, onoff, color, icon)
-            VALUES ($1, NULL, $2, $3, $4, $5, $6, $7, '', $8, $9, 1, 0, $10, $11)
-        `, [uId, eventId, obj.tp, obj.tp, obj.id, par3, par2, begda, endda, obj.color, obj.icon]);
+            INSERT INTO tic_eventloc (id, site, event, loc, begda, endda, color, icon)
+            VALUES ($1, NULL, $2, $3, $4, $5, $6, $7)
+        `, [uId, eventId,  obj.id, begda, endda, obj.color, obj.icon]);
       }
     }
     console.log(
-      eventId, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+      eventId, "@@@@@@@@@@@@@ BMV @@@@@@@@@@@@@@@@@")
 
     await db.query("COMMIT"); // Confirm the transaction
     ok = true;
@@ -514,40 +514,45 @@ const copyGrpEventloc = async (eventId, par1, par2, par3, begda, endda, requestB
 };
 
 
-const copyGrpLoclink = async (table, par1, par2, par3, begda, endda, requestBody) => {
+const copyGrpEventlocl = async (eventId, par1, loc, tploc, begda, endda, requestBody, eventloc) => {
 
   try {
-    const tableObj = JSON.parse(table);
-    
+    console.log(eventloc, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ copyGrpEventlocl  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
     let ok = false;
     let uId = '11111111111111111111'
     await db.query("BEGIN");
+    console.log(par1, "@@****************copyGrpEventlocl - PRE delete ****************@@", eventId, "@@@@", loc)
     if (par1 == 'true') {
+      console.log(par1, "***************************copyGrpEventlocl - delete *******************************")
       await db.query(
         `
-      delete from cmn_loclink
+      delete from tic_loclink
       where loc2 = $1
-    `, [tableObj.id]);
+      and event = $2
+    `, [eventloc, eventId]);
     }
 
     // Iteriramo kroz objekte u requestBody
     // Pretvorite string u niz objekata
     const parsedBody = JSON.parse(requestBody.jsonObj);
     // Provera da li parsedBody ima svojstvo koje sadrži niz objekata
+    console.log(parsedBody, "***************************copyGrpEventlocl - PRE IF *******************************")
     if (parsedBody && Array.isArray(parsedBody)) {
-
+      console.log(parsedBody, "***************************copyGrpEventlocl - IF *******************************")
       // Iteriramo kroz objekte u parsedBody
       for (const obj of parsedBody) {
+        console.log(obj, "***************************copyGrpEventlocl - FOR *******************************")
         uId = await uniqueId();
         await db.query(
           `
-          INSERT INTO cmn_loclink (
-            id, site, tp, loctp1, loc1, loctp2, loc2, val, begda, endda, hijerarhija, onoff, color, icon)
+          INSERT INTO tic_loclink (
+            id, site, event, tp, loctp1, loc1, loctp2, loc2, val, begda, endda, hijerarhija, onoff, color, icon)
           VALUES 
-            ($1, NULL, $2, $3, $4, $5, $6, '', $7, $8, 1, 0, $9, $10)
+            ($1, NULL, $2, $3, $4, $5, $6, $7, '', $8, $9, 1, 0, $10, $11)
           `, 
-          [  uId, tableObj.tp, obj.tp, obj.id, tableObj.tp, tableObj.id,  begda, endda, obj.color, obj.icon]
+          [  uId, eventId, tploc, obj.tp, obj.id, tploc, eventloc,  begda, endda, obj.color, obj.icon]
           );
+          console.log(eventId, "@@@*******copyGrpEventlocl - END FOR **********@@@", loc, "@@+@@", tploc, "@@+@@")
       }
     }
 
@@ -649,4 +654,5 @@ export default {
   copyGrpEventloc,
   copyEventatts,
   copyTpEventloc,
+  copyGrpEventlocl,
 };
