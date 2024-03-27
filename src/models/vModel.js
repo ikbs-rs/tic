@@ -1344,6 +1344,52 @@ const getTicpardiscountcurrF = async (objName, eventid, objid, lang) => {
 };
 
 
+const getLocLLV = async (objName, objId, par1, lang) => {
+  const sqlRecenica =
+    `
+    select l.id, l.site, l.code, l.text , l.valid, l.longtext, l.lang, l.grammcase, l.text textx, l.color, l.icon, 
+            l.tp, getValueById(l.tp, 'cmn_loctpx_v', 'code', '${lang || 'en'}') ctp, getValueById(l.tp, 'cmn_loctpx_v', 'text', '${lang || 'en'}') ntp
+      from	cmn_locx_v l, cmn_loclink ll
+      where l.lang = '${lang || 'en'}'
+      and l.tp = (CASE WHEN ${objId} = -1 then l.tp else ${objId} end)
+      and l.id = ll.loc1
+      and ll.loc2 = ${par1}
+    `
+  console.log(sqlRecenica, "@@@@@@@@@@@@@*****************getLocLLV***********/////////@@@@@@@@@@@@@@")
+  //const [rows] = await db.query(sqlRecenic);
+  let result = await db.query(sqlRecenica);
+  let rows = result.rows;
+  if (Array.isArray(rows)) {
+    return rows;
+  } else {
+    throw new Error(
+      `Greška pri dohvatanju slogova iz baze - abs find: ${rows}`
+    );
+  }
+};
+
+const getTicLoclinkV = async (objName, objId, par1, lang) => {
+  const sqlRecenica =
+    `select  l.id, l.site, l.loctp2, l.loc2, l.tp,
+            l.loctp1, getValueById(l.loctp1, 'cmn_loctpx_v', 'code', '${lang || 'en'}') cloctp1, getValueById(l.loctp1, 'cmn_loctpx_v', 'text', '${lang || 'en'}') nloctp1,
+            l.loc1, getValueById(l.loc1, 'cmn_locx_v', 'code', '${lang || 'en'}') cloc1, getValueById(l.loc1, 'cmn_locx_v', 'text', '${lang || 'en'}') nloc1,   		 
+            l.begda, l.endda, l.val, l.hijerarhija, l.onoff
+    from    tic_loclink l
+    where 	l.loc2  = ${objId}
+    and   l.event = ${par1}
+    `
+  console.log(sqlRecenica, "***********************getCmnLoclinkV***********************")
+  const result = await db.query(sqlRecenica);
+  const rows = result.rows;
+  if (Array.isArray(rows)) {
+    return rows;
+  } else {
+    throw new Error(
+      `Greška pri dohvatanju slogova iz baze - abs find: ${rows}`
+    );
+  }
+};
+
 export default {
   getListaC,
   getAgendaL,
@@ -1394,4 +1440,6 @@ export default {
   getCmnSpedicijaByTxtV,
   getDocdeliveryL,
   getEventAttsDDL,
+  getLocLLV,
+  getTicLoclinkV,
 };
