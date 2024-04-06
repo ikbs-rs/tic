@@ -582,7 +582,8 @@ const entitiesInfo =
 		"ddlist": "string",
 		"tp": "number",
 		"link": "number",
-		"linktp": "number"
+		"linktp": "number",
+		"description": "string"
 	  }
 	},
 	"tic_eventatts": {

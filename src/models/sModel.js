@@ -293,18 +293,29 @@ const copyEventSettings = async (eventId, tmpId, begda, endda) => {
 
     // Fetch rows from tic_eventatts
     const eventAttsRows = await db.query(`
-    SELECT nextval('iis.tic_table_id_seq') id, site, $1 event, att, value, valid, text, color, icon, "condition", link, minfee 
-    FROM tic_eventatts
-    WHERE event = $2
+    SELECT  nextval('iis.tic_table_id_seq') id, s.site, $1 event, s.att, s.value, s.valid, s.text, s.color, s.icon, s.condition, s.link, s.minfee,
+            a.inputtp, a.ddlist, a.code
+    FROM tic_eventatts s, tic_eventatt a
+    WHERE s.event = $2
+    and s.att = a.id
   `,
       [eventId, tmpId]
     );
 
     for (const row of eventAttsRows.rows) {
+      let pValue = row.value
+      let pText = row.text
+      if (row.inputtp==5) {
+        pValue = begda
+      }
+      if (row.inputtp==8) {
+        pValue = begda
+        pText = endda
+      }      
       await db.query(`
         INSERT INTO tic_eventatts (id, site, event, att, value, valid, text, color, icon, "condition", link, minfee )
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
-        `, [row.id, row.site, row.event, row.att, row.value, row.valid, row.text, row.color, row.icon, row.condition, row.link, row.minfee]);
+        `, [row.id, row.site, row.event, row.att, pValue, row.valid, pText, row.color, row.icon, row.condition, row.link, row.minfee]);
     }
 
     await client.query("COMMIT"); // Potvrdite transakciju
@@ -336,11 +347,16 @@ const activateEvent = async (eventId) => {
     // Create row for tic_doc
     const docRows = await db.query(`
       SELECT nextval('tic_table_id_seq') id , null site, to_char(NOW(), 'YYYYMMDD') "date", to_char(NOW(), 'YYYYMMDDHH24MISS') tm, 1 curr, 1 currrate, 
-      a.par usr, 1 status, 1 docobj, a.id broj, $1 obj2, '$$NADREDJENI$$ ' opis, to_char(NOW(), 'YYYYMMDDHH24MISS') timecreation, 0 storno, to_char(NOW(), 'YYYY') "year"
+      a.par usr, 1 status, 1 docobj, a.id broj, $1 obj2, '$$NADREDJENI$$ ' opis, to_char(NOW(), 'YYYYMMDDHH24MISS') timecreation, 0 storno, to_char(NOW(), 'YYYY') "year", a.status currStatus
       FROM tic_event a
       WHERE a.id = $2
     `,
       [eventId, eventId]);
+    if (docRows.rows.currStatus==1) {
+      throw new Error(
+        `Dogadjaj već aktiviran: ${rows}`
+      );
+    }
     console.log("***********************01*************************** eventId = ", eventId)
     let i = 0
     const docvr = "1683550594276921344"
@@ -369,7 +385,7 @@ const activateEvent = async (eventId) => {
           ) 
         `,
         [row.id, eventId, eventId]);
-      console.log("***********************03****************************", docId)
+      console.log(eventId, "***********************03****************************", docId)
       for (const row1 of docsRows.rows) {
         console.log("***********************04****************************", row.id)
         //Insert stavki sezonskih karti. Cena i iznos se neupisuju.
