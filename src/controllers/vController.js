@@ -13,7 +13,10 @@ const getCmnLinkV = async (req, res) => {
 const getLista = async (req, res) => {
   try {
     //console.log(req.query, "*********getListagetListagetLista**********")
-    const item = await vHelper.getLista( req.objName, req.query.stm, req.query.objid, req.query.par1, req.query.sl||'en' );
+    const item = await vHelper.getLista( req.objName, req.query.stm, req.query.objid, req.query.par1, req.query.sl||'en', 
+      req.query.pa2, req.query.par3, req.query.par4, req.query.par5, req.query.par6, req.query.par7, req.query.par8,
+      req.query.par9, req.query.par10
+         );
     res.status(200).json({ item }); 
   } catch (err) {
     res.status(500).json({ message: `Doslo je do greske getLista vController ${req.objName}`, error: err.message });

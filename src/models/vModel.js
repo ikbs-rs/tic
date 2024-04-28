@@ -63,9 +63,9 @@ const getListaC = async (objName, sqlstmt, lang) => {
 const getAgendaL = async (objName, lang) => {
   const sqlRecenica =
     `select aa.id , aa.site , aa.code , text, text textx, aa.begtm, aa.endtm, aa.valid, aa.lang, aa.grammcase,
-        aa.tg, getValueById(aa.tg, 'tic_agendatpx_v', 'code', '${lang || 'en'}') ctp, getValueById(aa.tg, 'tic_agendatpx_v', 'text', '${lang || 'en'}') ntp
+        aa.tg, getValueById(aa.tg, 'tic_agendatpx_v', 'code', '${lang || 'sr_cyr'}') ctp, getValueById(aa.tg, 'tic_agendatpx_v', 'text', '${lang || 'sr_cyr'}') ntp
   from	tic_agendax_v aa
-  where aa.lang = '${lang || 'en'}'`
+  where aa.lang = '${lang || 'sr_cyr'}'`
 
   //const [rows] = await db.query(sqlRecenic);
   let result = await db.query(sqlRecenica);
@@ -88,15 +88,15 @@ const getArtL = async (objName, lang) => {
         aa.grp, g.code cgrp, g.text ngrp,
         aa.amount, aa.combining
   from tic_artx_v aa, tic_arttpx_v p, cmn_umx_v u, cmn_tgpx_v t, tic_artgrpx_v g
-  where aa.lang = '${lang || 'en'}'
+  where aa.lang = '${lang || 'sr_cyr'}'
   and aa.tp = p.id 
   and aa.um = u.id 
   and aa.tgp = t.id 
   and aa.grp = g.id
-  and	p.lang = '${lang || 'en'}'
-  and	u.lang = '${lang || 'en'}'
-  and	t.lang = '${lang || 'en'}'
-  and	g.lang = '${lang || 'en'}'
+  and	p.lang = '${lang || 'sr_cyr'}'
+  and	u.lang = '${lang || 'sr_cyr'}'
+  and	t.lang = '${lang || 'sr_cyr'}'
+  and	g.lang = '${lang || 'sr_cyr'}'
   `
   console.log("****************getArtL*****************", sqlRecenica)
   //const [rows] = await db.query(sqlRecenic);
@@ -115,7 +115,7 @@ const getLocartL = async (objName, objId, lang) => {
   const sqlRecenica =
     `
   select aa.id , aa.site , aa.loc , aa.begda, aa.endda, 
-        aa.art, getValueById(aa.art, 'tic_artx_v', 'code', '${lang || 'en'}') cart, getValueById(aa.art, 'tic_artx_v', 'text', '${lang || 'en'}') nart
+        aa.art, getValueById(aa.art, 'tic_artx_v', 'code', '${lang || 'sr_cyr'}') cart, getValueById(aa.art, 'tic_artx_v', 'text', '${lang || 'sr_cyr'}') nart
   from	tic_artloc aa
   where aa.loc = ${objId}
   `
@@ -137,7 +137,7 @@ const getEventartL = async (objName, objId, lang) => {
   const sqlRecenica =
     `
   select ea.id, ea.site, ea."event", ea.discount, ea.descript, ea.begda, ea.endda , aa.site, aa.code, aa.text, aa.eancode, aa.qrcode, aa.valid, aa.lang, aa.grammcase,
-        ea.art, aa.code cart, ea.nart, aa.color,
+        ea.art, aa.code cart, ea.nart, coalesce(ea.color, aa.color) color,
         aa.tgp,t.code ctgp, t.text ntgp,
         aa.code||' '||aa.text cnart,
         aa.combining
@@ -145,8 +145,8 @@ const getEventartL = async (objName, objId, lang) => {
   where ea.event = ${objId}
   and ea.art = aa.id
   and aa.tgp = t.id  
-  and aa.lang = '${lang || 'en'}'  
-  and	t.lang = '${lang || 'en'}'
+  and aa.lang = '${lang || 'sr_cyr'}'  
+  and	t.lang = '${lang || 'sr_cyr'}'
   `
   console.log(sqlRecenica, "*************getEventartL*************")
   let result = await db.query(sqlRecenica);
@@ -171,7 +171,7 @@ const getEventartlinkL = async (objName, objId, lang) => {
   where ea.eventart2 = ${objId}
   and t.art = aa.id
   and ea.eventart1 = t.id   
-  and aa.lang = '${lang || 'en'}'  
+  and aa.lang = '${lang || 'sr_cyr'}'  
   `
   console.log(sqlRecenica, "*************getEventartL*************")
   let result = await db.query(sqlRecenica);
@@ -189,7 +189,7 @@ const getArtlocL = async (objName, objId, lang) => {
   const sqlRecenica =
     `
   select aa.id , aa.site , aa.art , aa.begda, aa.endda, 
-        aa.loc, getValueById(aa.loc, 'cmn_locx_v', 'code', '${lang || 'en'}') cloc, getValueById(aa.loc, 'cmn_locx_v', 'text', '${lang || 'en'}') nloc
+        aa.loc, getValueById(aa.loc, 'cmn_locx_v', 'code', '${lang || 'sr_cyr'}') cloc, getValueById(aa.loc, 'cmn_locx_v', 'text', '${lang || 'sr_cyr'}') nloc
   from	tic_artloc aa
   where aa.art = ${objId}
   `
@@ -211,9 +211,9 @@ const getArtcenaL = async (objName, objId, lang) => {
   const sqlRecenica =
     `
   select aa.id , aa.site , aa.art , aa.begda, aa.endda, aa.value, aa.event,
-        aa.cena, getValueById(aa.cena, 'tic_cenax_v', 'code', '${lang || 'en'}') ccena, getValueById(aa.cena, 'tic_cenax_v', 'text', '${lang || 'en'}') ncena,
-        aa.terr, getValueById(aa.terr, 'cmn_terrx_v', 'code', '${lang || 'en'}') cterr, getValueById(aa.terr, 'cmn_terrx_v', 'text', '${lang || 'en'}') nterr,
-        aa.curr, getValueById(aa.curr, 'cmn_currx_v', 'code', '${lang || 'en'}') ccurr, getValueById(aa.curr, 'cmn_currx_v', 'text', '${lang || 'en'}') ncurr
+        aa.cena, getValueById(aa.cena, 'tic_cenax_v', 'code', '${lang || 'sr_cyr'}') ccena, getValueById(aa.cena, 'tic_cenax_v', 'text', '${lang || 'sr_cyr'}') ncena,
+        aa.terr, getValueById(aa.terr, 'cmn_terrx_v', 'code', '${lang || 'sr_cyr'}') cterr, getValueById(aa.terr, 'cmn_terrx_v', 'text', '${lang || 'sr_cyr'}') nterr,
+        aa.curr, getValueById(aa.curr, 'cmn_currx_v', 'code', '${lang || 'sr_cyr'}') ccurr, getValueById(aa.curr, 'cmn_currx_v', 'text', '${lang || 'sr_cyr'}') ncurr
   from	tic_artcena aa
   where aa.art = ${objId}
   `
@@ -235,9 +235,9 @@ const getEventartcenaL = async (objName, objId, lang) => {
   const sqlRecenica =
     `
   select aa.id , aa.site , aa.eventart , aa.art, aa.begda, aa.endda, aa.value, aa.event,
-        aa.cena, getValueById(aa.cena, 'tic_cenax_v', 'code', '${lang || 'en'}') ccena, getValueById(aa.cena, 'tic_cenax_v', 'text', '${lang || 'en'}') ncena,
-        aa.terr, getValueById(aa.terr, 'cmn_terrx_v', 'code', '${lang || 'en'}') cterr, getValueById(aa.terr, 'cmn_terrx_v', 'text', '${lang || 'en'}') nterr,
-        aa.curr, getValueById(aa.curr, 'cmn_currx_v', 'code', '${lang || 'en'}') ccurr, getValueById(aa.curr, 'cmn_currx_v', 'text', '${lang || 'en'}') ncurr
+        aa.cena, getValueById(aa.cena, 'tic_cenax_v', 'code', '${lang || 'sr_cyr'}') ccena, getValueById(aa.cena, 'tic_cenax_v', 'text', '${lang || 'sr_cyr'}') ncena,
+        aa.terr, getValueById(aa.terr, 'cmn_terrx_v', 'code', '${lang || 'sr_cyr'}') cterr, getValueById(aa.terr, 'cmn_terrx_v', 'text', '${lang || 'sr_cyr'}') nterr,
+        aa.curr, getValueById(aa.curr, 'cmn_currx_v', 'code', '${lang || 'sr_cyr'}') ccurr, getValueById(aa.curr, 'cmn_currx_v', 'text', '${lang || 'sr_cyr'}') ncurr
   from	tic_eventartcena aa
   where aa.eventart = ${objId}
   `
@@ -282,7 +282,7 @@ const getArtlinkL = async (objName, objId, lang) => {
   const sqlRecenica =
     `
   select aa.id , aa.site , aa.tp, aa.art2,
-        aa.art1, getValueById(aa.art1, 'tic_artx_v', 'code', '${lang || 'en'}') cart1, getValueById(aa.art1, 'tic_artx_v', 'text', '${lang || 'en'}') nart1
+        aa.art1, getValueById(aa.art1, 'tic_artx_v', 'code', '${lang || 'sr_cyr'}') cart1, getValueById(aa.art1, 'tic_artx_v', 'text', '${lang || 'sr_cyr'}') nart1
   from	tic_artlink aa
   where aa.art2 = ${objId}
   `
@@ -304,7 +304,7 @@ const getDocpaymentL = async (objName, objId, lang) => {
   const sqlRecenica =
     `
   select aa.id , aa.site , aa.amount, aa.doc,
-        aa.paymenttp, getValueById(aa.paymenttp, 'cmn_paymenttpx_v', 'code', '${lang || 'en'}') cpaymenttp, getValueById(aa.paymenttp, 'cmn_paymenttpx_v', 'text', '${lang || 'en'}') npaymenttp,
+        aa.paymenttp, getValueById(aa.paymenttp, 'cmn_paymenttpx_v', 'code', '${lang || 'sr_cyr'}') cpaymenttp, getValueById(aa.paymenttp, 'cmn_paymenttpx_v', 'text', '${lang || 'sr_cyr'}') npaymenttp,
         aa.bcontent
   from	tic_docpayment aa
   where aa.doc = ${objId}
@@ -326,9 +326,9 @@ const getDocpaymentL = async (objName, objId, lang) => {
 const getCenaL = async (objName, lang) => {
   const sqlRecenica =
     `select aa.id , aa.site , aa.code , text, aa.valid, aa.lang, aa.grammcase, aa.color, aa.icon,
-	      aa.tp, getValueById(aa.tp, 'tic_cenatpx_v', 'code', '${lang || 'en'}') ctp , getValueById(aa.tp, 'tic_cenatpx_v', 'text', '${lang || 'en'}') ntp
+	      aa.tp, getValueById(aa.tp, 'tic_cenatpx_v', 'code', '${lang || 'sr_cyr'}') ctp , getValueById(aa.tp, 'tic_cenatpx_v', 'text', '${lang || 'sr_cyr'}') ntp
   from	tic_cenax_v aa
-  where aa.lang = '${lang || 'en'}'`
+  where aa.lang = '${lang || 'sr_cyr'}'`
   //const [rows] = await db.query(sqlRecenic);
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
@@ -346,9 +346,9 @@ const getDocsL = async (objName, objId, lang) => {
     `
   select aa.id, aa.loc, aa.art, aa.tgp, aa.taxrate, aa.price , aa."input", aa."output" , aa.curr , aa.currrate, aa.site, aa.doc,
       aa."duguje" , aa."potrazuje" , aa.leftcurr , aa.rightcurr, aa.begtm , aa.endtm , aa.status , aa.fee , aa.par, aa.descript, aa.discount,
-      aa.event, getValueById(aa.event, 'tic_eventx_v', 'code', '${lang || 'en'}') cevent, getValueById(aa.event, 'tic_eventx_v', 'text', '${lang || 'en'}') nevent,
-      aa.loc, getValueById(aa.loc, 'cmn_locx_v', 'code', '${lang || 'en'}') cloc, getValueById(aa.loc, 'cmn_locx_v', 'text', '${lang || 'en'}') nloc,
-      aa.art, getValueById(aa.art, 'tic_artx_v', 'code', '${lang || 'en'}') cart, getValueById(aa.art, 'tic_artx_v', 'text', '${lang || 'en'}') nart
+      aa.event, getValueById(aa.event, 'tic_eventx_v', 'code', '${lang || 'sr_cyr'}') cevent, getValueById(aa.event, 'tic_eventx_v', 'text', '${lang || 'sr_cyr'}') nevent,
+      aa.loc, getValueById(aa.loc, 'cmn_locx_v', 'code', '${lang || 'sr_cyr'}') cloc, getValueById(aa.loc, 'cmn_locx_v', 'text', '${lang || 'sr_cyr'}') nloc,
+      aa.art, getValueById(aa.art, 'tic_artx_v', 'code', '${lang || 'sr_cyr'}') cart, getValueById(aa.art, 'tic_artx_v', 'text', '${lang || 'sr_cyr'}') nart
   from tic_docs aa, tic_doc d
   where aa.doc = ${objId}
   and aa.doc = d.id
@@ -365,68 +365,199 @@ const getDocsL = async (objName, objId, lang) => {
   }
 };
 
-const getTransactionL = async (objName, lang) => {
+const getTransactionL = async (objName, lang, par1, par2, par3, par4, par5, par6, par7, par8, par9, par10) => {
+  //   const sqlRecenica =
+  //     `
+  //     SELECT 
+  //       a.id, a.tm, a.docvr, d."text" AS ndocvr, a.usr, p.code AS cpar, p."text" AS npar, b.event, e."text" AS nevent, 
+  //       e.begda, 'web' AS sal_ch, COUNT(*) AS no_tick, 0 AS ticket, SUM(b.potrazuje) AS amount, a.status, b.status, 
+  //       b.curr, c.code AS ccurr, 
+  //       CASE 
+  //           WHEN d.code = 'RC' THEN '01'
+  //           ELSE '02'
+  //       END AS trtp,
+  //       b.event
+  //     FROM 
+  //       tic_doc a
+  //     JOIN 
+  //       tic_docs b ON a.id = b.doc
+  //     left OUTER JOIN 
+  //       tic_eventx_v e ON b.event = e.id
+  //     JOIN 
+  //       cmn_parx_v p ON a.usr = p.id
+  //     left OUTER JOIN 
+  //       cmn_currx_v c ON b.curr = c.id
+  //     JOIN 
+  //       tic_docvrx_v d ON a.docvr = d.id
+  //     WHERE e.lang = '${lang || 'sr_cyr'}'
+  //     and p.lang = '${lang || 'sr_cyr'}'
+  //     and c.lang = '${lang || 'sr_cyr'}'
+  //     and d.lang = '${lang || 'sr_cyr'}'
+  //     GROUP BY a.id, a.tm, a.docvr, a.usr, p.code, p."text", b.event, e."text", e.begda, a.status, b.status, b.curr, c.code, d."text", trtp
+  // ORDER BY  a.tm DESC
+  //   `
+  console.log(par6, "PAR6 ================================================")
+  let and1=''
+  if (par1==`true`){
+    and1 = ` and canceled = '0'`
+  }
+  let and2=''
+  if (par2==`true`){
+    and2 = ` and canceled = '0'`
+  }
+  let and3=''
+  if (par3==`true`){
+    and3 = ` and canceled = '0'`
+  }
+  let and4=''
+  if (par4==`true`){
+    and4 = ` and istekla = true`
+  }
+  let and5=''
+  if (par5==`true`){
+    and5 = ` and paid = 'true'`
+  }
+  let and6=''
+  if (par6==`true`){
+    and6 = ` and canceled = '0'`
+  }
+  
   const sqlRecenica =
+    // select * from ( 
+    // select e.id event, du.id, e.code, c."text" ctgevent, te.text tpevent, e.text nevent, l.text hall,  e.endda, e.endtm tmpocetak,
+		// es.art, es.ulaz, es.kapija, es.pool, es.sector, es.blok, es.rownum, es."label", es.code1 sediste,
+		// ds.art , ds.nart, ds."output" , ds.price, ds.taxrate, ds.discount, ds.potrazuje ,
+		// du.text npar, du.address addrpar, du.tel telpar, du.pib pipar, du.idnum idpar, du.place plpar, 
+		// di."first" , di."last" , di.uid, di.pib, di.adress , di.city, di.country , di.email , di.phon,
+		// du.username, du.firstname, du.lastname,
+		// ds.ticket obj_karta,
+		// to_timestamp(ds.endtm, 'YYYYMMDDHH24MISS') < now() istekla,
+		// (
+		// select 
+    //       CASE 
+    //       WHEN count(*) = 0 THEN false
+    //       ELSE true
+    //       END AS broj
+    //     from	tic_docpayment dp
+    //     where dp.status = 1
+    //     and dp.doc = du.id
+    //     ) paid,
+    //     nodelivery, fordelivery, indelivery,
+    //     to_char(
+    //     (
+    //     select sum(ds.potrazuje) potrazuje
+    //     from	tic_docs ds
+    //     where ds.doc = du.id
+    //     ), 'FM999,999,990.00') iznos,
+    //     to_timestamp((
+    //     select min(ds.endtm) potrazuje
+    //     from	tic_docs ds
+    //     where ds.doc = du.id
+    //     ), 'YYYYMMDDHH24MISS') < now() isteklo,
+    //     (
+    //     select count(*) broj
+    //     from	tic_docs ds, tic_art ar, tic_artgrp g
+    //     where ds.doc = du.id
+    //     and ds.art = ar.id
+    //     and ar.grp = g.id
+    //     ) brojkarti
+    // from tic_eventx_v e
+    // left join cmn_locx_v l on e.loc = l.id and l.lang = '${lang || 'sr_cyr'}'
+    // left join tic_eventctgx_v c on e.ctg = c.id and c.lang = '${lang || 'sr_cyr'}'
+    // left join tic_eventtpx_v te on e.tp = te.id and te.lang = '${lang || 'sr_cyr'}'
+    // join tic_docs ds on e.id = ds."event" 
+    // left join (
+    //   select p.text, p.address, p.site , p.tel , p.pib , p.idnum , p.place,
+		// 	      u.username, u.firstname, u.lastname,
+    //       COALESCE(LENGTH(dd.tmrec), 0) nodelivery, LENGTH(dd.tmcour) fordelivery, LENGTH(dd.datdelivery) indelivery, 
+    //       d.*
+    //   from tic_doc d
+    //   left join cmn_parx_v p  on d.usr = p.id and p.lang = '${lang || 'sr_cyr'}'
+    //   left join adm_user u on d.usersys = u.id
+    //   left join tic_docdelivery dd on dd.doc = d.id
+    //   ) as du on du.id = ds.doc
+    // join tic_eventst es on ds.loc = es.loc1 and ds.event = es.event
+    // left join tic_docsuid di on ds.id = di.docs 
+    // where e.lang = '${lang || 'sr_cyr'}'
+    // ) x
+    // where 1=1
     `
-    SELECT 
-      a.id, 
-      a.tm, 
-      a.docvr, 
-      d."text" AS ndocvr, 
-      a.usr, 
-      p.code AS cpar, 
-      p."text" AS npar, 
-      b.event, 
-      e."text" AS nevent, 
-      e.begda, 
-      'web' AS sal_ch, 
-      COUNT(*) AS no_tick, 
-      0 AS ticket, 
-      SUM(b.potrazuje) AS amount,
-      a.status, 
-      b.status, 
-      b.curr, 
-      c.code AS ccurr, 
+    select *
+    from (
+    select   a.id, a.tm, a.kanal, a.npar, a.addrpar, a.telpar, a.pipar, a.idpar, a.plpar, a.idpar,	
+    a.username, a.firstname, a.lastname, a.status canceled,
+    '['||string_agg(distinct '{"startda": "'||a.startda||'", "starttm":"'||a.starttm||'", "name":"'||a."text"||'", "venue":"'||a.venue||'"}', ',')||']' nevent,
+    sum(a.tax) tax, sum(a.discount) discount, 
+    sum(a."output") "output", sum(a.potrazuje) potrazuje,  max(a.endtm) tmreserv,
+    sum(
+      CASE
+          WHEN trim(a.atp) IN ('K', 'CK') THEN a.potrazuje
+          ELSE 0
+      END
+      ) tickettotal,
+      sum(
+      CASE
+          WHEN trim(a.atp) IN ('K', 'CK') THEN a.output
+          ELSE 0
+      END
+      ) ticketcount,
+    (select 
       CASE 
-          WHEN d.code = 'RC' THEN '01'
-          ELSE '02'
-      END AS trtp,
-      b.event
-    FROM 
-      tic_doc a
-    JOIN 
-      tic_docs b ON a.id = b.doc
-    left OUTER JOIN 
-      tic_eventx_v e ON b.event = e.id
-    JOIN 
-      cmn_parx_v p ON a.usr = p.id
-    left OUTER JOIN 
-      cmn_currx_v c ON b.curr = c.id
-    JOIN 
-      tic_docvrx_v d ON a.docvr = d.id
-    WHERE e.lang = '${lang || 'en'}'
-    and p.lang = '${lang || 'en'}'
-    and c.lang = '${lang || 'en'}'
-    and d.lang = '${lang || 'en'}'
-    GROUP BY 
-    a.id, 
-    a.tm, 
-    a.docvr, 
-    a.usr, 
-    p.code, 
-    p."text", 
-    b.event, 
-    e."text", 
-    e.begda, 
-    a.status, 
-    b.status, 
-    b.curr, 
-    c.code, 
-    d."text", 
-    trtp
-ORDER BY 
-    a.tm DESC
-  `
+      WHEN count(*) = 0 THEN false
+      ELSE true
+      END AS broj
+    from	tic_docpayment dp
+    where dp.status = 1
+    and dp.doc = a.id
+    ) paid,
+    to_timestamp(max(a.endtm), 'YYYYMMDDHH24MISS') < now() istekla,
+    coalesce((select dl.status
+    from	tic_docdelivery dl
+    where 	dl.doc = a.id
+    ), '0') delivery
+from	(			
+select 	du.id, du.tm, o."text" kanal, du.text npar, du.address addrpar, du.tel telpar, du.pib pipar, du.idnum, du.idpar, du.place plpar, 		
+    du.username, du.firstname, du.lastname, du.status,
+    e."text", ds.tax, ds.discount, ds."output", ds.potrazuje, ds.endtm, e.endda startda, e.endtm starttm, atp.code atp, ll.text venue
+from (
+      select p.text, p.address, p.site , p.tel , p.pib , p.idnum , p.place, p.id idpar,
+      u.username, u.firstname, u.lastname,
+            COALESCE(LENGTH(dd.tmrec), 0) nodelivery, LENGTH(dd.tmcour) fordelivery, LENGTH(dd.datdelivery) indelivery, 
+            d.*
+      from tic_doc d
+      join cmn_parx_v p  on d.usr = p.id and p.lang = '${lang || 'sr_cyr'}'
+      left join adm_user u on d.usersys = u.id
+      left join tic_docdelivery dd on dd.doc = d.id
+      ) as du
+      join tic_docs ds on du.id = ds.doc
+      join tic_artx_v ar on ds.art = ar.id
+      join tic_arttp atp on ar.tp = atp.id
+      join tic_eventx_v e on ds.event = e.id
+      join cmn_locx_v ll on e.loc = ll.id
+      join cmn_objx_v o on du.channel = o.id
+where       
+      ds.tgp is not null
+      and ds.taxrate is not null
+      and ds.price is not null
+      and ds.tax is not null 
+      and ds.discount is not null 
+    and ds."input" is not null 
+    and ds."output" is not null 
+    and ds.curr is not null 
+    and ds.currrate is not null 
+    and ds.duguje is not null
+    and ds.potrazuje is not null
+    and ds.leftcurr is not null
+    and ds.rightcurr is not null
+    and ds.status is not null
+    and ds.fee is not null 
+    and ds.nart is not null 
+    and length(ticket) >20 
+) a
+group by a.id, a.tm, a.kanal, a.npar, a.addrpar, a.telpar, a.pipar, a.idpar, a.plpar, a.idpar,		
+    a.username, a.firstname, a.lastname, a.status  
+) where 1=1  
+    ` + and1 + and2 + and3 + and4 + and5 + and6
   console.log("*-*-*-*-*-*-*-*-*-1111111 objId 111111111", sqlRecenica)
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
@@ -442,9 +573,9 @@ ORDER BY
 const getDocvrL = async (objName, lang) => {
   const sqlRecenica =
     `select aa.id , aa.site , aa.code , text, aa.valid, aa.lang, aa.grammcase,
-	      aa.tp, getValueById(aa.tp, 'tic_doctpx_v', 'code', '${lang || 'en'}') ctp , getValueById(aa.tp, 'tic_doctpx_v', 'text', '${lang || 'en'}') ntp
+	      aa.tp, getValueById(aa.tp, 'tic_doctpx_v', 'code', '${lang || 'sr_cyr'}') ctp , getValueById(aa.tp, 'tic_doctpx_v', 'text', '${lang || 'sr_cyr'}') ntp
   from	tic_docvrx_v aa
-  where aa.lang = '${lang || 'en'}'`
+  where aa.lang = '${lang || 'sr_cyr'}'`
   //console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
@@ -461,9 +592,9 @@ const getDocvrL = async (objName, lang) => {
 const getPrivilegeL = async (objName, lang) => {
   const sqlRecenica =
     `select aa.id , aa.site , aa.code , text, aa.limitirano, aa.valid, aa.lang, aa.popust, aa.domen, aa.uslov, aa.vrednost, aa.grammcase,
-	      aa.tp, getValueById(aa.tp, 'tic_privilegetpx_v', 'code', '${lang || 'en'}') ctp , getValueById(aa.tp, 'tic_privilegetpx_v', 'text', '${lang || 'en'}') ntp
+	      aa.tp, getValueById(aa.tp, 'tic_privilegetpx_v', 'code', '${lang || 'sr_cyr'}') ctp , getValueById(aa.tp, 'tic_privilegetpx_v', 'text', '${lang || 'sr_cyr'}') ntp
   from	tic_privilegex_v aa
-  where aa.lang = '${lang || 'en'}'`
+  where aa.lang = '${lang || 'sr_cyr'}'`
   console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
@@ -480,7 +611,7 @@ const getPrivilegediscountL = async (objName, objId, lang) => {
   const sqlRecenica =
     `
   select aa.id , aa.site , aa.privilege , aa.begda, aa.endda, aa.value, 
-	      aa.discount, getValueById(aa.discount, 'tic_discountx_v', 'code', '${lang || 'en'}') cdiscount , getValueById(aa.discount, 'tic_discountx_v', 'text', '${lang || 'en'}') ndiscount
+	      aa.discount, getValueById(aa.discount, 'tic_discountx_v', 'code', '${lang || 'sr_cyr'}') cdiscount , getValueById(aa.discount, 'tic_discountx_v', 'text', '${lang || 'sr_cyr'}') ndiscount
   from	tic_privilegediscount aa
   where aa.privilege = ${objId}
   `
@@ -500,7 +631,7 @@ const getPrivilegelinkL = async (objName, objId, lang) => {
   const sqlRecenica =
     `
   select aa.id , aa.site , aa.privilege2 , aa.begda, aa.endda, 
-	      aa.privilege1, getValueById(aa.privilege1, 'tic_privilegex_v', 'code', '${lang || 'en'}') cprivilege , getValueById(aa.privilege1, 'tic_privilegex_v', 'text', '${lang || 'en'}') nprivilege
+	      aa.privilege1, getValueById(aa.privilege1, 'tic_privilegex_v', 'code', '${lang || 'sr_cyr'}') cprivilege , getValueById(aa.privilege1, 'tic_privilegex_v', 'text', '${lang || 'sr_cyr'}') nprivilege
   from	tic_privilegelink aa
   where aa.privilege2 = ${objId}
   `
@@ -520,9 +651,9 @@ const getPrivilegecondL = async (objName, objId, lang) => {
   const sqlRecenica =
     `
   select aa.id , aa.site , aa.privilege , aa.begda, aa.endda, 
-	      aa.begcondtp, getValueById(aa.begcondtp, 'tic_condtpx_v', 'code', '${lang || 'en'}') cbegcondtp , getValueById(aa.begcondtp, 'tic_condtpx_v', 'text', '${lang || 'en'}') nbegcondtp,
+	      aa.begcondtp, getValueById(aa.begcondtp, 'tic_condtpx_v', 'code', '${lang || 'sr_cyr'}') cbegcondtp , getValueById(aa.begcondtp, 'tic_condtpx_v', 'text', '${lang || 'sr_cyr'}') nbegcondtp,
 	      aa.begcondition, aa.begvalue,
-	      aa.endcondtp, getValueById(aa.endcondtp, 'tic_condtpx_v', 'code', '${lang || 'en'}') cendcondtp , getValueById(aa.endcondtp, 'tic_condtpx_v', 'text', '${lang || 'en'}') nendcondtp,
+	      aa.endcondtp, getValueById(aa.endcondtp, 'tic_condtpx_v', 'code', '${lang || 'sr_cyr'}') cendcondtp , getValueById(aa.endcondtp, 'tic_condtpx_v', 'text', '${lang || 'sr_cyr'}') nendcondtp,
 	      aa.endcondition, aa.endvalue
   from	tic_privilegecond aa
   where aa.privilege = ${objId}
@@ -543,7 +674,7 @@ const getParprivilegeL = async (objName, objId, lang) => {
   const sqlRecenica =
     `
   select aa.id , aa.site , aa.par , aa.begda, aa.endda, maxprc, maxval,
-	      aa.privilege, getValueById(aa.privilege, 'tic_privilegex_v', 'code', '${lang || 'en'}') cprivilege , getValueById(aa.privilege, 'tic_privilegex_v', 'text', '${lang || 'en'}') nprivilege
+	      aa.privilege, getValueById(aa.privilege, 'tic_privilegex_v', 'code', '${lang || 'sr_cyr'}') cprivilege , getValueById(aa.privilege, 'tic_privilegex_v', 'text', '${lang || 'sr_cyr'}') nprivilege
   from	tic_parprivilege aa
   where aa.par = ${objId}
   `
@@ -562,9 +693,9 @@ const getParprivilegeL = async (objName, objId, lang) => {
 const getDiscountL = async (objName, lang) => {
   const sqlRecenica =
     `select aa.id , aa.site , aa.code , aa.text, aa.tp, aa.valid, aa.lang, aa.grammcase,
-  aa.tp, getValueById(aa.tp, 'tic_discounttpx_v', 'code', '${lang || 'en'}') ctp , getValueById(aa.tp, 'tic_discounttpx_v', 'text', '${lang || 'en'}') ntp
+  aa.tp, getValueById(aa.tp, 'tic_discounttpx_v', 'code', '${lang || 'sr_cyr'}') ctp , getValueById(aa.tp, 'tic_discounttpx_v', 'text', '${lang || 'sr_cyr'}') ntp
 from	tic_discountx_v aa
-where aa.lang = '${lang || 'en'}'`
+where aa.lang = '${lang || 'sr_cyr'}'`
   console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
@@ -589,9 +720,9 @@ where aa.usr = p.id
 and aa.curr  = c.id 
 and aa.docvr  = v.id 
 and ${item} = ${objId}
-and p.lang = '${lang || 'en'}'
-and c.lang = '${lang || 'en'}'
-and v.lang = '${lang || 'en'}'
+and p.lang = '${lang || 'sr_cyr'}'
+and c.lang = '${lang || 'sr_cyr'}'
+and v.lang = '${lang || 'sr_cyr'}'
   `
   console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
 
@@ -619,9 +750,9 @@ and aa.curr  = c.id
 and aa.docvr  = v.id 
 and ${item1} = ${objId1}
 and ${item2} = ${objId2}
-and p.lang = '${lang || 'en'}'
-and c.lang = '${lang || 'en'}'
-and v.lang = '${lang || 'en'}'
+and p.lang = '${lang || 'sr_cyr'}'
+and c.lang = '${lang || 'sr_cyr'}'
+and v.lang = '${lang || 'sr_cyr'}'
   `
   console.log("*-*-*-*-*-*-*-*-*-getTicDocByNumV21111111", sqlRecenica)
 
@@ -649,8 +780,8 @@ const getTicDocsByNumV = async (item, objId, lang) => {
   and aa.art  = a.id 
   and aa.curr  = c.id 
   and ${item} = ${objId}
-  and p.lang = '${lang || 'en'}'
-  and c.lang = '${lang || 'en'}'
+  and p.lang = '${lang || 'sr_cyr'}'
+  and c.lang = '${lang || 'sr_cyr'}'
   `
   console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
 
@@ -692,7 +823,7 @@ const getCmnSpedicijaByTxtV = async (objName, item, objId, lang) => {
   from  cmn_partp aa, cmn_parx_v a
   where  aa.id = a.tp
   and ${item} = '${objId}'
-  and a.lang = '${lang || 'en'}'
+  and a.lang = '${lang || 'sr_cyr'}'
   `
   console.log("*-*-*-*-*-*-*-*-*-getCmnSpedicijaByTxtV-1111111111111111", sqlRecenica)
 
@@ -713,18 +844,18 @@ const getEventL = async (objName, lang) => {
   select aa.id , aa.site , aa.code , aa.text, aa.text textx, aa.begda, aa.endda, aa.begtm, aa.endtm, aa.status, aa.descript, aa.note, 
         aa.lang, aa.grammcase, aa.loc, aa.tmp, aa.season,
         aa.tp, tp.code ctp, tp.text ntp,
-        aa.event, getValueById(aa.event, 'tic_eventx_v', 'code', '${lang || 'en'}') cevent , getValueById(aa.event, 'tic_eventx_v', 'text', '${lang || 'en'}') nevent,
+        aa.event, getValueById(aa.event, 'tic_eventx_v', 'code', '${lang || 'sr_cyr'}') cevent , getValueById(aa.event, 'tic_eventx_v', 'text', '${lang || 'sr_cyr'}') nevent,
         aa.ctg, ctg.code cctg, ctg.text nctg,
-        aa.par, getValueById(aa.par, 'cmn_parx_v', 'code', '${lang || 'en'}') cpar , getValueById(aa.par, 'cmn_parx_v', 'text', '${lang || 'en'}') npar,
+        aa.par, getValueById(aa.par, 'cmn_parx_v', 'code', '${lang || 'sr_cyr'}') cpar , getValueById(aa.par, 'cmn_parx_v', 'text', '${lang || 'sr_cyr'}') npar,
         aa.loc, l.code cloc , l.text nloc, l.tp tploc
   from	tic_eventx_v aa, tic_eventtpx_v tp, tic_eventctgx_v ctg, cmn_locx_v l
-  where aa.lang = '${lang || 'en'}'
+  where aa.lang = '${lang || 'sr_cyr'}'
   and aa.ctg = ctg.id
   and aa.tp = tp.id
   and aa.loc = l.id
-  and tp.lang = '${lang || 'en'}'
-  and ctg.lang = '${lang || 'en'}'
-  and l.lang = '${lang || 'en'}'
+  and tp.lang = '${lang || 'sr_cyr'}'
+  and ctg.lang = '${lang || 'sr_cyr'}'
+  and l.lang = '${lang || 'sr_cyr'}'
   `
   console.log("**************************getEventL******************************", sqlRecenica)
   let result = await db.query(sqlRecenica);
@@ -744,16 +875,16 @@ const getEventTmpL = async (objName, lang) => {
   select aa.id , aa.site , aa.code , aa.text, aa.text textx, aa.begda, aa.endda, aa.begtm, aa.endtm, aa.status, aa.descript, aa.note, 
         aa.lang, aa.grammcase, aa.loc, aa.tmp,
         aa.tp, tp.code ctp, tp.text ntp,
-        aa.event, getValueById(aa.event, 'tic_eventx_v', 'code', '${lang || 'en'}') cevent , getValueById(aa.event, 'tic_eventx_v', 'text', '${lang || 'en'}') nevent,
+        aa.event, getValueById(aa.event, 'tic_eventx_v', 'code', '${lang || 'sr_cyr'}') cevent , getValueById(aa.event, 'tic_eventx_v', 'text', '${lang || 'sr_cyr'}') nevent,
         aa.ctg, ctg.code cctg, ctg.text nctg,
-        aa.par, getValueById(aa.par, 'cmn_parx_v', 'code', '${lang || 'en'}') cpar , getValueById(aa.par, 'cmn_parx_v', 'text', '${lang || 'en'}') npar
+        aa.par, getValueById(aa.par, 'cmn_parx_v', 'code', '${lang || 'sr_cyr'}') cpar , getValueById(aa.par, 'cmn_parx_v', 'text', '${lang || 'sr_cyr'}') npar
   from	tic_eventx_v aa, tic_eventtpx_v tp, tic_eventctgx_v ctg
-  where aa.lang = '${lang || 'en'}'
+  where aa.lang = '${lang || 'sr_cyr'}'
   and aa.ctg = ctg.id
   and aa.tp = tp.id
   and aa.tmp = 1
-  and tp.lang = '${lang || 'en'}'
-  and ctg.lang = '${lang || 'en'}'
+  and tp.lang = '${lang || 'sr_cyr'}'
+  and ctg.lang = '${lang || 'sr_cyr'}'
   `
   console.log("**************************getEventL******************************", sqlRecenica)
   let result = await db.query(sqlRecenica);
@@ -777,11 +908,11 @@ const getEventProdajaL = async (objName, lang) => {
         aa.ctg, ctg.code cctg, ctg.text nctg,
         aa.loc
   from	tic_eventx_v aa, tic_eventtpx_v tp, tic_eventctgx_v ctg
-  where aa.lang = '${lang || 'en'}'
+  where aa.lang = '${lang || 'sr_cyr'}'
   and aa.ctg = ctg.id
   and aa.tp = tp.id
-  and ctg.lang = '${lang || 'en'}'
-  and tp.lang = '${lang || 'en'}'
+  and ctg.lang = '${lang || 'sr_cyr'}'
+  and tp.lang = '${lang || 'sr_cyr'}'
   `
   console.log("**************************getEventProdajaL******************************", sqlRecenica)
   let result = await db.query(sqlRecenica);
@@ -804,7 +935,7 @@ const getEventAttsDDL = async (objName, objId, par1, lang) => {
         aa.tp, t.code ctp, t.text ntp,
         aa.event, aa.ctg, aa.loc
   from	tic_eventx_v aa, tic_event e, tic_eventtp t
-  where aa.lang = '${lang || 'en'}'
+  where aa.lang = '${lang || 'sr_cyr'}'
   and e.id = ${objId}
   and aa.par = e.par
   and aa.tp = t.id
@@ -834,7 +965,7 @@ const getEventlinkL = async (objName, objId, lang) => {
   left join (
     select *
     from	tic_eventx_v a2
-    where 	a2.lang = '${lang || 'en'}'
+    where 	a2.lang = '${lang || 'sr_cyr'}'
   ) aa2
   on aa.event1 = aa2.id`
   //const [rows] = await db.query(sqlRecenic);
@@ -860,7 +991,7 @@ const getEventCena = async (objName, objId, lang) => {
       THEN a.value::numeric
       ELSE -1
     END = c.id
-    and c.lang = '${lang || 'en'}'
+    and c.lang = '${lang || 'sr_cyr'}'
     and a.art = ${objId}
     `
   console.log(sqlRecenica, "#######################getEventCena###########################")
@@ -883,10 +1014,10 @@ const getEventattL = async (objName, lang) => {
     `
   select aa.id , aa.site , aa.code , aa.text, aa.valid, aa.ddlist, aa.link, aa.linktp, aa.description,
         aa.lang, aa.grammcase,
-        aa.inputtp, getValueById(aa.inputtp, 'cmn_inputtpx_v', 'code', '${lang || 'en'}') cinputtp, getValueById(aa.inputtp, 'cmn_inputtpx_v', 'text', '${lang || 'en'}') ninputtp,
-        aa.tp, getValueById(aa.tp, 'tic_eventatttpx_v', 'code', '${lang || 'en'}') ctp, getValueById(aa.tp, 'tic_eventatttpx_v', 'text', '${lang || 'en'}') ntp
+        aa.inputtp, getValueById(aa.inputtp, 'cmn_inputtpx_v', 'code', '${lang || 'sr_cyr'}') cinputtp, getValueById(aa.inputtp, 'cmn_inputtpx_v', 'text', '${lang || 'sr_cyr'}') ninputtp,
+        aa.tp, getValueById(aa.tp, 'tic_eventatttpx_v', 'code', '${lang || 'sr_cyr'}') ctp, getValueById(aa.tp, 'tic_eventatttpx_v', 'text', '${lang || 'sr_cyr'}') ntp
   from	tic_eventattx_v aa
-  where aa.lang = '${lang || 'en'}'
+  where aa.lang = '${lang || 'sr_cyr'}'
   `
   console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
 
@@ -904,13 +1035,13 @@ const getEventattL = async (objName, lang) => {
 const getEventattsL = async (objName, objId, lang) => {
   const sqlRecenica =
     `select aa.id , aa.site , aa.event , aa.value, aa.valid, a2.ddlist, aa.text, aa.color, aa.icon,aa.condition, aa.link, aa.minfee,
-        a2.inputtp, getValueById(a2.inputtp, 'cmn_inputtpx_v', 'code', '${lang || 'en'}') cinputtp, getValueById(a2.inputtp, 'cmn_inputtpx_v', 'text', '${lang || 'en'}') ninputtp,
-        a2.tp, getValueById(a2.tp, 'tic_eventatttpx_v', 'code', '${lang || 'en'}') cttp, getValueById(a2.tp, 'tic_eventatttpx_v', 'text', '${lang || 'en'}') nttp,
+        a2.inputtp, getValueById(a2.inputtp, 'cmn_inputtpx_v', 'code', '${lang || 'sr_cyr'}') cinputtp, getValueById(a2.inputtp, 'cmn_inputtpx_v', 'text', '${lang || 'sr_cyr'}') ninputtp,
+        a2.tp, getValueById(a2.tp, 'tic_eventatttpx_v', 'code', '${lang || 'sr_cyr'}') cttp, getValueById(a2.tp, 'tic_eventatttpx_v', 'text', '${lang || 'sr_cyr'}') nttp,
         aa.att, a2.code ctp, a2.text ntp
   from	tic_eventatts aa, tic_eventattx_v a2
   where aa.event = ${objId}
   and   aa.att = a2.id
-  and   a2.lang = '${lang || 'en'}'
+  and   a2.lang = '${lang || 'sr_cyr'}'
   order by a2.code
   `
   console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
@@ -929,14 +1060,14 @@ const getEventattsL = async (objName, objId, lang) => {
 const getEventattstpL = async (objName, objId, par1, lang) => {
   const sqlRecenica =
     `select aa.id , aa.site , aa.event , aa.value, aa.valid, a2.ddlist, aa.text, aa.color, aa.icon,aa.condition, aa.link, aa.minfee,
-        a2.inputtp, getValueById(a2.inputtp, 'cmn_inputtpx_v', 'code', '${lang || 'en'}') cinputtp, getValueById(a2.inputtp, 'cmn_inputtpx_v', 'text', '${lang || 'en'}') ninputtp,
-        a2.tp, getValueById(a2.tp, 'tic_eventatttpx_v', 'code', '${lang || 'en'}') cttp, getValueById(a2.tp, 'tic_eventatttpx_v', 'text', '${lang || 'en'}') nttp,
+        a2.inputtp, getValueById(a2.inputtp, 'cmn_inputtpx_v', 'code', '${lang || 'sr_cyr'}') cinputtp, getValueById(a2.inputtp, 'cmn_inputtpx_v', 'text', '${lang || 'sr_cyr'}') ninputtp,
+        a2.tp, getValueById(a2.tp, 'tic_eventatttpx_v', 'code', '${lang || 'sr_cyr'}') cttp, getValueById(a2.tp, 'tic_eventatttpx_v', 'text', '${lang || 'sr_cyr'}') nttp,
         aa.att, a2.code ctp, a2.text ntp, a2.description
   from	tic_eventatts aa, tic_eventattx_v a2
   where aa.event = ${objId}
   and   case ${par1} when '-1' then a2.tp else ${par1} end = a2.tp
   and   aa.att = a2.id
-  and   a2.lang = '${lang || 'en'}'
+  and   a2.lang = '${lang || 'sr_cyr'}'
   order by a2.code
   `
   console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
@@ -956,12 +1087,12 @@ const getEventobjL = async (objName, objId, lang) => {
   const sqlRecenica =
     `
   select aa.id , aa.site , aa.event , aa.begda, aa.endda, aa.begtm, aa.endtm, a2.lang , a2.grammcase , aa.color, aa.icon,
-        aa.objtp, getValueById(aa.objtp, 'cmn_objtpx_v', 'code', '${lang || 'en'}') cobjtp, getValueById(aa.objtp, 'cmn_objtpx_v', 'text', '${lang || 'en'}') nobjtp,
+        aa.objtp, getValueById(aa.objtp, 'cmn_objtpx_v', 'code', '${lang || 'sr_cyr'}') cobjtp, getValueById(aa.objtp, 'cmn_objtpx_v', 'text', '${lang || 'sr_cyr'}') nobjtp,
         aa.obj, a2.code cobj, a2.text nobj
   from	tic_eventobj aa, cmn_objx_v a2
   where aa.event = ${objId}
   and   aa.obj = a2.id
-  and   a2.lang = '${lang || 'en'}'
+  and   a2.lang = '${lang || 'sr_cyr'}'
   `
   console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
 
@@ -979,7 +1110,7 @@ const getEventobjL = async (objName, objId, lang) => {
 const getEventtpsL = async (objName, objId, lang) => {
   const sqlRecenica =
     `select aa.id , aa.site , aa.eventtp , aa.value, aa.begda, aa.endda, 
-        aa.att, getValueById(aa.att, 'tic_eventattx_v', 'code', '${lang || 'en'}') catt, getValueById(aa.att, 'tic_eventattx_v', 'text', '${lang || 'en'}') natt
+        aa.att, getValueById(aa.att, 'tic_eventattx_v', 'code', '${lang || 'sr_cyr'}') catt, getValueById(aa.att, 'tic_eventattx_v', 'text', '${lang || 'sr_cyr'}') natt
   from	tic_eventtps aa
   where aa.eventtp = ${objId}`
   //const [rows] = await db.query(sqlRecenic);
@@ -1006,7 +1137,7 @@ const getEventagendaL = async (objName, objId, lang) => {
   left join (
     select *
     from	tic_agendax_v a2
-    where 	a2.lang = '${lang || 'en'}'
+    where 	a2.lang = '${lang || 'sr_cyr'}'
   ) aa2
   on aa.agenda = aa2.id`
   //const [rows] = await db.query(sqlRecenic);
@@ -1025,7 +1156,7 @@ const getEventagendaL = async (objName, objId, lang) => {
 const getEventlocL = async (objName, objId, lang) => {
   const sqlRecenica =
     `select aa.id , aa.site , aa.event , aa.begda, aa.endda, 
-        aa.loc, getValueById(aa.loc, 'cmn_locx_v', 'code', '${lang || 'en'}') cloc, getValueById(aa.loc, 'cmn_locx_v', 'text', '${lang || 'en'}') nloc
+        aa.loc, getValueById(aa.loc, 'cmn_locx_v', 'code', '${lang || 'sr_cyr'}') cloc, getValueById(aa.loc, 'cmn_locx_v', 'text', '${lang || 'sr_cyr'}') nloc
   from	tic_eventloc aa
   where aa.event = ${objId}`
   let result = await db.query(sqlRecenica);
@@ -1042,13 +1173,13 @@ const getEventlocL = async (objName, objId, lang) => {
 const getEventlocTpL = async (objName, objId, par1, lang) => {
   const sqlRecenica =
     `select aa.id , aa.site , aa.event , aa.begda, aa.endda, aa.loc,
-        b.code cloc, b.text nloc, b.valid, b.graftp, b.latlongs, b.radius, b.color, b.fillcolor, b.originfillcolor, b.rownum, b.grammcase, b.text textx,
-        b.tp loctp, getValueById(b.tp, 'cmn_loctpx_v', 'code', '${lang || 'en'}') cloctp, getValueById(b.tp, 'cmn_loctpx_v', 'text', '${lang || 'en'}') nloctp
+        b.code cloc, b.text nloc, b.valid, b.graftp, b.latlongs, b.radius, coalesce(aa.color, b.color) color, b.fillcolor, b.originfillcolor, b.rownum, b.grammcase, b.text textx,
+        b.tp loctp, getValueById(b.tp, 'cmn_loctpx_v', 'code', '${lang || 'sr_cyr'}') cloctp, getValueById(b.tp, 'cmn_loctpx_v', 'text', '${lang || 'sr_cyr'}') nloctp
   from  tic_eventloc aa, cmn_locx_v b
   where aa.event = ${objId}
   and aa.loc = b.id
   and ( b.tp = CASE WHEN ${par1} = -1 THEN b.tp  ELSE ${par1}  END )
-  and b.lang = '${lang || 'en'}'`
+  and b.lang = '${lang || 'sr_cyr'}'`
 
   console.log("*-*-*-*-*-*-*-*-*- getEventstL @@@@@@@@@@@@@@@@@", sqlRecenica)
   let result = await db.query(sqlRecenica);
@@ -1065,7 +1196,7 @@ const getEventlocTpL = async (objName, objId, par1, lang) => {
 const getEventcenatpL = async (objName, objId, lang) => {
   const sqlRecenica =
     `select aa.id , aa.site , aa.event , aa.begda, aa.endda, 
-        aa.cenatp, getValueById(aa.cenatp, 'tic_cenatpx_v', 'code', '${lang || 'en'}') ccenatp, getValueById(aa.cenatp, 'tic_cenatpx_v', 'text', '${lang || 'en'}') ncenatp
+        aa.cenatp, getValueById(aa.cenatp, 'tic_cenatpx_v', 'code', '${lang || 'sr_cyr'}') ccenatp, getValueById(aa.cenatp, 'tic_cenatpx_v', 'text', '${lang || 'sr_cyr'}') ncenatp
   from	tic_eventcenatp aa
   where aa.event = ${objId}`
   //const [rows] = await db.query(sqlRecenic);
@@ -1084,9 +1215,9 @@ const getEventcenatpL = async (objName, objId, lang) => {
 const getSeatL = async (objName, lang) => {
   const sqlRecenica =
     `select aa.id , aa.site , aa.code , text, aa.valid, aa.lang, aa.grammcase,
-	      aa.tp, getValueById(aa.tp, 'tic_seattpx_v', 'code', '${lang || 'en'}') ctp , getValueById(aa.tp, 'tic_seattpx_v', 'text', '${lang || 'en'}') ntp
+	      aa.tp, getValueById(aa.tp, 'tic_seattpx_v', 'code', '${lang || 'sr_cyr'}') ctp , getValueById(aa.tp, 'tic_seattpx_v', 'text', '${lang || 'sr_cyr'}') ntp
   from	tic_seatx_v aa
-  where aa.lang = '${lang || 'en'}'`
+  where aa.lang = '${lang || 'sr_cyr'}'`
   //const [rows] = await db.query(sqlRecenic);
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
@@ -1132,10 +1263,35 @@ const getDocdeliveryL = async (objName, objId, lang) => {
   where  a.doc = d.id 
   and d.usr = b.id 
   and a.courier = p.id 
-  and b.lang = '${lang || 'en'}'
-  and p.lang = '${lang || 'en'}'
+  and b.lang = '${lang || 'sr_cyr'}'
+  and p.lang = '${lang || 'sr_cyr'}'
   group by a.id, a.site , a.doc , a.courier , p."text", a.adress , a.amount , a.dat , a.datdelivery ,
   		a.status , a.note , a.parent , b.code, b."text"
+  `
+  // where aa.event = ${objId}
+  // `      
+  console.log("*-*-*-*-*-*-*-*-*- getEventstL 1111111111111111", sqlRecenica)
+  let result = await db.query(sqlRecenica);
+  let rows = result.rows;
+  if (Array.isArray(rows)) {
+    return rows;
+  } else {
+    throw new Error(
+      `Greška pri dohvatanju slogova iz baze - abs find: ${rows}`
+    );
+  }
+};
+
+const getDocdeliveryLL = async (objName, objId, lang) => {
+  const sqlRecenica =
+    `
+    select a.id, a.site , a.doc , a.courier ,  a.adress , a.amount , a.dat , a.datdelivery ,
+          a.status , a.note , a.parent , a.country, a.zip , a.city, a.tmrec, a.tmship, a.tmcour, a.tmbck, a.usr,
+          p.code cpar, p."text" npar, p1."text" ncourier 
+    from  tic_docdelivery a
+    join	tic_doc d on a.doc = d.id
+    join 	cmn_parx_v p on d.usr = p.id and p.lang = '${lang || 'sr_cyr'}'
+    join 	cmn_parx_v p1 on a.courier = p1.id and p1.lang = '${lang || 'sr_cyr'}'
   `
   // where aa.event = ${objId}
   // `      
@@ -1348,9 +1504,9 @@ const getLocLLV = async (objName, objId, par1, lang) => {
   const sqlRecenica =
     `
     select l.id, l.site, l.code, l.text , l.valid, l.longtext, l.lang, l.grammcase, l.text textx, l.color, l.icon, 
-            l.tp, getValueById(l.tp, 'cmn_loctpx_v', 'code', '${lang || 'en'}') ctp, getValueById(l.tp, 'cmn_loctpx_v', 'text', '${lang || 'en'}') ntp
+            l.tp, getValueById(l.tp, 'cmn_loctpx_v', 'code', '${lang || 'sr_cyr'}') ctp, getValueById(l.tp, 'cmn_loctpx_v', 'text', '${lang || 'sr_cyr'}') ntp
       from	cmn_locx_v l, cmn_loclink ll
-      where l.lang = '${lang || 'en'}'
+      where l.lang = '${lang || 'sr_cyr'}'
       and l.tp = (CASE WHEN ${objId} = -1 then l.tp else ${objId} end)
       and l.id = ll.loc1
       and ll.loc2 = ${par1}
@@ -1371,8 +1527,8 @@ const getLocLLV = async (objName, objId, par1, lang) => {
 const getTicLoclinkV = async (objName, objId, par1, lang) => {
   const sqlRecenica =
     `select  l.id, l.site, l.loctp2, l.loc2, l.tp,
-            l.loctp1, getValueById(l.loctp1, 'cmn_loctpx_v', 'code', '${lang || 'en'}') cloctp1, getValueById(l.loctp1, 'cmn_loctpx_v', 'text', '${lang || 'en'}') nloctp1,
-            l.loc1, getValueById(l.loc1, 'cmn_locx_v', 'code', '${lang || 'en'}') cloc1, getValueById(l.loc1, 'cmn_locx_v', 'text', '${lang || 'en'}') nloc1,   		 
+            l.loctp1, getValueById(l.loctp1, 'cmn_loctpx_v', 'code', '${lang || 'sr_cyr'}') cloctp1, getValueById(l.loctp1, 'cmn_loctpx_v', 'text', '${lang || 'sr_cyr'}') nloctp1,
+            l.loc1, getValueById(l.loc1, 'cmn_locx_v', 'code', '${lang || 'sr_cyr'}') cloc1, getValueById(l.loc1, 'cmn_locx_v', 'text', '${lang || 'sr_cyr'}') nloc1,   		 
             l.begda, l.endda, l.val, l.hijerarhija, l.onoff
     from    tic_loclink l
     where 	l.loc2  = ${objId}
@@ -1439,6 +1595,7 @@ export default {
   getTicDocdeliveryByNumV,
   getCmnSpedicijaByTxtV,
   getDocdeliveryL,
+  getDocdeliveryLL,
   getEventAttsDDL,
   getLocLLV,
   getTicLoclinkV,

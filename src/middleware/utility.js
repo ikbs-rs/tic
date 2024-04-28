@@ -65,7 +65,7 @@ export const uniqueId = async () => {
     data_center_id: dataCentar,
     sequence: data,
   });
-  await new Promise((resolve) => setTimeout(resolve, 0.5));
+  await new Promise((resolve) => setTimeout(resolve, 1.5));
 
   return snowflake.nextId();
 };
@@ -87,7 +87,7 @@ export const transactionId1 = async (par) => {
     data_center_id: par,
     sequence: data,
   });
-  await new Promise((resolve) => setTimeout(resolve, 0.5));
+  await new Promise((resolve) => setTimeout(resolve, 1.5));
   console.log((performance.now()*snowflake.nextId()).toString(), "##########################snowflake.nextId()#############################", snowflake.nextId())
   return snowflake.nextId().toString().slice(0, 8);
 };

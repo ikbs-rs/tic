@@ -22,7 +22,7 @@ const getListaC = async (objName, stm, sqlstmt, lang) => {
   }
 };
 
-const getLista = async (objName, stm, objId, par1, lang) => {
+const getLista = async (objName, stm, objId, par1, lang, par2, par3, par4, par5, par6, par7, par8, par9, par10) => {
   try {
     console.log(objId, "*******Helper!!!!!!*********", stm);
     let result = {};
@@ -64,7 +64,7 @@ const getLista = async (objName, stm, objId, par1, lang) => {
         result = await vModel.getDocvrL(objName, lang);
         break;
       case "tic_transaction_v":
-        result = await vModel.getTransactionL(objName, lang);
+        result = await vModel.getTransactionL(objName, lang, par1,par2, par3, par4, par5, par6, par7, par8, par9, par10);
         break;
       case "tic_docs_v":
         result = await vModel.getDocsL(objName, objId, lang);
@@ -150,6 +150,9 @@ const getLista = async (objName, stm, objId, par1, lang) => {
       case "tic_docdelivery_v":
         result = await vModel.getDocdeliveryL(objName, objId, lang);
         break;
+        case "tic_docdeliveryl_v":
+          result = await vModel.getDocdeliveryLL(objName, objId, lang);
+          break;        
       case "tic_eventattsdd_v":
         result = await vModel.getEventAttsDDL(objName, objId, par1, lang);
         break;

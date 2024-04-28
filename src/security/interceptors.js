@@ -29,7 +29,7 @@ export const checkJwt = async (req, res, next) => {
         console.log("*-*-*-*-*-checkJwtUrl*-*-*-*-*3333*-*", checkJwtUrl)
         const response = await axios.post(`${checkJwtUrl}`, {}, {
           headers: { Authorization: `Bearer ${token}` },
-          timeout: 500 // vreme za koje se očekuje odgovor od udaljenog servera (u milisekundama)
+          timeout: 2500 // vreme za koje se očekuje odgovor od udaljenog servera (u milisekundama)
         });
         // provera statusa odgovora
         console.log(response.status, "*-*-*-*-*-response*-*-*-*-**-*", response.data.success)

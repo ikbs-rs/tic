@@ -410,9 +410,16 @@ const entitiesInfo =
 			"status": "string",
 			"note": "string",
 			"parent": "number",
-			"country": "number",
+			"country": "string",
 			"zip": "string",
-			"city": "number"  
+			"city": "string",
+			"tmrec": "string",
+			"tmship": "string",
+			"tmcour": "string",
+			"tmbck": "string",
+			"usr": "number",
+			"tel": "string",
+			"email": "string"			  
 		}
 	},	
 	"tic_docpayment": {
