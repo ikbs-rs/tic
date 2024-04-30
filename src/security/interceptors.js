@@ -66,6 +66,7 @@ export const checkPermissions = (par1 = "1", par2 = "1") => {
       const objName = req.objName;
       const userId = req.userId;
       const jwtServer = process.env.JWT_URL
+      console.log(objName, userId, "######", jwtServer)
       if (jwtServer === "LOCAL") {
         // Proveru prava korisnika dalje obavlja obicna funkcija
         if (await roll.proveraDozvola(userId, objName, par1, par2)) {

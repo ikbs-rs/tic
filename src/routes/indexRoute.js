@@ -73,7 +73,9 @@ router.use('/tic/eventobj', checkPermissions(), abstruct)
 router.use('/tic/events', checkPermissions(), abstruct) 
 router.use('/tic/eventtps', checkPermissions(), abstruct)
 router.use('/tic/file', checkPermissions(), fileRouter)
+
 router.use('/tic/esir', checkPermissions(), esirRouter)
+
 router.use('/tic/naime', checkPermissions(), abstruct) 
 router.use('/tic/parprivilege', checkPermissions(), abstruct) 
 

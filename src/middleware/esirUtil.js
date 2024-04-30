@@ -1,4 +1,5 @@
 const assembleEsirInvoicesRequestBody = (ticInvoice) => {
+    console.log(ticInvoice, "0 ticInvoice 0000000000")
     return {
         // advancePaid: null,  //?? Koristi se za izdavanje zavrsnog avansnog racuna, opcioni parametar, sadrzi ukupno placeni avans
         // advanceTax: null,  //?? Koristi se za izdavanje zavrsnog avansnog racuna, opcioni parametar, sadrzi vrednost poreza na avans
