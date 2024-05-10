@@ -13,7 +13,6 @@ const postEsirInvoices = async (pBody) => {
         const body = esirUtil.assembleEsirInvoicesRequestBody(pBody);
         const result = await Esir.postEsirInvoices(ESIR_INVOICES_URL, body, config);
   
-        console.log(result)
         return result.data;
     } catch (err) {
         throw new Error(`esirHelper - Greška u POST-u EsirInvoices: ${err.message}`);
