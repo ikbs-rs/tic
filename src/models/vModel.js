@@ -826,6 +826,25 @@ const getTicDocdeliveryByNumV = async (item, objId, lang) => {
     );
   }
 };
+const getTransactionsByNumV = async (item, objId, lang) => {
+  const sqlRecenica =
+    `
+  select aa.*
+  from  tic_docs aa
+  where  ${item} = ${objId}
+  `
+  console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
+
+  let result = await db.query(sqlRecenica);
+  let rows = result.rows;
+  if (Array.isArray(rows)) {
+    return rows;
+  } else {
+    throw new Error(
+      `Greška pri dohvatanju slogova iz baze - abs find: ${rows}`
+    );
+  }
+};
 
 const getTicDocpaymentByNumV = async (item, objId, lang) => {
   const sqlRecenica =
@@ -1577,6 +1596,35 @@ const getTicLoclinkV = async (objName, objId, par1, lang) => {
   }
 };
 
+  const getTicEventchpermissV = async (objName, objId, par1, lang) => {
+    const sqlRecenica =
+      `select o.id, o.code, o."text", e."event" 
+      from tic_eventobj e, cmn_objx_v o
+      where e.obj = o.id
+      and e.event = ${objId}
+      and o.id in (
+        select s.obj
+        from adm_userpermiss p, adm_rollx_v r, adm_rollstr s, cmn_objx_v o, adm_user u
+        where r.id = p.roll
+        and r.strukturna = 'D'
+        and r.xparam = 'X'
+        and r.id = s.roll
+        and s.obj = o.id
+        and p.usr = u.id
+        AND u.id = CASE WHEN ${par1} = 1 THEN u.id ELSE ${par1} END
+        )
+      `
+    console.log(sqlRecenica, "!!!!!!!!!!!***********************getTicEventpermiss***********************!!!!!!!!!!!!!!!!!!!!!!!!!")
+    const result = await db.query(sqlRecenica);
+    const rows = result.rows;
+    if (Array.isArray(rows)) {
+      return rows;
+    } else {
+      throw new Error(
+        `Greška pri dohvatanju slogova iz baze - abs find: ${rows}`
+      );
+    }
+  };  
 export default {
   getListaC,
   getAgendaL,
@@ -1631,4 +1679,6 @@ export default {
   getEventAttsDDL,
   getLocLLV,
   getTicLoclinkV,
+  getTransactionsByNumV,
+  getTicEventchpermissV,
 };
