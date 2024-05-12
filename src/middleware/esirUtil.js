@@ -12,7 +12,7 @@ const assembleEsirInvoicesRequestBody = (ticInvoice) => {
             cashier: ticInvoice?.cashier,//??
             // dateAndTimeOfIssue: ticInvoice?.date,  //tic_doc.date
             invoiceNumber: ticInvoice?.broj,     //tic_doc.broj
-            invoiceType: "Normal", //??
+            invoiceType: "Training", //??
             referentDocumentDT: ticInvoice?.referentDocumentDT,     //?  vreme originalnog računa, ovo se popunjava za transactionType Refund
             referentDocumentNumber: ticInvoice?.referentDocumentNumber,  //broj originalnog računa, ovo se popunjava za transactionType Refund
             transactionType: ticInvoice?.transactionType, //(Sale or Refund)
