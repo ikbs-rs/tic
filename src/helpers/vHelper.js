@@ -162,6 +162,9 @@ const getLista = async (objName, stm, objId, par1, lang, par2, par3, par4, par5,
       case "tic_loclinkll_v":
         result = await vModel.getTicLoclinkV(objName, objId, par1, lang);
         break;
+      case "tic_eventchpermiss_v":
+        result = await vModel.getTicEventchpermissV(objName, objId, par1, lang);
+        break;
       default:
         console.error("vHelper: Pogresan naziv za view-a");
     }
@@ -258,6 +261,8 @@ const getListaByNum = async (objName, stm, item, objId, lang) => {
         break;
       case "tic_docpayment_v":
         var result = await vModel.getTicDocpaymentByNumV(item, objId, lang);
+      case "tic_transactions_v":
+        var result = await vModel.getTransactionsByNumV(item, objId, lang);
         break;
       default:
         console.error("Pogresan naziv za view, getListaByNum");
