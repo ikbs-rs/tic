@@ -368,7 +368,9 @@ const entitiesInfo =
 		"timecreation": "string",
 		"storno": "number",
 		"year": "number",
-		"channel": "number"
+		"channel": "number",
+		"usersys": "number",
+		"endtm": "string"
 	  }
 	},
 	"tic_docb": {
@@ -460,7 +462,13 @@ const entitiesInfo =
 		"par": "number",
 		"descript": "string",
 		"storno": "string",
-		"nart": "string"
+		"nart": "string",
+		"row": "string",
+		"label": "string",
+		"seat": "string",
+		"vreme": "number",
+		"ticket": "string",
+		"services": "string"
 	  }
 	},
 	"tic_docslink": {
