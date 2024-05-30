@@ -1,5 +1,5 @@
 import abstractModel from "../models/Abstruct.js";
-import { uniqueId, uniqiueUUID, transactionId } from "../middleware/utility.js";
+import { uniqueId, uniqiueUUID, transactionId, randomTenDigit } from "../middleware/utility.js";
 import abstructQuery from "../middleware/model/abstructQuery.js";
 import { getToken } from "../security/jwt/tokenJWT.js";
 import bcrypt from "bcryptjs";
@@ -24,12 +24,19 @@ const add = async (objName, objData) => {
       const hashedPassword = await bcrypt.hash(objData.password, saltRounds);
       objData.password = hashedPassword;
     }
+    // Mozda mi ovo ne treba jer dolazi sa fronta !!!
+    console.log(objName, "@ 00 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@", objData)
+    if (objName === "tic_doc") {
+      const pBroj = await randomTenDigit(objData.id)
+      objData.broj = pBroj;
+    }
+    console.log(objName, "@ 01 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@", objData.broj)
 
     const sqlQuery = await abstructQuery.getInsertQuery(objName, objData);
 
     const result = await abstractModel.add(sqlQuery);
 
-    console.log(objName, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@", objData)
+    console.log(objName, "@ 03 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@", objData)
 
     if (objName === "tic_doc" || objName === "tic_eventatts") {
       return objData

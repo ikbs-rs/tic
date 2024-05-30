@@ -101,6 +101,12 @@ const postFunction = async (
       case "tic_copyeventatts_s":
         result = await sModel.copyEventatts(objId1, requestBody);
         break;
+      case "tic_prodaja_s": // obrada zaglavlja na prodaji 
+        result = await sModel.obradaProdaja(par1, par2, requestBody);
+        break;
+      case "tic_prodajas_s": // obrada stavke na prodaji
+        result = await sModel.obradaProdajas(par1, par2);
+        break;
       default:
         console.error("sHelper: Pogresan naziv za view-a - " + stm);
     }

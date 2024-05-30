@@ -305,13 +305,13 @@ const copyEventSettings = async (eventId, tmpId, begda, endda) => {
     for (const row of eventAttsRows.rows) {
       let pValue = row.value
       let pText = row.text
-      if (row.inputtp==5) {
+      if (row.inputtp == 5) {
         pValue = begda
       }
-      if (row.inputtp==8) {
+      if (row.inputtp == 8) {
         pValue = begda
         pText = endda
-      }      
+      }
       await db.query(`
         INSERT INTO tic_eventatts (id, site, event, att, value, valid, text, color, icon, "condition", link, minfee )
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
@@ -352,7 +352,7 @@ const activateEvent = async (eventId) => {
       WHERE a.id = $2
     `,
       [eventId, eventId]);
-    if (docRows.rows.currStatus==1) {
+    if (docRows.rows.currStatus == 1) {
       throw new Error(
         `Dogadjaj već aktiviran: ${rows}`
       );
@@ -412,7 +412,7 @@ const activateEvent = async (eventId) => {
 };
 
 const copyTpEventloc = async (eventId, par1, lang) => {
-  const client = await db.connect(); 
+  const client = await db.connect();
   try {
 
     console.log(par1, "*00**************************copyGrpEvent*******************************")
@@ -433,11 +433,11 @@ const copyTpEventloc = async (eventId, par1, lang) => {
     `, [eventId]);
     }
 
-    console.log(par1, "*02**************************DELETE*******************************", eventId)    
+    console.log(par1, "*02**************************DELETE*******************************", eventId)
     // Iteriramo kroz objekte u requestBody
     // Pretvorite string u niz objekata
     await client.query(
-    `
+      `
       INSERT INTO tic_eventloc (id, site, event, loc, begda, endda, color, icon)
       SELECT nextval('iis.tic_table_id_seq') id, null site, e.id event, l.id loc, e.begda, e.endda, ll.color, ll.icon
       FROM tic_event e, cmn_loclink ll, cmn_loc l
@@ -454,7 +454,7 @@ const copyTpEventloc = async (eventId, par1, lang) => {
 
     return ok;
   } catch (error) {
-      await client.query("ROLLBACK"); // Rollback the transaction in case of an error
+    await client.query("ROLLBACK"); // Rollback the transaction in case of an error
     throw error;
   } finally {
     client.release(); // Oslobodite klijenta
@@ -511,7 +511,7 @@ const copyGrpEventloc = async (eventId, par1, loc, tploc, begda, endda, requestB
         await db.query(`
             INSERT INTO tic_eventloc (id, site, event, loc, begda, endda, color, icon)
             VALUES ($1, NULL, $2, $3, $4, $5, $6, $7)
-        `, [uId, eventId,  obj.id, begda, endda, obj.color, obj.icon]);
+        `, [uId, eventId, obj.id, begda, endda, obj.color, obj.icon]);
       }
     }
     console.log(
@@ -565,10 +565,10 @@ const copyGrpEventlocl = async (eventId, par1, loc, tploc, begda, endda, request
             id, site, event, tp, loctp1, loc1, loctp2, loc2, val, begda, endda, hijerarhija, onoff, color, icon)
           VALUES 
             ($1, NULL, $2, $3, $4, $5, $6, $7, '', $8, $9, 1, 0, $10, $11)
-          `, 
-          [  uId, eventId, tploc, obj.tp, obj.id, tploc, eventloc,  begda, endda, obj.color, obj.icon]
-          );
-          console.log(eventId, "@@@*******copyGrpEventlocl - END FOR **********@@@", loc, "@@+@@", tploc, "@@+@@")
+          `,
+          [uId, eventId, tploc, obj.tp, obj.id, tploc, eventloc, begda, endda, obj.color, obj.icon]
+        );
+        console.log(eventId, "@@@*******copyGrpEventlocl - END FOR **********@@@", loc, "@@+@@", tploc, "@@+@@")
       }
     }
 
@@ -656,6 +656,292 @@ const copyEventatts = async (eventId, requestBody) => {
   }
 };
 
+const obradaProdaja = async (par1, par2, requestBody) => {
+  let ok = true
+  try {
+
+    /* proveravam  PAR1
+      par1 = 'RZV' izmena rezervacije
+      par1 = 'ISP' izmena isporuke
+      par1 = 'ONL' nacin placanja 
+      par1 = 'CSH' nacin placanja
+      par1 = 'CRT' nacin placanja
+
+      par2 = CREATE/UPDATE
+      [ { id : 'RZV', ...}, { id : 'ISP', ...}, { id : 'ONL', ...}, { id : 'MPL', ...} ]
+
+    ticDoc
+    ticDocOld
+    */
+    const parsedBody = requestBody //JSON.parse(requestBody);
+    const { ..._ticDoc } = parsedBody
+
+    // return ok
+
+
+    await db.query("BEGIN");
+
+    if (par1 == 'RZV') {
+      const docsRows = await db.query(`
+          SELECT *
+          FROM tic_docs
+          WHERE doc = $1
+        `,
+        [_ticDoc.id]);
+
+      for (const row of docsRows.rows) {
+
+        let _services = row.services || '[]'
+        if (typeof _services !== 'object') {
+          try {
+            _services = JSON.parse(_services);
+          } catch (e) {
+            _services = [];
+          }
+        }
+
+        _services = _services.filter(service => service.id !== 'RZV');
+        console.log(_ticDoc, par2, row, "## 1111 ####################################################################")
+        if (_ticDoc.reservation == '1') {
+          const sqlUpit = `
+          SELECT a.id, a.tgp, a."text", r.rate, b.event, b.condition, b.minfee
+          FROM tic_artx_v a   
+          JOIN cmn_tgptax g ON a.tgp = g.tgp
+          JOIN cmn_taxrate r ON r.tax = g.tax
+          JOIN (
+              SELECT s.value, s."text", s.condition, s.minfee, s.event
+              FROM tic_eventatts s
+              JOIN tic_eventatt a ON a.id = s.att AND a.code = '08.00.'
+              where  s."text" ~ '^[0-9]+(\.[0-9]+)?$' 
+              and s.event = ${row.event}
+          ) b ON b."text" = to_char(a.id, 'FM999999999999999999999')
+          WHERE a.code = 'Н4'     
+          `
+          const artRow = await db.query(sqlUpit);
+          const item = artRow.rows[0]
+
+          let bruto = row.output * row.price * parseFloat(item.condition) * 0.01
+          if (bruto < parseFloat(item.minfee)) {
+            bruto = parseFloat(item.minfee)
+          }
+          let neto = bruto / (1 + parseFloat(item.rate) * 0.01)
+
+          const newService = {
+            id: 'RZV',
+            text: item.text,
+            art: item.id,
+            tgp: item.tgp,
+            tax: bruto - neto,
+            curr: 1,
+            currrate: 1,
+            output: row.output,
+            price: bruto / row.output,
+            discount: 0,
+            potrazuje: bruto,
+            leftcurr: bruto
+          };
+
+          _services.push(newService);
+
+        }
+
+        row.services = JSON.stringify(_services);
+
+        const sqlDocs = `
+        UPDATE tic_docs
+        SET services = '${row.services}'
+        WHERE id = ${row.id}
+      `
+        await db.query(sqlDocs);
+      }
+      await db.query(`
+      UPDATE tic_doc
+      SET reservation = $1,
+        status = $2
+      WHERE id = $3
+      `, [_ticDoc.reservation, _ticDoc.reservation, _ticDoc.id]);
+
+    }
+
+    if (par1 == 'ISP') {
+      const docsRows = await db.query(`
+          SELECT *
+          FROM tic_docs a
+          left join (
+            select o.id, o.code ccart, o.text ncart, t.code ctp
+            from cmn_obj o
+            join cmn_objtp t on t.id = o.tp and t.code = 'XTCTP'
+          ) b on a.tickettp = b.id 
+          WHERE doc = $1
+        `,
+        [_ticDoc.id]);
+
+      for (const row of docsRows.rows) {
+        if (row.ccart == 'TCTP1') {
+          let _services = row.services || '[]'
+          if (typeof _services !== 'object') {
+            try {
+              _services = JSON.parse(_services);
+            } catch (e) {
+              _services = [];
+            }
+          }
+
+          _services = _services.filter(service => service.id !== 'RZV');
+          console.log(_ticDoc, par2, row, "## 1111 ####################################################################")
+          if (_ticDoc.reservation == '1') {
+            const sqlUpit = `
+            SELECT a.id, a.tgp, a."text", r.rate, b.event, b.value, b.condition, b.minfee
+            FROM tic_artx_v a   
+            JOIN cmn_tgptax g ON a.tgp = g.tgp
+            JOIN cmn_taxrate r ON r.tax = g.tax
+            JOIN (
+                SELECT s.value, s."text", s.condition, s.minfee, s.event
+                FROM tic_eventatts s
+                JOIN tic_eventatt a ON a.id = s.att AND a.code = '08.04.'
+                where  s."text" ~ '^[0-9]+(\.[0-9]+)?$' 
+                and s.event = ${row.event}
+            ) b ON b."text" = to_char(a.id, 'FM999999999999999999999')
+            WHERE a.code = 'Н5'      
+          `
+            const artRow = await db.query(sqlUpit);
+            const item = artRow.rows[0]
+
+            let bruto = row.output * row.price * parseFloat(item.condition) * 0.01
+            if (bruto < parseFloat(item.minfee)) {
+              bruto = parseFloat(item.minfee)
+            }
+            let neto = bruto / (1 + parseFloat(item.rate) * 0.01)
+
+            const newService = {
+              id: 'RZV',
+              text: item.text,
+              art: item.id,
+              tgp: item.tgp,
+              tax: bruto - neto,
+              curr: 1,
+              currrate: 1,
+              output: row.output,
+              price: bruto / row.output,
+              discount: 0,
+              potrazuje: bruto,
+              leftcurr: bruto
+            };
+
+            _services.push(newService);
+
+          }
+
+          row.services = JSON.stringify(_services);
+
+          const sqlDocs = `
+            UPDATE tic_docs
+            SET services = '${row.services}'
+            WHERE id = ${row.id}
+            `
+          await db.query(sqlDocs);
+        }
+      }
+      await db.query(`
+      UPDATE tic_doc
+      SET delivery = $1
+      WHERE id = $2
+      `, [_ticDoc.delivery, _ticDoc.id]);
+
+
+    }
+
+    if (par1 == 'ONL') {
+      //dohvati stavke
+
+      //del naknadu za koriscenje online usluge
+      //push naknadu  za koriscenje online usluge
+
+      //azuriraj zaglavlje
+
+      //ayuriraj zaglavlje
+
+    }
+
+    if (par1 == 'CSH' || par1 == 'CRT') {
+      //dohvati stavke
+
+      //del naknadu za usluge na prodajnom mestu
+      //push naknadu  za usluge na prodajnom mestu
+
+      //azuriraj zaglavlje
+
+      //ayuriraj zaglavlje      
+    }
+    console.log("*************** COMMIT ************************")
+    await db.query("COMMIT"); // Confirm the transaction
+    ok = true;
+
+    return ok;
+  } catch (error) {
+    if (db) {
+      await db.query("ROLLBACK"); // Rollback the transaction in case of an error
+    }
+    throw error;
+  }
+};
+/****************************************************************************** */
+
+
+const obradaProdajas = async (par1, par2) => {
+
+  try {
+
+    let isporuka = '-1'
+    let rezervacija = '-1'
+    let placanje = '-1'
+
+    const parsedBody = JSON.parse(requestBody.jsonObj);
+    const _ticDoc = parsedBody.doc
+    const _ticDocs = parsedBody.docs
+    /* proveravam  PAR1
+      par1 = 'ISP' izmena isporuke
+      par1 = 'CTP' za tip karte podesiti naknadu izmena isporuke
+
+      par2 = CREATE/UPDATE
+    */
+
+    /*
+    ticDoc    
+    ticDocs
+    ticDocsOld
+    */
+
+    if (par1 == 'ISP') {
+      // dohvati stavku
+      // ako stavi isporuku a nije regular postaviti na regular
+
+      //del naknadu za isporuku
+      //push naknadu  za isporuku
+
+      // azuriraj stavku za sve karete regular
+    }
+
+
+    if (par1 == 'CTP') {
+      // dohvati stavku
+
+      //proveri tp karte
+      // ako nije regular skinuti isporuku
+      //del naknadu za isporuku
+      //push naknadu  za isporuku
+
+      // azuriraj stavku 
+    }
+    await db.query("BEGIN");
+
+  } catch (error) {
+    if (db) {
+      await db.query("ROLLBACK"); // Rollback the transaction in case of an error
+    }
+    throw error;
+  }
+};
 
 export default {
   getAgendaL,
@@ -671,4 +957,6 @@ export default {
   copyEventatts,
   copyTpEventloc,
   copyGrpEventlocl,
+  obradaProdaja,
+  obradaProdajas
 };
