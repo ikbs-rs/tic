@@ -370,7 +370,11 @@ const entitiesInfo =
 		"year": "number",
 		"channel": "number",
 		"usersys": "number",
-		"endtm": "string"
+		"endtm": "string",
+		"reservation": "number",
+		"delivery": "number",
+		"paymenttp": "number",
+		"services": "string"
 	  }
 	},
 	"tic_docb": {
@@ -468,7 +472,9 @@ const entitiesInfo =
 		"seat": "string",
 		"vreme": "number",
 		"ticket": "string",
-		"services": "string"
+		"services": "string",
+		"tickettp": "number",
+		"delivery": "number"
 	  }
 	},
 	"tic_docslink": {

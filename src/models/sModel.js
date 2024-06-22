@@ -943,6 +943,344 @@ const obradaProdajas = async (par1, par2) => {
   }
 };
 
+const docSetService = async (requestBody) => {
+
+    try {
+      await db.query('BEGIN');
+      // await client.query('SET search_path TO iis,public;'); // Add this line
+      const ticDocRow = requestBody;
+      console.log('ticDocRow=================================:', ticDocRow);
+      const query = {
+        name: 'call-tic_docs_setservices',
+        text: `SELECT tic_docs_setservices(
+          u_id := $1, 
+          u_site := $2, 
+          u_docvr := $3, 
+          u_date := $4, 
+          u_tm := $5, 
+          u_curr := $6, 
+          u_currrate := $7, 
+          u_usr := $8, 
+          u_status := $9, 
+          u_docobj := $10, 
+          u_broj := $11, 
+          u_obj2 := $12, 
+          u_opis := $13, 
+          u_timecreation := $14, 
+          u_storno := $15, 
+          u_year := $16, 
+          u_channel := $17, 
+          u_usersys := $18, 
+          u_endtm := $19, 
+          u_reservation := $20, 
+          u_delivery := $21, 
+          u_paymenttp := $22, 
+          action_tp := $23
+      )`,
+        values: [
+          ticDocRow.id,
+          ticDocRow.site,
+          ticDocRow.docvr,
+          ticDocRow.date,
+          ticDocRow.tm,
+          ticDocRow.curr,
+          ticDocRow.currrate,
+          ticDocRow.usr,
+          ticDocRow.status,
+          ticDocRow.docobj,
+          ticDocRow.broj,
+          ticDocRow.obj2,
+          ticDocRow.opis,
+          ticDocRow.timecreation,
+          ticDocRow.storno,
+          ticDocRow.year,
+          ticDocRow.channel,
+          ticDocRow.usersys,
+          ticDocRow.endtm,
+          ticDocRow.reservation,
+          ticDocRow.delivery,
+          ticDocRow.paymenttp,
+          ticDocRow.actiontp
+        ]
+      };
+
+      try {
+        client.on('notice', (msg) => {
+          console.log(msg);
+        });
+
+        console.log('Executing query:', query);
+        const result = await client.query(query);
+        // await new Promise(resolve => setTimeout(resolve, 5000));
+        console.log('Query result:', result);
+        await client.query('COMMIT');
+        console.log('tic_docs_setservices function executed successfully');
+      } catch (err) {
+        console.error(err.stack);
+      }
+
+    } catch (error) {
+      await client.query('ROLLBACK'); // Rollback the transaction in case of error
+      console.error(`Error updating sectors: ${error}`);
+      res.status(500).json({ error: 'Failed to update sectors' });
+
+      // await client.query('COMMIT'); 
+    } finally {
+      client.end();
+      client.release(); // Release the database connection back to the pool
+    }
+
+};
+
+const ticEventCopy = async (requestBody) => {
+
+  const client = await db.connect();
+  try {
+    await client.query('BEGIN');
+    // await client.query('SET search_path TO iis,public;'); // Add this line
+    const ticEventRow = requestBody;
+    console.log('ticEventRow=================================:', ticEventRow);
+    const query = {
+      name: 'call-tic_event_copy',
+      text: `SELECT tic_event_copy(
+        u_id := $1,
+        u_site := $2,
+        u_code := $3,
+        u_text := $4,
+        u_tp := $5,
+        u_begda := $6,
+        u_endda := $7,
+        u_begtm := $8,
+        u_endtm := $9,
+        u_status := $10,
+        u_descript := $11,
+        u_note := $12,
+        u_event := $13,
+        u_ctg := $14,
+        u_loc := $15,
+        u_par := $16,
+        u_tmp := $17,
+        u_season := $18,
+        u_map_extent := $19,
+        u_map_min_zoom := $20,
+        u_map_max_zoom := $21,
+        u_map_max_resolution := $22,
+        u_tile_extent := $23,
+        u_tile_size := $24,
+        u_venue_id := $25,
+        u_enable_tiles := $26,
+        u_map_zoom_level := $27,
+        u_have_background := $28,
+        u_background_image := $29,
+        u_loc_id := $30,
+        u_auto_scale := $31,
+        u_auto_zoom := $32
+    )`,
+      values: [
+        ticEventRow.id,
+        ticEventRow.site,
+        ticEventRow.code,
+        ticEventRow.text,
+        ticEventRow.tp,
+        ticEventRow.begda,
+        ticEventRow.endda,
+        ticEventRow.begtm,
+        ticEventRow.endtm,
+        ticEventRow.status,
+        ticEventRow.descript,
+        ticEventRow.note,
+        ticEventRow.event,
+        ticEventRow.ctg,
+        ticEventRow.loc,
+        ticEventRow.par,
+        ticEventRow.tmp,
+        ticEventRow.season,
+        ticEventRow.map_extent,
+        ticEventRow.map_min_zoom,
+        ticEventRow.map_max_zoom,
+        ticEventRow.map_max_resolution,
+        ticEventRow.tile_extent,
+        ticEventRow.tile_size,
+        ticEventRow.venue_id,
+        ticEventRow.enable_tiles,
+        ticEventRow.map_zoom_level,
+        ticEventRow.have_background,
+        ticEventRow.background_image,
+        ticEventRow.loc_id,
+        ticEventRow.auto_scale,
+        ticEventRow.auto_zoom
+      ]
+    };
+
+    try {
+      client.on('notice', (msg) => {
+        console.log(msg);
+      });
+
+      console.log('Executing query:', query);
+      const result = await client.query(query);
+      console.log('Query result:', result);
+      await client.query('COMMIT');
+      console.log('tic_docs_setservices function executed successfully', result.rows[0]);
+      return result.rows[0]
+    } catch (err) {
+      console.error(err.stack);
+      await client.query('ROLLBACK'); // Rollback the transaction in case of error
+      throw err;
+    }
+  } catch (error) {
+    console.error(`Error updating sectors: ${error}`);
+    res.status(500).json({ error: 'Failed to update sectors' });
+  } finally {
+    client.release(); // Release the database connection back to the pool
+  }
+
+};
+
+const ticEventSaveDate = async (requestBody) => {
+
+  const client = await db.connect();
+  try {
+    await client.query('BEGIN');
+    // await client.query('SET search_path TO iis,public;'); // Add this line
+    const ticEventRow = requestBody;
+    console.log('ticEventRow=================================:', ticEventRow);
+    const query = {
+      name: 'call-tic_event_savedate',
+      text: `SELECT tic_event_savedate(
+        u_id := $1,
+        u_site := $2,
+        u_code := $3,
+        u_text := $4,
+        u_tp := $5,
+        u_begda := $6,
+        u_endda := $7,
+        u_begtm := $8,
+        u_endtm := $9,
+        u_status := $10,
+        u_descript := $11,
+        u_note := $12,
+        u_event := $13,
+        u_ctg := $14,
+        u_loc := $15,
+        u_par := $16,
+        u_tmp := $17,
+        u_season := $18,
+        u_map_extent := $19,
+        u_map_min_zoom := $20,
+        u_map_max_zoom := $21,
+        u_map_max_resolution := $22,
+        u_tile_extent := $23,
+        u_tile_size := $24,
+        u_venue_id := $25,
+        u_enable_tiles := $26,
+        u_map_zoom_level := $27,
+        u_have_background := $28,
+        u_background_image := $29,
+        u_loc_id := $30,
+        u_auto_scale := $31,
+        u_auto_zoom := $32
+    )`,
+      values: [
+        ticEventRow.id,
+        ticEventRow.site,
+        ticEventRow.code,
+        ticEventRow.text,
+        ticEventRow.tp,
+        ticEventRow.begda,
+        ticEventRow.endda,
+        ticEventRow.begtm,
+        ticEventRow.endtm,
+        ticEventRow.status,
+        ticEventRow.descript,
+        ticEventRow.note,
+        ticEventRow.event,
+        ticEventRow.ctg,
+        ticEventRow.loc,
+        ticEventRow.par,
+        ticEventRow.tmp,
+        ticEventRow.season,
+        ticEventRow.map_extent,
+        ticEventRow.map_min_zoom,
+        ticEventRow.map_max_zoom,
+        ticEventRow.map_max_resolution,
+        ticEventRow.tile_extent,
+        ticEventRow.tile_size,
+        ticEventRow.venue_id,
+        ticEventRow.enable_tiles,
+        ticEventRow.map_zoom_level,
+        ticEventRow.have_background,
+        ticEventRow.background_image,
+        ticEventRow.loc_id,
+        ticEventRow.auto_scale,
+        ticEventRow.auto_zoom
+      ]
+    };
+
+    try {
+      client.on('notice', (msg) => {
+        console.log(msg);
+      });
+
+      console.log('Executing query:', query);
+      const result = await client.query(query);
+      console.log('Query result:', result);
+      await client.query('COMMIT');
+      console.log('tic_event_savedate function executed successfully', result.rows[0]);
+      return result.rows[0]
+    } catch (err) {
+      console.error(err.stack);
+      await client.query('ROLLBACK'); // Rollback the transaction in case of error
+      throw err;
+    }
+  } catch (error) {
+    console.error(`Error updating sectors: ${error}`);
+    res.status(500).json({ error: 'Failed to update sectors' });
+  } finally {
+    client.release(); // Release the database connection back to the pool
+  }
+
+};
+
+const ticEventDeleteAll = async (uId) => {
+
+  const client = await db.connect();
+  try {
+    await client.query('BEGIN');
+
+    const query = {
+      name: 'call-tic_event_copy',
+      text: `SELECT tic_eventdeleteall(
+        u_id := $1
+    )`,
+      values: [uId]
+    };
+
+    try {
+      client.on('notice', (msg) => {
+        console.log(msg);
+      });
+
+      console.log('Executing query:', query);
+      const result = await client.query(query);
+      console.log('Query result:', result);
+      await client.query('COMMIT');
+      console.log('tic_eventdeleteall function executed successfully', result.rows[0]);
+      return {id: uId}
+    } catch (err) {
+      console.error(err.stack);
+      await client.query('ROLLBACK'); // Rollback the transaction in case of error
+      throw err;
+    }
+  } catch (error) {
+    console.error(`Error updating sectors: ${error}`);
+    res.status(500).json({ error: 'Failed to update sectors' });
+  } finally {
+    client.release(); // Release the database connection back to the pool
+  }
+
+};
+
 export default {
   getAgendaL,
   getArtL,
@@ -958,5 +1296,9 @@ export default {
   copyTpEventloc,
   copyGrpEventlocl,
   obradaProdaja,
-  obradaProdajas
+  obradaProdajas,
+  docSetService,
+  ticEventCopy,
+  ticEventSaveDate,
+  ticEventDeleteAll,
 };

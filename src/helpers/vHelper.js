@@ -72,6 +72,12 @@ const getLista = async (objName, stm, objId, par1, lang, par2, par3, par4, par5,
       case "tic_docs_v":
         result = await vModel.getDocsL(objName, objId, lang);
         break;
+      case "tic_docsartikli_v":
+        result = await vModel.getDocsArtikliL(objName, objId, lang);
+        break;
+      case "tic_docsnaknade_v":
+        result = await vModel.getDocsNaknadeL(objName, objId, lang);
+        break;
       case "tic_event_v":
         result = await vModel.getEventL(objName, lang);
         break;
@@ -176,6 +182,9 @@ const getLista = async (objName, stm, objId, par1, lang, par2, par3, par4, par5,
         break;
       case "tic_docactivuser_v":
         result = await vModel.getTicDocActivUser(objName, objId, lang);
+        break;
+      case "tic_docsuidprodaja_v":
+        result = await vModel.getDocsuidProdajaLista(objName, objId, lang);
         break;
       default:
         console.error("vHelper: Pogresan naziv za view-a");

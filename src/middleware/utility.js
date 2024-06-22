@@ -56,39 +56,39 @@ export const transactionId = async (par) => {
 //******************************************* */
 
 // Generisanje novog Id na osnovu lokalnog okruzenje
-// export const uniqueId = async () => {
-//   timestamp = Date.now().toString();
-//   const randomValue = Math.floor(Math.random() * 90) + 10;
-//   data = virtualHost + processId + timestamp+ randomValue;
-//   workerId = createHash("sha256").update(data).digest("hex");
-//   //console.log(data, "------dataCentar-------", dataCentar, "***workerId***", workerId, "*******processId*******", processId )
-//   snowflake.init({
-//     worker_id: workerId,
-//     data_center_id: dataCentar,
-//     sequence: data,
-//   });
-//   await new Promise((resolve) => setTimeout(resolve, 1.5));
-
-//   return snowflake.nextId();
-// };
 export const uniqueId = async () => {
-  const timestamp = Date.now().toString();
+  timestamp = Date.now().toString();
   const randomValue = Math.floor(Math.random() * 90) + 10;
-  const data = virtualHost + processId + timestamp + randomValue;
-  const workerIdHash = createHash("sha256").update(data).digest("hex");
-  const workerId = BigInt('0x' + workerIdHash.slice(0, 2)) % BigInt(32); // Uzimamo samo prvih 2 hex cifara heša i mod 32 da dobijemo vrednost između 0-31
-
+  data = virtualHost + processId + timestamp+ randomValue;
+  workerId = createHash("sha256").update(data).digest("hex");
+  //console.log(data, "------dataCentar-------", dataCentar, "***workerId***", workerId, "*******processId*******", processId )
   snowflake.init({
-    worker_id: Number(workerId),
-    data_center_id: parseInt(dataCentar, 10),
-    sequence: parseInt(timestamp, 10),
+    worker_id: workerId,
+    data_center_id: dataCentar,
+    sequence: data,
   });
-
   await new Promise((resolve) => setTimeout(resolve, 1.5));
 
-  const id = snowflake.nextId().toString();
-  return id.padStart(20, '0'); // Osiguravamo da je rezultat tačno 20 cifara
+  return snowflake.nextId();
 };
+// export const uniqueId = async () => {
+//   const timestamp = Date.now().toString();
+//   const randomValue = Math.floor(Math.random() * 90) + 10;
+//   const data = virtualHost + processId + timestamp + randomValue;
+//   const workerIdHash = createHash("sha256").update(data).digest("hex");
+//   const workerId = BigInt('0x' + workerIdHash.slice(0, 2)) % BigInt(32); // Uzimamo samo prvih 2 hex cifara heša i mod 32 da dobijemo vrednost između 0-31
+
+//   snowflake.init({
+//     worker_id: Number(workerId),
+//     data_center_id: parseInt(dataCentar, 10),
+//     sequence: parseInt(timestamp, 10),
+//   });
+
+//   await new Promise((resolve) => setTimeout(resolve, 1.5));
+
+//   const id = snowflake.nextId().toString();
+//   return id.padStart(20, '0'); // Osiguravamo da je rezultat tačno 20 cifara
+// };
 
 export const transactionId1 = async (par) => {
   timestamp = performance.now().toString();
@@ -163,23 +163,26 @@ export const unflatten = (items) => {
 }
 
 export const randomTenDigit = async (uid) => {
-  if (uid.length !== 20 || !/^\d+$/.test(uid)) {
-    throw new Error("UID mora biti niz od 20 cifara.");
+  console.log("TRANSACTION 00 : ", uid);
+  if (uid.length !== 19 || !/^\d+$/.test(uid)) {
+    throw new Error("UID mora biti niz od 19 cifara.");
   }
+  console.log("TRANSACTION 01 : ");
 
+  // Generisanje prvog cifara između 1 i 9
+  const firstDigit = Math.floor(Math.random() * 9) + 1;
+
+  // Generisanje preostalih 9 cifara
   const randomBuffer = randomBytes(5);
-  const randomNumber = parseInt(randomBuffer.toString('hex'), 16);
+  const randomNumber = parseInt(randomBuffer.toString('hex'), 16).toString().slice(0, 9);
 
   const hash = createHash('sha256').update(uid).digest('hex');
-  const hashNumber = parseInt(hash.slice(0, 10), 16);
+  const hashNumber = parseInt(hash.slice(0, 10), 16).toString().slice(0, 9);
 
-  let uniqueNumber = (hashNumber ^ randomNumber) % 10000000000;
+  // Kombinovanje brojeva i osiguravanje tačno 10 cifara
+  const uniqueNumber = `${firstDigit}${randomNumber}${hashNumber}`.slice(0, 10);
 
-  // Uklanjanje vodećih nula
-  while (uniqueNumber < 1000000000) {
-    uniqueNumber = (uniqueNumber * 10) + Math.floor(Math.random() * 10);
-  }
-
+  console.log("TRANSACTION ID : ", uniqueNumber);
   return uniqueNumber;
 };
 

@@ -59,6 +59,7 @@ router.use('/tic/docs', checkPermissions(), abstruct)
 router.use('/tic/docslink', checkPermissions(), abstruct) 
 router.use('/tic/docpayment', checkPermissions(), abstruct)
 router.use('/tic/docdelivery', checkPermissions(), abstruct)
+router.use('/tic/docsuid', checkPermissions(), abstruct)
 
 router.use('/tic/eventagenda', checkPermissions(), abstruct) 
 router.use('/tic/eventart', checkPermissions(), abstruct) 

@@ -30,7 +30,7 @@ const add = async (objName, objData) => {
       const pBroj = await randomTenDigit(objData.id)
       objData.broj = pBroj;
     }
-    console.log(objName, "@ 01 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@", objData.broj)
+    console.log(objName, "@ 01 @@@@@@@@@@@@@@@@@@@@@@@@ AB_HELPER 33 @@@@@@@@@@@@@@@@@@@@@@@@@@", objData.broj)
 
     const sqlQuery = await abstructQuery.getInsertQuery(objName, objData);
 
