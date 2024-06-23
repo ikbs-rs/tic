@@ -656,6 +656,15 @@ const copyEventatts = async (eventId, requestBody) => {
   }
 };
 
+const ticSetItem = async (objName, item, items) => {
+  const attributeType = entities.entitiesInfo[objName].attributes[item];
+  const value = attributeType === 'string' ? `'${items.usr}'` : items.usr;
+  const sqlString = `UPDATE ${objName} set ${item} = ${value}  WHERE id = ${items.id}`;
+  console.log(sqlString, "55555555555555555555555555555555555555555555555555555", items)
+  const result = await db.query(sqlString);
+  return result.rowCount;  
+}
+
 const obradaProdaja = async (par1, par2, requestBody) => {
   let ok = true
   try {
@@ -1301,4 +1310,5 @@ export default {
   ticEventCopy,
   ticEventSaveDate,
   ticEventDeleteAll,
+  ticSetItem,
 };

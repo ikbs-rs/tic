@@ -116,9 +116,12 @@ const postFunction = async (
       case "tic_eventdeleteall_s": // obrada stavke na prodaji
         result = await sModel.ticEventDeleteAll(objId1);
         break;
-        case "tic_eventsavedate_s": // obrada stavke na prodaji
+      case "tic_eventsavedate_s": // obrada stavke na prodaji
         result = await sModel.ticEventSaveDate(requestBody);
-        break;        
+        break;
+      case "tic_set_s": // obrada stavke na prodaji
+        result = await sModel.ticSetItem(par1, par2, requestBody);
+        break;
         
       default:
         console.error("sHelper: Pogresan naziv za view-a - " + stm);

@@ -332,10 +332,13 @@ const getDocById = async (objName, objId, lang) => {
 const getDocsuidProdajaLista = async (objName, objId, lang) => {
   const sqlRecenica =
     `
-    select u.*, aa.id docsid, aa.tickettp, aa.delivery, a.text nartikal, aa.nart, aa.discount, aa.row, aa.seat, aa.price
+    select u.*, aa.id docsid, aa.tickettp, aa.delivery, a.text nartikal, aa.nart, aa.discount, aa.row, 
+          aa.seat, aa.price, e.text nevent, aa.price, c.code ccurr
     from	tic_docs aa
-    join  tic_art a on a.id = aa.art
+    join  tic_artx_v a on a.id = aa.art
     join  tic_arttp p on p.id = a.tp and p.code!='Н'
+    join  tic_eventx_v e on aa.event = e.id
+    join  cmn_curr c on aa.curr = c.id
     left  join  tic_docsuid u on aa.id = u.docs
     where aa.doc = ${objId}
     `
