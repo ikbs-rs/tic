@@ -333,7 +333,7 @@ const getDocsuidProdajaLista = async (objName, objId, lang) => {
   const sqlRecenica =
     `
     select u.*, aa.id docsid, aa.tickettp, aa.delivery, a.text nartikal, aa.nart, aa.discount, aa.row, 
-          aa.seat, aa.price, e.text nevent, aa.price, c.code ccurr
+          aa.seat, aa.price, e.text nevent, aa.price, c.code ccurr, aa.event
     from	tic_docs aa
     join  tic_artx_v a on a.id = aa.art
     join  tic_arttp p on p.id = a.tp and p.code!='Н'
@@ -342,7 +342,7 @@ const getDocsuidProdajaLista = async (objName, objId, lang) => {
     left  join  tic_docsuid u on aa.id = u.docs
     where aa.doc = ${objId}
     `
-  //console.log(sqlRecenica, "*******************getArtcenaL*********************"  )    
+  console.log(sqlRecenica, "*******************getDocsuidProdajaLista*********************"  )    
   //const [rows] = await db.query(sqlRecenic);
 
   let result = await db.query(sqlRecenica);
@@ -427,6 +427,7 @@ const getDocsArtikliL = async (objName, objId, lang) => {
   select aa.id, aa.loc, aa.art, aa.tgp, aa.taxrate, aa.price , aa."input", aa."output" , aa.curr , aa.currrate, aa.site, aa.doc, aa.seat, aa.row,
       aa."duguje" , aa."potrazuje" , aa.leftcurr , aa.rightcurr, aa.begtm , aa.endtm , aa.status , aa.fee , aa.par, aa.descript, aa.discount,
       aa.cena, aa.reztm, aa.storno, aa.nart, aa."row", aa."label", aa.vreme, aa.ticket, aa.services, aa.tickettp, aa.delivery,
+      aa.ulaz, aa.sector, aa.barcode, aa.online, aa.print, aa.pm, aa.rez, aa.sysuser,
       aa.event, getValueById(aa.event, 'tic_eventx_v', 'code', '${lang || 'sr_cyr'}') cevent, getValueById(aa.event, 'tic_eventx_v', 'text', '${lang || 'sr_cyr'}') nevent,
       aa.loc, getValueById(aa.loc, 'cmn_locx_v', 'code', '${lang || 'sr_cyr'}') cloc, getValueById(aa.loc, 'cmn_locx_v', 'text', '${lang || 'sr_cyr'}') nloc,
       aa.art, getValueById(aa.art, 'tic_artx_v', 'code', '${lang || 'sr_cyr'}') cart, getValueById(aa.art, 'tic_artx_v', 'text', '${lang || 'sr_cyr'}') nart
@@ -590,8 +591,8 @@ const getTransactionL = async (objName, lang, par1, par2, par3, par4, par5, par6
     `
     select *
     from (
-      select a.id, a.tm, a.kanal, a.npar, a.addrpar, a.telpar, a.pipar, a.idnum, a.idpar, a.plpar, 		
-            a.username, a.firstname, a.lastname, a.canceled,
+      select a.id, a.tm, a.kanal, a.cpar, a.npar, a.addrpar, a.telpar, a.pipar, a.idnum, a.idpar, a.plpar, 		
+            a.username, a.firstname, a.lastname, a.canceled, a.broj, a.storno,
             a.delivery, a.reservation, a.paymenttp, a.services,
             '['||string_agg(distinct '{"id": "'||a.event||'", "code": "'||a.cevent||'", "startda": "'||a.startda||'", "starttm":"'||a.starttm
             ||'", "text":"'||a.nevent||'", "venue":"'||a.venue
@@ -626,18 +627,18 @@ const getTransactionL = async (objName, lang, par1, par2, par3, par4, par5, par6
             ), '0') delivery_st,	    
             sum(a.tax) tax, sum(a.discount) discount, sum(a."output") "output", sum(a.potrazuje) potrazuje
       from (
-      select 	a.id, a.tm, a.kanal, a.npar, a.addrpar, a.telpar, a.pipar, a.idnum, a.idpar, a.plpar, 		
-            a.username, a.firstname, a.lastname, a.canceled, a.startda, a.starttm, a.event, a.atp, a.venue, a.nevent, a.cevent, 
+      select 	a.id, a.tm, a.kanal, a.cpar, a.npar, a.addrpar, a.telpar, a.pipar, a.idnum, a.idpar, a.plpar, 		
+            a.username, a.firstname, a.lastname, a.canceled, a.startda, a.starttm, a.event, a.atp, a.venue, a.nevent, a.cevent, a.broj, a.storno,
             a.delivery, a.reservation, a.paymenttp, a.services,
             sum(a.tax) tax, sum(a.discount) discount, sum(a."output") "output", sum(a.potrazuje) potrazuje, max(a.tmreserv) tmreserv
       from  (			
-          select 	du.id, du.tm, o."text" kanal, du.text npar, du.address addrpar, du.tel telpar, du.pib pipar, du.idnum, du.idpar, du.place plpar, 		
-                du.username, du.firstname, du.lastname, du.status canceled, du.delivery, du.reservation, du.paymenttp, du.services,
+          select 	du.id, du.tm, o."text" kanal, du.cpar, du.text npar, du.address addrpar, du.tel telpar, du.pib pipar, du.idnum, du.idpar, du.place plpar, 		
+                du.username, du.firstname, du.lastname, du.status canceled, du.delivery, du.reservation, du.paymenttp, du.services, du.broj, du.storno, 
                 e.id event, e."text" nevent, e.code cevent, 
                 ds.tax, ds.discount, ds."output", ds.potrazuje, ds.endtm tmreserv, e.endda startda, e.endtm starttm, 
                 atp.code atp, ll.text venue
           from (
-                select p.text, p.address, p.site , p.tel , p.pib , p.idnum , p.place, p.id idpar,
+                select p.code cpar, p.text, p.address, p.site , p.tel , p.pib , p.idnum , p.place, p.id idpar,
                     u.username, u.firstname, u.lastname,
                       COALESCE(LENGTH(dd.tmrec), 0) nodelivery, LENGTH(dd.tmcour) fordelivery, LENGTH(dd.datdelivery) indelivery, 
                       d.*
@@ -676,11 +677,11 @@ const getTransactionL = async (objName, lang, par1, par2, par3, par4, par5, par6
               and ds.nart is not null 
               and length(ticket) >20 
         ) a
-      group by a.id, a.tm, a.kanal, a.npar, a.addrpar, a.telpar, a.pipar, a.idnum, a.idpar, a.plpar, 		
+      group by a.id, a.tm, a.kanal, a.cpar, a.npar, a.addrpar, a.telpar, a.pipar, a.idnum, a.idpar, a.plpar, a.broj, a.storno,		
             a.username, a.firstname, a.lastname, a.canceled, a.startda, a.starttm, a.event, a.atp, a.venue, a.nevent, a.nevent, a.cevent,
             a.delivery, a.reservation, a.paymenttp, a.services
       ) a	
-      group by a.id, a.tm, a.kanal, a.npar, a.addrpar, a.telpar, a.pipar, a.idnum, a.idpar, a.plpar, 		
+      group by a.id, a.tm, a.kanal, a.cpar, a.npar, a.addrpar, a.telpar, a.pipar, a.idnum, a.idpar, a.plpar,  a.broj, a.storno,	
             a.username, a.firstname, a.lastname, a.canceled,
             a.delivery, a.reservation, a.paymenttp, a.services
     ) where 1=1		  
@@ -731,7 +732,7 @@ const getTransactionFL = async (objName, lang, par1, par2, par3, par4, par5, par
     select *
     from (
       select a.id, to_char( a.id, '0000000000000000000')||to_char( a.event, '0000000000000000000') ide, a.tm, a.kanal, a.npar, a.addrpar, a.telpar, a.pipar, a.idnum, a.idpar, a.plpar, 		
-            a.username, a.firstname, a.lastname, a.canceled,
+            a.username, a.firstname, a.lastname, a.canceled, a.broj, a.storno,
 		    a.event, a.startda, a.starttm,
 		    a.cevent code, a.nevent text, a.venue,
 		    getTransactionstavke(a.id) nevent,
@@ -768,13 +769,13 @@ const getTransactionFL = async (objName, lang, par1, par2, par3, par4, par5, par
             ), '0') delivery_st,	    
             sum(a.tax) tax, sum(a.discount) discount, sum(a."output") "output", sum(a.potrazuje) potrazuje
       from (
-      select 	a.id, a.tm, a.kanal, a.npar, a.addrpar, a.telpar, a.pipar, a.idnum, a.idpar, a.plpar, 		
+      select 	a.id, a.tm, a.kanal, a.npar, a.addrpar, a.telpar, a.pipar, a.idnum, a.idpar, a.plpar,  a.broj, a.storno,
             a.username, a.firstname, a.lastname, a.canceled, a.startda, a.starttm, a.event, a.atp, a.venue, a.nevent, a.cevent,
             a.delivery, a.reservation, a.paymenttp, a.services, 
             sum(a.tax) tax, sum(a.discount) discount, sum(a."output") "output", sum(a.potrazuje) potrazuje, max(a.tmreserv) tmreserv
       from  (			
           select 	du.id, du.tm, o."text" kanal, du.text npar, du.address addrpar, du.tel telpar, du.pib pipar, du.idnum, du.idpar, du.place plpar, 		
-                du.username, du.firstname, du.lastname, du.status canceled,
+                du.username, du.firstname, du.lastname, du.status canceled, du.broj, du.storno,
                 du.delivery, du.reservation, du.paymenttp, du.services,
                 e.id event, e."text" nevent, e.code cevent, 
                 ds.tax, ds.discount, ds."output", ds.potrazuje, ds.endtm tmreserv, e.endda startda, e.endtm starttm, 
@@ -820,11 +821,11 @@ const getTransactionFL = async (objName, lang, par1, par2, par3, par4, par5, par
               and length(ticket) >20 
         ) a
       group by a.id, a.tm, a.kanal, a.npar, a.addrpar, a.telpar, a.pipar, a.idnum, a.idpar, a.plpar,
-            a.delivery, a.reservation, a.paymenttp, a.services, 		
+            a.delivery, a.reservation, a.paymenttp, a.services, a.broj, a.storno,	
             a.username, a.firstname, a.lastname, a.canceled, a.startda, a.starttm, a.event, a.atp, a.venue, a.nevent, a.nevent, a.cevent	
       ) a	
 group by a.id, a.tm, a.kanal, a.npar, a.addrpar, a.telpar, a.pipar, a.idnum, a.idpar, a.plpar, 		
-            a.username, a.firstname, a.lastname, a.canceled,
+            a.username, a.firstname, a.lastname, a.canceled, a.broj, a.storno,
 		    a.event, a.startda, a.starttm,
         a.delivery, a.reservation, a.paymenttp, a.services,
 		    a.cevent, a.nevent, a.venue
@@ -1620,6 +1621,72 @@ const getDocdeliveryL = async (objName, objId, lang) => {
   }
 };
 
+
+const getDocdiscounttpL = async (objName, objId, lang) => {
+  const sqlRecenica =
+    `
+    select 	max(s.id) id, e.text nevent, a."text" natt, tp."text" nprivilige, min(s."condition") condition, s.minfee, s.text, s.value, tp.code cprivilege,
+            e.text ||', '|| a."text" ||', '|| tp."text" ||'- val: '|| coalesce(min(s."condition"), ' ')||', '||coalesce(s.minfee::text, ' ') text
+    from 	tic_eventx_v e
+    join 	tic_eventatts s on s.event = e.id 
+    join 	tic_eventattx_v a on a.id = s.att and a.code like '09.01%'
+          and a.lang = '${lang || 'sr_cyr'}'
+    left join 	tic_privilegex_v tp on trim(s.value) = tp.id::text
+          and tp.lang = '${lang || 'sr_cyr'}'    
+    where 	e.id in (
+        select s.event
+        from	tic_docs s
+        where 	s.doc = ${objId}
+    )
+    and e.lang = '${lang || 'sr_cyr'}'
+    group by e."text" , a."text" , tp."text", s.minfee, s.text, s.value, tp.code
+  `
+     
+  console.log("*-*-*-*-*-*-*-*-*- getEventstL 1111111111111111", sqlRecenica)
+  let result = await db.query(sqlRecenica);
+  let rows = result.rows;
+  if (Array.isArray(rows)) {
+    return rows;
+  } else {
+    throw new Error(
+      `Greška pri dohvatanju slogova iz baze - abs find: ${rows}`
+    );
+  }
+};
+
+const getDocdiscountL = async (objName, objId, lang) => {
+  const sqlRecenica =
+    `
+    select *
+    from tic_docdiscount d
+    join (
+      select 	max(s.id) aid, e.text ||', '|| a."text" ||', '|| tp."text" ||'- val: '|| coalesce(min(s."condition"), ' ')||', '||coalesce(s.minfee::text, ' ') text
+      from 	tic_eventx_v e
+      join 	tic_eventatts s on s.event = e.id 
+      join 	tic_eventattx_v a on a.id = s.att and a.code like '09.01%'
+      left join 	tic_privilegex_v tp on trim(s.value) = tp.id::text
+      where 	e.id in (
+          select s.event
+          from	tic_docs s
+          where 	s.doc = ${objId}
+      )
+      group by e."text" , a."text" , tp."text", s.minfee, s.text, s.value, tp.code
+      ) a on d.discount = a.aid
+    and d.doc = ${objId}
+  `
+     
+  console.log("*-*-*-*-*-*-*-*-*- getEventstL 1111111111111111", sqlRecenica)
+  let result = await db.query(sqlRecenica);
+  let rows = result.rows;
+  if (Array.isArray(rows)) {
+    return rows;
+  } else {
+    throw new Error(
+      `Greška pri dohvatanju slogova iz baze - abs find: ${rows}`
+    );
+  }
+};
+
 const getDocdeliveryLL = async (objName, objId, lang) => {
   const sqlRecenica =
     `
@@ -2000,6 +2067,31 @@ const getTicLoclinkV = async (objName, objId, par1, lang) => {
     }
   };
   
+
+  const getEventattsobjcodeL = async (objId, par1, id, lang) => {
+    const sqlRecenica =
+      `
+      select  a2.code catt, a2.text natt, o.code cobj, o.text nobj, aa.* 
+      from	tic_eventatts aa 
+      join 	tic_eventattx_v a2 on aa.att = a2.id and a2.code = '${par1}'
+      join 	cmn_objx_v o on o.id::"text" = aa.value and o.lang = '${lang || 'sr_cyr'}'
+      join 	cmn_objtp ot on ot.id = o.tp and ot.code = '${id}'
+      where aa.event = ${objId}
+    `
+    console.log(sqlRecenica, "*******************getEventartcenaTL*********************")
+    //const [rows] = await db.query(sqlRecenic);
+  
+    let result = await db.query(sqlRecenica);
+    let rows = result.rows;
+    if (Array.isArray(rows)) {
+      return rows;
+    } else {
+      throw new Error(
+        `Greška pri dohvatanju slogova iz baze - abs find: ${rows}`
+      );
+    }
+  }; 
+
 export default {
   getListaC,
   getAgendaL,
@@ -2050,6 +2142,8 @@ export default {
   getTicDocpaymentByNumV,
   getCmnSpedicijaByTxtV,
   getDocdeliveryL,
+  getDocdiscounttpL,
+  getDocdiscountL,
   getDocdeliveryLL,
   getEventAttsDDL,
   getLocLLV,
@@ -2065,4 +2159,5 @@ export default {
   getDocById,
   getDocsNaknadeL,
   getDocsArtikliL,
+  getEventattsobjcodeL,
 };

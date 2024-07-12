@@ -25,6 +25,7 @@ const getListaC = async (objName, stm, sqlstmt, lang) => {
 const getLista = async (objName, stm, objId, par1, lang, par2, par3, par4, par5, par6, par7, par8, par9, par10) => {
   try {
     console.log(objId, "*******Helper!!!!!!*********", stm);
+    console.log(objId, par1, par2, lang, '5555555555555555555555555555555555555555555555555555555555555555555555555555555555')
     let result = {};
     switch (stm) {
       case "tic_agenda_v":
@@ -162,6 +163,12 @@ const getLista = async (objName, stm, objId, par1, lang, par2, par3, par4, par5,
       case "tic_docdeliveryl_v":
         result = await vModel.getDocdeliveryLL(objName, objId, lang);
         break;
+      case "tic_docdiscounttp_v":
+        result = await vModel.getDocdiscounttpL(objName, objId, lang);
+        break;
+      case "tic_docdiscount_v":
+        result = await vModel.getDocdiscountL(objName, objId, lang);
+        break;
       case "tic_eventattsdd_v":
         result = await vModel.getEventAttsDDL(objName, objId, par1, lang);
         break;
@@ -185,6 +192,10 @@ const getLista = async (objName, stm, objId, par1, lang, par2, par3, par4, par5,
         break;
       case "tic_docsuidprodaja_v":
         result = await vModel.getDocsuidProdajaLista(objName, objId, lang);
+        break;
+      case "tic_eventattsobjcodel_v":
+        console.log(objId, par1, par2, lang, '5555555555555555555555555555555555555555555555555555555555555555555555555555555555')
+        result = await vModel.getEventattsobjcodeL(objId, par1, par2, lang);
         break;
       default:
         console.error("vHelper: Pogresan naziv za view-a");

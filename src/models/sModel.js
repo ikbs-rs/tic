@@ -662,7 +662,16 @@ const ticSetItem = async (objName, item, items) => {
   const sqlString = `UPDATE ${objName} set ${item} = ${value}  WHERE id = ${items.id}`;
   console.log(sqlString, "55555555555555555555555555555555555555555555555555555", items)
   const result = await db.query(sqlString);
-  return result.rowCount;  
+  return result.rowCount;
+}
+
+const ticSetValue = async (objName, item, itemValue, objId) => {
+  const attributeType = entities.entitiesInfo[objName].attributes[item];
+  const value = attributeType === 'string' ? `'${itemValue}'` : itemValue;
+  const sqlString = `UPDATE ${objName} set ${item} = ${value}  WHERE id = ${objId}`;
+  console.log(sqlString, "55555555555555555555555555555555555555555555555555555", item)
+  const result = await db.query(sqlString);
+  return result.rowCount;
 }
 
 const obradaProdaja = async (par1, par2, requestBody) => {
@@ -954,14 +963,14 @@ const obradaProdajas = async (par1, par2) => {
 
 const docSetService = async (requestBody) => {
 
-    try {
-      await db.query('BEGIN');
-      // await client.query('SET search_path TO iis,public;'); // Add this line
-      const ticDocRow = requestBody;
-      console.log('ticDocRow=================================:', ticDocRow);
-      const query = {
-        name: 'call-tic_docs_setservices',
-        text: `SELECT tic_docs_setservices(
+  try {
+    await db.query('BEGIN');
+    // await client.query('SET search_path TO iis,public;'); // Add this line
+    const ticDocRow = requestBody;
+    console.log('ticDocRow=================================:', ticDocRow);
+    const query = {
+      name: 'call-tic_docs_setservices',
+      text: `SELECT tic_docs_setservices(
           u_id := $1, 
           u_site := $2, 
           u_docvr := $3, 
@@ -986,58 +995,58 @@ const docSetService = async (requestBody) => {
           u_paymenttp := $22, 
           action_tp := $23
       )`,
-        values: [
-          ticDocRow.id,
-          ticDocRow.site,
-          ticDocRow.docvr,
-          ticDocRow.date,
-          ticDocRow.tm,
-          ticDocRow.curr,
-          ticDocRow.currrate,
-          ticDocRow.usr,
-          ticDocRow.status,
-          ticDocRow.docobj,
-          ticDocRow.broj,
-          ticDocRow.obj2,
-          ticDocRow.opis,
-          ticDocRow.timecreation,
-          ticDocRow.storno,
-          ticDocRow.year,
-          ticDocRow.channel,
-          ticDocRow.usersys,
-          ticDocRow.endtm,
-          ticDocRow.reservation,
-          ticDocRow.delivery,
-          ticDocRow.paymenttp,
-          ticDocRow.actiontp
-        ]
-      };
+      values: [
+        ticDocRow.id,
+        ticDocRow.site,
+        ticDocRow.docvr,
+        ticDocRow.date,
+        ticDocRow.tm,
+        ticDocRow.curr,
+        ticDocRow.currrate,
+        ticDocRow.usr,
+        ticDocRow.status,
+        ticDocRow.docobj,
+        ticDocRow.broj,
+        ticDocRow.obj2,
+        ticDocRow.opis,
+        ticDocRow.timecreation,
+        ticDocRow.storno,
+        ticDocRow.year,
+        ticDocRow.channel,
+        ticDocRow.usersys,
+        ticDocRow.endtm,
+        ticDocRow.reservation,
+        ticDocRow.delivery,
+        ticDocRow.paymenttp,
+        ticDocRow.actiontp
+      ]
+    };
 
-      try {
-        client.on('notice', (msg) => {
-          console.log(msg);
-        });
+    try {
+      client.on('notice', (msg) => {
+        console.log(msg);
+      });
 
-        console.log('Executing query:', query);
-        const result = await client.query(query);
-        // await new Promise(resolve => setTimeout(resolve, 5000));
-        console.log('Query result:', result);
-        await client.query('COMMIT');
-        console.log('tic_docs_setservices function executed successfully');
-      } catch (err) {
-        console.error(err.stack);
-      }
-
-    } catch (error) {
-      await client.query('ROLLBACK'); // Rollback the transaction in case of error
-      console.error(`Error updating sectors: ${error}`);
-      res.status(500).json({ error: 'Failed to update sectors' });
-
-      // await client.query('COMMIT'); 
-    } finally {
-      client.end();
-      client.release(); // Release the database connection back to the pool
+      console.log('Executing query:', query);
+      const result = await client.query(query);
+      // await new Promise(resolve => setTimeout(resolve, 5000));
+      console.log('Query result:', result);
+      await client.query('COMMIT');
+      console.log('tic_docs_setservices function executed successfully');
+    } catch (err) {
+      console.error(err.stack);
     }
+
+  } catch (error) {
+    await client.query('ROLLBACK'); // Rollback the transaction in case of error
+    console.error(`Error updating sectors: ${error}`);
+    res.status(500).json({ error: 'Failed to update sectors' });
+
+    // await client.query('COMMIT'); 
+  } finally {
+    client.end();
+    client.release(); // Release the database connection back to the pool
+  }
 
 };
 
@@ -1275,7 +1284,7 @@ const ticEventDeleteAll = async (uId) => {
       console.log('Query result:', result);
       await client.query('COMMIT');
       console.log('tic_eventdeleteall function executed successfully', result.rows[0]);
-      return {id: uId}
+      return { id: uId }
     } catch (err) {
       console.error(err.stack);
       await client.query('ROLLBACK'); // Rollback the transaction in case of error
@@ -1289,6 +1298,90 @@ const ticEventDeleteAll = async (uId) => {
   }
 
 };
+
+const ticDocstorno = async (par1, par2, objId1, requestBody, lang) => {
+  const client = await db.connect();
+
+  try {
+    console.log(par1, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ copyGrpEventlocl  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+    let ok = false;
+    let uId = '11111111111111111111'
+    let sId = '11111111111111111111'
+    uId = await uniqueId();
+    await client.query(
+      `
+      INSERT INTO tic_doc
+      SELECT $1 id, site, docvr, "date", to_char(now(), 'YYYYMMDDHH24MISS') tm, curr, currrate, usr, status, docobj, broj, obj2, opis, timecreation,
+	           1 storno, "year", channel, $2 sysusr,  endtm, reservation, 	delivery, paymenttp, services 
+      FROM tic_doc
+      WHERE id = $3
+    `,
+      [uId, par2, objId1]
+    );
+
+    if (par1 == 'DOC') {
+      await client.query(
+        `
+        INSERT INTO tic_docs(
+            id, site, doc, event, loc, art, tgp, taxrate, price, input, output, discount, curr, currrate, tax, 
+            duguje, potrazuje, leftcurr, rightcurr, begtm, endtm, status, fee, par, descript, cena, reztm, 
+            storno, nart, row, label, seat, vreme,ticket, services, tickettp, delivery, 
+            ulaz, sector, barcode, online, print, pm, rez, sysuser
+            )
+        SELECT 	nextval('iis.tic_table_id_seq') id, site, $1, event, loc, art, tgp, taxrate, price, input, -output, discount, curr, currrate, -tax, 
+	              duguje, -potrazuje, leftcurr, -rightcurr, null, null, status, fee, par, descript, cena, reztm, 
+	              1, nart, row, label, seat, now() vreme, ticket, services, tickettp, delivery,
+                ulaz, sector, barcode, online, print, pm, rez, sysuser
+        FROM tic_docs
+        WHERE doc = $2
+      `,
+        [uId, objId1]
+      );
+    } else {
+      console.log(requestBody, "***************************copyGrpEventlocl - PRE IF *******************************", requestBody.jsonObj)      
+      const parsedBody = requestBody; //JSON.parse(requestBody.jsonObj);
+      if (parsedBody && Array.isArray(parsedBody)) {
+        console.log(parsedBody, "***************************copyGrpEventlocl - IF *******************************")
+        // Iteriramo kroz objekte u parsedBody
+        for (const obj of parsedBody) {
+          console.log(obj, "***************************copyGrpEventlocl - FOR *******************************")
+          sId = await uniqueId();
+          await db.query(
+            `
+          INSERT INTO tic_docs (
+            id, site, doc, event, loc, art, tgp, taxrate, price, input, output, discount, curr, currrate, tax, 
+            duguje, potrazuje, leftcurr, rightcurr, begtm, endtm, status, fee, par, descript, cena, reztm, 
+            storno, nart, row, label, seat,  ticket, services, tickettp, delivery,
+            ulaz, sector, barcode, online, print, pm, rez, sysuser
+            )
+          VALUES 
+            ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, 
+            $24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36)
+          `,
+            [sId, obj.site, obj.doc, obj.event, obj.loc, obj.art, obj.tgp, obj.taxrate, obj.price, obj.input, -obj.output, 
+              obj.discount, obj.curr, obj.currrate, -obj.tax, obj.duguje, -obj.potrazuje, obj.leftcurr, obj.rightcurr, 
+              obj.begtm, obj.endtm, obj.status, obj.fee, obj.par, obj.descript, obj.cena, obj.reztm, obj.storno, obj.nart, obj.row, 
+              obj.label, obj.seat,  obj.ticket, obj.services, obj.tickettp, obj.delivery,
+              obj.ulaz, obj.sector, obj.barcode, obj.online, obj.print, obj.pm, obj.rez, obj.sysuser]
+          );
+          console.log(sId, "@@@*******copyGrpEventlocl - END FOR **********@@@", -obj.output, "@@+@@", uId, "@@+@@")
+        }
+      }
+    }
+
+    await db.query("COMMIT"); 
+    ok = true;
+    return ok;
+  }
+  catch (error) {
+    if (db) {
+      await db.query("ROLLBACK"); 
+    }
+    throw error;
+  }
+};
+/****************************************************************************** */
+
 
 export default {
   getAgendaL,
@@ -1311,4 +1404,6 @@ export default {
   ticEventSaveDate,
   ticEventDeleteAll,
   ticSetItem,
+  ticSetValue,
+  ticDocstorno,
 };

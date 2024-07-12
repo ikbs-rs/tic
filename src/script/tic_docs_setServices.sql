@@ -100,6 +100,7 @@ RAISE NOTICE 'DOSAO U FUNKCIJU tic_docs_setservices za ID: %', u_id;
             SELECT s.*
             FROM tic_docs s
             WHERE s.doc = u_id 
+            and s.storno != '1'
         loop
 	        
 	        -- Za naknadu dovlačim postavke iz eventa - procenat i minimalnu naknadu po karti
@@ -162,8 +163,10 @@ RAISE NOTICE 'DOSAO U FUNKCIJU tic_docs_setservices za ID: %', u_id;
             WHERE s.doc = u_id 
             and o.code = 'TCTP1'
             and s.tickettp = o.id
+            and s.storno != '1'
+            and s.print = 1
         loop
-	        
+	        RAISE NOTICE 'Dodavanje naknade za PRINT  Н3: '; 
 	        -- Za naknadu dovlačim postavke iz eventa - procenat i minimalnu naknadu po karti
 	        SELECT s.value::numeric, s.text, substring(s.condition, 1, length(s.condition) - 1) AS procent, s.minfee 
 	        INTO pValue, pText, pProcent, pMinfee
@@ -234,6 +237,8 @@ RAISE NOTICE 'DOSAO U FUNKCIJU tic_docs_setservices za ID: %', u_id;
 		            join tic_art a on a.id = s.art
 		            join tic_arttp t on t.id = a.tp and t.code in ('CK', 'K')
 		            WHERE s.doc = u_id 
+		            and s.storno != '1'
+		            and s.pm = 1
 		        loop
 			        
 			        -- Za naknadu dovlačim postavke iz eventa - procenat i minimalnu naknadu po karti
@@ -296,6 +301,8 @@ RAISE NOTICE 'DOSAO U FUNKCIJU tic_docs_setservices za ID: %', u_id;
             join tic_art a on  a.id = s.art
             join tic_arttp t on t.id = a.tp and t.code in ('K', 'CK')
             WHERE s.doc = u_id 
+            and s.storno != '1'
+            and s.rez= 1
         loop
 	        
 	        -- Za naknadu dovlačim postavke iz eventa - procenat i minimalnu naknadu po karti
@@ -372,6 +379,8 @@ RAISE NOTICE 'H5 -- Delivery: %', u_delivery;
 	            join tic_art a on  a.id = s.art
 	            join tic_arttp t on t.id = a.tp and t.code in ('K', 'CK')
 	            WHERE s.doc = u_id 
+	            and s.storno != '1'
+	            and s.delivery = 1
 	        loop
 		        if pBroj = 0 then
 		        RAISE NOTICE 'H5 -0- tic_docs_record5: %', tic_docs_record5; 

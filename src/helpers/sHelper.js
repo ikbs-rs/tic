@@ -122,6 +122,12 @@ const postFunction = async (
       case "tic_set_s": // obrada stavke na prodaji
         result = await sModel.ticSetItem(par1, par2, requestBody);
         break;
+      case "tic_setvalue_s": // obrada stavke na prodaji
+        result = await sModel.ticSetValue(par1, par2, objId1, objId2);
+        break;
+      case "tic_docstorno_s": // obrada stavke na prodaji
+        result = await sModel.ticDocstorno (par1, par2, objId1, requestBody, lang)
+        break;
         
       default:
         console.error("sHelper: Pogresan naziv za view-a - " + stm);
