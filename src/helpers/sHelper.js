@@ -110,6 +110,9 @@ const postFunction = async (
       case "tic_docssetservice_s": // obrada stavke na prodaji
         result = await sModel.docSetService(requestBody);
         break;
+      case "tic_docsetcancel_s": // obrada stavke na prodaji
+        result = await sModel.docSetCancelService(objId1);
+        break;
       case "tic_eventcopy_s": // obrada stavke na prodaji
         result = await sModel.ticEventCopy(requestBody);
         break;
@@ -126,9 +129,20 @@ const postFunction = async (
         result = await sModel.ticSetValue(par1, par2, objId1, objId2);
         break;
       case "tic_docstorno_s": // obrada stavke na prodaji
-        result = await sModel.ticDocstorno (par1, par2, objId1, requestBody, lang)
+        result = await sModel.ticDocstorno(par1, par2, objId1, requestBody, lang)
         break;
-        
+      case "tic_docsuidpar_s": // obrada stavke na prodaji
+        result = await sModel.ticDocsuidPar(objId1, requestBody, lang)
+        break;
+      case "tic_docsuidparall_s": // obrada stavke na prodaji
+        result = await sModel.ticDocsuidParAll(objId1, requestBody, lang)
+        break;
+      case "tic_docsuidparallnull_s": // obrada stavke na prodaji
+        result = await sModel.ticDocsuidParAllNull(objId1, requestBody, lang)
+        break;
+      case "tic_docsuidparnull_s": // obrada stavke na prodaji
+        result = await sModel.ticDocsuidParNull(objId1, requestBody, lang)
+        break;
       default:
         console.error("sHelper: Pogresan naziv za view-a - " + stm);
     }

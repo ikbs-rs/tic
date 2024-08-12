@@ -22,10 +22,10 @@ const getListaC = async (objName, stm, sqlstmt, lang) => {
   }
 };
 
-const getLista = async (objName, stm, objId, par1, lang, par2, par3, par4, par5, par6, par7, par8, par9, par10) => {
+const getLista = async (objName, stm, objId, par1, par2, lang, par3, par4, par5, par6, par7, par8, par9, par10) => {
   try {
     console.log(objId, "*******Helper!!!!!!*********", stm);
-    console.log(objId, par1, par2, lang, '5555555555555555555555555555555555555555555555555555555555555555555555555555555555')
+    console.log(objName, stm, objId, par1, par2, lang, par3, par4, par5, par6, par7, par8, par9, par10, '5555555555555555555555555555555555555555555555555555555555555555555555555555555555')
     let result = {};
     switch (stm) {
       case "tic_agenda_v":
@@ -75,6 +75,9 @@ const getLista = async (objName, stm, objId, par1, lang, par2, par3, par4, par5,
         break;
       case "tic_docsartikli_v":
         result = await vModel.getDocsArtikliL(objName, objId, lang);
+        break;
+      case "tic_docsartikliprint_v":
+        result = await vModel.getDocsArtikliPrintL(objName, objId, lang);
         break;
       case "tic_docsnaknade_v":
         result = await vModel.getDocsNaknadeL(objName, objId, lang);
@@ -166,6 +169,9 @@ const getLista = async (objName, stm, objId, par1, lang, par2, par3, par4, par5,
       case "tic_docdiscounttp_v":
         result = await vModel.getDocdiscounttpL(objName, objId, lang);
         break;
+        case "tic_docsdiscounttp_v":
+          result = await vModel.getDocsdiscounttpL(objName, objId, lang);
+          break        
       case "tic_docdiscount_v":
         result = await vModel.getDocdiscountL(objName, objId, lang);
         break;
@@ -194,8 +200,16 @@ const getLista = async (objName, stm, objId, par1, lang, par2, par3, par4, par5,
         result = await vModel.getDocsuidProdajaLista(objName, objId, lang);
         break;
       case "tic_eventattsobjcodel_v":
-        console.log(objId, par1, par2, lang, '5555555555555555555555555555555555555555555555555555555555555555555555555555555555')
         result = await vModel.getEventattsobjcodeL(objId, par1, par2, lang);
+        break;
+      case "tic_doczbirniiznos_v":
+        result = await vModel.getDocZbirniiznosL(objId);
+        break;
+      case "tic_docshavediscount_v":
+        result = await vModel.getTicDocHaveDiscountV(objId, par1, lang);
+        break;
+      case "tic_docsdiscountl_v":
+        result = await vModel.getTicDocsdiscountL(objId, lang);
         break;
       default:
         console.error("vHelper: Pogresan naziv za view-a");

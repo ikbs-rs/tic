@@ -587,7 +587,8 @@ const entitiesInfo =
 			"loc": "number",
 			"par": "number",
 			"tmp": "number",
-			"season": "number"
+			"season": "number",
+			"mapa": "number"
 		}
 	},
 	"tic_eventagenda": {
@@ -611,7 +612,8 @@ const entitiesInfo =
 			"nart": "string",
 			"discount": "number",
 			"color": "string",
-			"icon": "string"
+			"icon": "string",
+			"maxkol": "number"
 		}
 	},
 	"tic_eventatttp": {
@@ -1023,7 +1025,25 @@ const entitiesInfo =
 			"docs": "number",
 			"time": "string"
 		}
-	}
+	},
+	"tic_docsdiscount": {
+		"attributes": {
+		  "id": "number",
+		  "site": "number",
+		  "docs": "number",
+		  "discount": "number",
+		  "eksternibroj": "string",
+		  "procenat": "number",
+		  "iznos": "number",
+		  "discountvalue": "number",
+		  "allitem": "number",
+		  "proc": "number",
+		  "bcontent": "string",
+		  "opis": "string",
+		  "napomena": "string",
+		  "postavka": "string"
+		}
+	  }	
 }
 export default {
 	entitiesInfo,

@@ -346,7 +346,7 @@ const activateEvent = async (eventId) => {
 
     // Create row for tic_doc
     const docRows = await db.query(`
-      SELECT nextval('tic_table_id_seq') id , null site, to_char(NOW(), 'YYYYMMDD') "date", to_char(NOW(), 'YYYYMMDDHH24MISS') tm, 1 curr, 1 currrate, 
+      SELECT nextval('tic_table_id_seq') id , null site, to_char(NOW(), 'YYYYMMDD') "date", to_char(NOW(), 'YYYYMMDDHH24MISS') tm, 1 curr, 1 currrate, 22 docvr,
       a.par usr, 1 status, 1 docobj, a.id broj, $1 obj2, '$$NADREDJENI$$ ' opis, to_char(NOW(), 'YYYYMMDDHH24MISS') timecreation, 0 storno, to_char(NOW(), 'YYYY') "year", a.status currStatus
       FROM tic_event a
       WHERE a.id = $2
@@ -359,25 +359,30 @@ const activateEvent = async (eventId) => {
     }
     console.log("***********************01*************************** eventId = ", eventId)
     let i = 0
-    const docvr = "1683550594276921344"
+    // const docvr = "22"
     for (const row of docRows.rows) {
       console.log(eventId, "***********************02********************row********", row)
       // Insertuje se zaglavlje dokumenta - kupac organizator
       const docId = row.id
+      const channel = 1
       await db.query(`
-          INSERT INTO tic_doc (id , site, date, tm, curr, currrate, usr, status, docobj, broj, obj2, opis, timecreation, storno, year, docvr)
-          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
-        `, [docId, row.site, row.date, row.tm, row.curr, row.currrate, row.usr, row.status, row.docobj, row.broj, row.obj2, row.opis, row.timecreation, row.storno, row.year, docvr]);
+          INSERT INTO tic_doc (id , site, date, tm, curr, currrate, usr, status, docobj, broj, obj2, opis, timecreation, storno, year, docvr, endtm, usersys, channel)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, 2, $8, $9, $10, $11, $12, $13, $14, $15, $16, 1, 1773469083845922816)
+        `, [docId, row.site, row.date, row.tm, row.curr, row.currrate, 1, row.docobj, row.broj, row.obj2, row.opis, row.timecreation, row.storno, row.year, row.docvr, '99991231235959']);
       console.log(docId, "***********************02****************************", ++i)
       // Upit za sezonske doga]aje koji se primenjuju na pojedinacni
       // Ako se kupac prijavljuje onda je to rezervacija u suprotnom je odmah racun
 
       const docsRows = await db.query(`
-          SELECT nextval('tic_table_id_seq') id, site, $1 doc, $2 event, loc, art, tgp, taxrate, 0 price, input, output, 0 discount, curr, currrate, 0 duguje, 0 potrazuje, 0 leftcurr,
-          0 rightcurr, to_char(NOW(), 'YYYYMMDDHH24MISS') begtm, '99991231000000' endtm, 1 status, 0 fee, par, ' ' descript
-          FROM tic_docs
-          WHERE event in (
-            select a.value::numeric 
+          SELECT nextval('tic_table_id_seq') id, d.site, $1 doc, $2 event, d.loc, d.art, d.tgp, d.taxrate, 0 price, d.input, d.output, 
+          0 discount, d.curr, d.currrate, 0 duguje, 0 potrazuje, 0 leftcurr, 0 rightcurr,
+          0 rightcurr, to_char(NOW(), 'YYYYMMDDHH24MISS') begtm, d.endtm, 2 status, 0 fee, par, 'AKTIVACIJA_DOKUMENTA' descript,
+          d.tax, a.text nart, d.row, d.label, d.seat
+          FROM tic_docs d
+          join tic_artx_v a on a.id = d.art
+          join tic_arttp t on t.id = a.tp and t.code in ('CK', 'K')
+          WHERE d.event::varchar in (
+            select a.value 
             from	tic_eventatts a, tic_eventatt b
             where a.event = $3
             and a.att = b.id 
@@ -391,11 +396,13 @@ const activateEvent = async (eventId) => {
         //Insert stavki sezonskih karti. Cena i iznos se neupisuju.
         await db.query(`
           INSERT INTO tic_docs (id, site, doc, event, loc, art, tgp, taxrate, price, input, output, discount, curr, currrate, duguje, potrazuje,
-            leftcurr, rightcurr, begtm, endtm, status, fee, par, descript)
-          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24)
+            leftcurr, rightcurr, begtm, endtm, status, fee, par, descript, tax, nart, row, label, seat)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, 
+            $23, $24, $25, $26, $27, $28, $29)
           `, [row1.id, row1.site, row.id, row1.event, row1.loc, row1.art, row1.tgp, row1.taxrate, row1.price, row1.input,
         row1.output, row1.discount, row1.curr, row1.currrate, row1.duguje, row1.potrazuje,
-        row1.leftcurr, row1.rightcurr, row1.begtm, row1.endtm, row1.status, row1.fee, row1.par, row1.descript]);
+        row1.leftcurr, row1.rightcurr, row1.begtm, row1.endtm, row1.status, row1.fee, row1.par, row1.descript, row1.tax, row1.nart,
+        row1.row, row1.label, row1.seat]);
       }
     }
 
@@ -1050,6 +1057,215 @@ const docSetService = async (requestBody) => {
 
 };
 
+const docSetCancelService = async (objId) => {
+
+  try {
+    await db.query('BEGIN');
+
+    const query1 = ` update tic_doc  
+              set status = 4 
+              where id = $1`;
+    const query2 = ` update tic_docs  
+                set endtm = null,
+                    begtm = null
+                where doc = $1`;
+
+    console.log('ticDocRow=================================:', query1);
+    console.log('ticDocRow=================================:', query2);
+
+    try {
+      console.log('Executing query:', query1);
+      await db.query(query1, [objId]);
+      let result = await db.query(query2, [objId]);
+      console.log('Query result:', result);
+      await db.query('COMMIT');
+      console.log('tic_docs_cancel function executed successfully');
+    } catch (err) {
+      console.error('Error executing queries, rolling back:', err.stack);
+      await db.query('ROLLBACK');
+      throw err; // Rethrow the error after rollback
+    }
+
+  } catch (error) {
+    console.error(`Error in transaction, rolling back: ${error}`);
+    throw error; // Rethrow the error to be handled by the caller
+  }
+
+};
+
+const ticDocsuidParAllNull = async (objId1, requestBody, lang) => {
+
+  try {
+    const ticDocRow = requestBody;
+    await db.query('BEGIN');
+
+    const query1 = ` 
+              update tic_docsuid
+                set first = '',
+                  last = '',
+                  uid = '',
+                  adress = '',
+                  city = '',
+                  country = '',
+                  phon = '',
+                  email = '',
+                  par = null
+              where 	docs in (
+                  select s.id
+                  from	tic_docs s
+                  where 	s.doc = $1
+              )
+              `;
+
+    console.log('ticDocRow=================================:', query1);
+
+    try {
+      console.log('Executing query:', query1);
+      await db.query(query1, [objId1]);
+      await db.query('COMMIT');
+    } catch (err) {
+      console.error('Error executing queries, rolling back:', err.stack);
+      await db.query('ROLLBACK');
+      throw err; // Rethrow the error after rollback
+    }
+
+  } catch (error) {
+    console.error(`Error in transaction, rolling back: ${error}`);
+    throw error; // Rethrow the error to be handled by the caller
+  }
+
+};
+
+
+const ticDocsuidParAll = async (objId1, requestBody, lang) => {
+
+  try {
+    const ticDocRow = requestBody;
+    await db.query('BEGIN');
+
+    const query = ` 
+              update tic_docsuid
+                set first = '${ticDocRow.text}',
+                  last = '${ticDocRow.text}',
+                  uid = '${ticDocRow.idnum || ticDocRow.pib}',
+                  adress = '${ticDocRow.address}',
+                  city = '${ticDocRow.place}',
+                  country = '${ticDocRow.country}',
+                  phon = '${ticDocRow.tel}',
+                  email = '${ticDocRow.email}',
+                  par = ${ticDocRow.id}
+              where 	docs in (
+                  select s.id
+                  from	tic_docs s
+                  where 	s.doc = ${objId1}
+              )
+              `;
+
+    console.log(requestBody, 'ticDocRow=================================:', query, "-------------", ticDocRow);
+
+    try {
+      await db.query(query);
+      await db.query('COMMIT');
+    } catch (err) {
+      console.error('Error executing queries, rolling back:', err.stack);
+      await db.query('ROLLBACK');
+      throw err; // Rethrow the error after rollback
+    }
+
+  } catch (error) {
+    console.error(`Error in transaction, rolling back: ${error}`);
+    throw error; // Rethrow the error to be handled by the caller
+  }
+
+};
+
+const ticDocsuidPar = async (objId1, requestBody, lang) => {
+
+  try {
+    const ticDocRow = requestBody;
+    await db.query('BEGIN');
+
+    const query = ` 
+              update tic_docsuid
+                set first = '${ticDocRow.text}',
+                  last = '${ticDocRow.text}',
+                  uid = '${ticDocRow.idnum || ticDocRow.pib}',
+                  adress = '${ticDocRow.address}',
+                  city = '${ticDocRow.place}',
+                  country = '${ticDocRow.country}',
+                  phon = '${ticDocRow.tel}',
+                  email = '${ticDocRow.email}',
+                  par = ${ticDocRow.id}
+              where 	docs  = ${objId1}
+              `;
+
+    const query1 = ` 
+              update tic_docs
+                set status = 99
+              where 	id  = ${objId1}
+              `;
+
+    console.log(requestBody, 'ticDocRow=================================:', query, "-------------", ticDocRow);
+
+    try {
+      await db.query(query);
+      await db.query(query1);
+      await db.query('COMMIT');
+    } catch (err) {
+      console.error('Error executing queries, rolling back:', err.stack);
+      await db.query('ROLLBACK');
+      throw err; // Rethrow the error after rollback
+    }
+
+  } catch (error) {
+    console.error(`Error in transaction, rolling back: ${error}`);
+    throw error; // Rethrow the error to be handled by the caller
+  }
+
+};
+const ticDocsuidParNull = async (objId1, requestBody, lang) => {
+
+  try {
+    const ticDocRow = requestBody;
+    await db.query('BEGIN');
+
+    const query = ` 
+              update tic_docsuid
+                set first = '',
+                  last = '',
+                  uid = '',
+                  adress = '',
+                  city = '',
+                  country = '',
+                  phon = '',
+                  email = '',
+                  par = null
+              where 	docs  = ${objId1}
+              `;
+              const query1 = ` 
+              update tic_docs
+                set status = 1
+              where 	id  = ${objId1}
+              `;
+    console.log(requestBody, 'ticDocRow=================================:', query, "-------------", ticDocRow);
+
+    try {
+      await db.query(query);
+      await db.query(query1);
+      await db.query('COMMIT');
+    } catch (err) {
+      console.error('Error executing queries, rolling back:', err.stack);
+      await db.query('ROLLBACK');
+      throw err; // Rethrow the error after rollback
+    }
+
+  } catch (error) {
+    console.error(`Error in transaction, rolling back: ${error}`);
+    throw error; // Rethrow the error to be handled by the caller
+  }
+
+};
+
 const ticEventCopy = async (requestBody) => {
 
   const client = await db.connect();
@@ -1338,7 +1554,7 @@ const ticDocstorno = async (par1, par2, objId1, requestBody, lang) => {
         [uId, objId1]
       );
     } else {
-      console.log(requestBody, "***************************copyGrpEventlocl - PRE IF *******************************", requestBody.jsonObj)      
+      console.log(requestBody, "***************************copyGrpEventlocl - PRE IF *******************************", requestBody.jsonObj)
       const parsedBody = requestBody; //JSON.parse(requestBody.jsonObj);
       if (parsedBody && Array.isArray(parsedBody)) {
         console.log(parsedBody, "***************************copyGrpEventlocl - IF *******************************")
@@ -1358,10 +1574,10 @@ const ticDocstorno = async (par1, par2, objId1, requestBody, lang) => {
             ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, 
             $24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36)
           `,
-            [sId, obj.site, obj.doc, obj.event, obj.loc, obj.art, obj.tgp, obj.taxrate, obj.price, obj.input, -obj.output, 
-              obj.discount, obj.curr, obj.currrate, -obj.tax, obj.duguje, -obj.potrazuje, obj.leftcurr, obj.rightcurr, 
-              obj.begtm, obj.endtm, obj.status, obj.fee, obj.par, obj.descript, obj.cena, obj.reztm, obj.storno, obj.nart, obj.row, 
-              obj.label, obj.seat,  obj.ticket, obj.services, obj.tickettp, obj.delivery,
+            [sId, obj.site, obj.doc, obj.event, obj.loc, obj.art, obj.tgp, obj.taxrate, obj.price, obj.input, -obj.output,
+              obj.discount, obj.curr, obj.currrate, -obj.tax, obj.duguje, -obj.potrazuje, obj.leftcurr, obj.rightcurr,
+              obj.begtm, obj.endtm, obj.status, obj.fee, obj.par, obj.descript, obj.cena, obj.reztm, obj.storno, obj.nart, obj.row,
+              obj.label, obj.seat, obj.ticket, obj.services, obj.tickettp, obj.delivery,
               obj.ulaz, obj.sector, obj.barcode, obj.online, obj.print, obj.pm, obj.rez, obj.sysuser]
           );
           console.log(sId, "@@@*******copyGrpEventlocl - END FOR **********@@@", -obj.output, "@@+@@", uId, "@@+@@")
@@ -1369,13 +1585,13 @@ const ticDocstorno = async (par1, par2, objId1, requestBody, lang) => {
       }
     }
 
-    await db.query("COMMIT"); 
+    await db.query("COMMIT");
     ok = true;
     return ok;
   }
   catch (error) {
     if (db) {
-      await db.query("ROLLBACK"); 
+      await db.query("ROLLBACK");
     }
     throw error;
   }
@@ -1406,4 +1622,9 @@ export default {
   ticSetItem,
   ticSetValue,
   ticDocstorno,
+  docSetCancelService,
+  ticDocsuidParAll,
+  ticDocsuidParAllNull,
+  ticDocsuidParNull,
+  ticDocsuidPar,
 };
