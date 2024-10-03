@@ -593,6 +593,51 @@ const copyGrpEventlocl = async (eventId, par1, loc, tploc, begda, endda, request
 /****************************************************************************** */
 
 
+const copyGrpEventart = async (eventId, par1, requestBody) => {
+
+  try {
+    console.log(par1, "***************************copyGrpEvent!!!!!!!!*******************************")
+    let ok = false;
+    let uId = '11111111111111111111'
+    await db.query("BEGIN");
+
+    if (par1 == 'true') {
+      await db.query(
+        `
+      delete from tic_eventart
+      where event = $1
+    `, [eventId]);
+    }
+    console.log(par1, "***************************copyGrpEvent!!!!!!!!*******************************")
+    // Iteriramo kroz objekte u requestBody
+    // Pretvorite string u niz objekata
+    const parsedBody = JSON.parse(requestBody.jsonObj);
+
+    console.log(parsedBody, "5555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555")
+    if (parsedBody && Array.isArray(parsedBody)) {
+      // Iteriramo kroz objekte u parsedBody
+      for (const obj of parsedBody) {
+        uId = await uniqueId();
+
+        // Insert rows into tic_eventatts using obj.id
+        await db.query(`
+          INSERT INTO tic_eventart (id, site, event, art, descript, begda, endda, nart, discount)
+          VALUES ($1, NULL, $2, $3, '', to_char(NOW(), 'YYYYMMDDHH'), '99991231', $4, 0)
+        `, [uId, eventId, obj.id, obj.text]);
+      }
+    }
+    await db.query("COMMIT"); // Confirm the transaction
+    ok = true;
+
+    return ok;
+  } catch (error) {
+    if (db) {
+      await db.query("ROLLBACK"); // Rollback the transaction in case of an error
+    }
+    throw error;
+  }
+};
+
 const copyGrpEvent = async (eventId, par1, requestBody) => {
 
   try {
@@ -1109,7 +1154,8 @@ const ticDocsuidParAllNull = async (objId1, requestBody, lang) => {
                   country = '',
                   phon = '',
                   email = '',
-                  par = null
+                  par = null,
+                  birthday = ''
               where 	docs in (
                   select s.id
                   from	tic_docs s
@@ -1136,6 +1182,116 @@ const ticDocsuidParAllNull = async (objId1, requestBody, lang) => {
 
 };
 
+const ticDocdiscountAll = async (objId1, requestBody, lang) => {
+
+  try {
+    const ticDocRow = requestBody;
+    await db.query('BEGIN');
+    const queryStmt = ` 
+              delete from  tic_docsdiscount
+              where 	docs in (
+                  select s1.id
+                  from  tic_docs s1 
+                  join  tic_doc d on d.id = s1.doc
+                  join  tic_docs s2 on s2.doc = d.id and s2.id = ${ticDocRow.docs}
+                  where s1.event = ${ticDocRow.event}
+              ) 
+              and id != ${ticDocRow.id}
+              and discount = ${ticDocRow.discount}
+              
+              `;
+
+    const query = ` 
+              insert into tic_docsdiscount (id, site, docs, discount, eksternibroj, discountvalue, procenat)
+              select  nextval('tic_table_id_seq') id, s.site, s.id docs, ${ticDocRow.discount}, '${ticDocRow.eksternibroj}',
+                      ${ticDocRow.discountvalue}, ${ticDocRow.procenat}
+              from  tic_docs s
+              join  tic_doc d on d.id = s.doc
+              join  tic_docs s1 on s1.doc = d.id and s1.id = ${ticDocRow.docs}
+              where 	s.id != ${ticDocRow.docs}
+              and s.event = ${ticDocRow.event}
+              `;
+
+    console.log(queryStmt, 'ticDocRow=================================:', query, "-------------", ticDocRow);
+
+    try {
+      await db.query(queryStmt);
+      await db.query(query);
+      await db.query('COMMIT');
+    } catch (err) {
+      console.error('Error executing queries, rolling back:', err.stack);
+      await db.query('ROLLBACK');
+      throw err; // Rethrow the error after rollback
+    }
+
+  } catch (error) {
+    console.error(`Error in transaction, rolling back: ${error}`);
+    throw error; // Rethrow the error to be handled by the caller
+  }
+
+};
+
+const ticDelDocdiscountAll = async (objId1, requestBody, lang) => {
+  try {
+    const ticDocRow = requestBody;
+    await db.query('BEGIN');
+    const queryStmt = ` 
+              delete from  tic_docsdiscount
+              where 	docs in (
+                  select s1.id
+                  from  tic_docs s1 
+                  join  tic_doc d on d.id = s1.doc and d.id = ${ticDocRow.id}
+              )               
+              `;
+    console.log(queryStmt, 'ticDocRow=================================-------------', ticDocRow);
+    try {
+      await db.query(queryStmt);
+      await db.query('COMMIT');
+    } catch (err) {
+      console.error('Error executing queries, rolling back:', err.stack);
+      await db.query('ROLLBACK');
+      throw err; // Rethrow the error after rollback
+    }
+
+  } catch (error) {
+    console.error(`Error in transaction, rolling back: ${error}`);
+    throw error; // Rethrow the error to be handled by the caller
+  }
+};
+
+const ticDelDocdiscountEventAll = async (objId1, requestBody, lang) => {
+
+  try {
+    const ticDocRow = requestBody;
+    await db.query('BEGIN');
+    const queryStmt = ` 
+              delete from  tic_docsdiscount
+              where 	docs in (
+                  select s1.id
+                  from  tic_docs s1 
+                  join  tic_doc d on d.id = s1.doc
+                  join  tic_docs s2 on s2.doc = d.id and s2.id = ${ticDocRow.docs}
+                  where s1.event = ${ticDocRow.event}
+              )               
+              `;
+
+    console.log(queryStmt, 'ticDocRow=================================-------------', ticDocRow);
+
+    try {
+      await db.query(queryStmt);
+      await db.query('COMMIT');
+    } catch (err) {
+      console.error('Error executing queries, rolling back:', err.stack);
+      await db.query('ROLLBACK');
+      throw err; // Rethrow the error after rollback
+    }
+
+  } catch (error) {
+    console.error(`Error in transaction, rolling back: ${error}`);
+    throw error; // Rethrow the error to be handled by the caller
+  }
+
+};
 
 const ticDocsuidParAll = async (objId1, requestBody, lang) => {
 
@@ -1153,7 +1309,8 @@ const ticDocsuidParAll = async (objId1, requestBody, lang) => {
                   country = '${ticDocRow.country}',
                   phon = '${ticDocRow.tel}',
                   email = '${ticDocRow.email}',
-                  par = ${ticDocRow.id}
+                  par = ${ticDocRow.id},
+                  birthday = '${ticDocRow.birthday}'
               where 	docs in (
                   select s.id
                   from	tic_docs s
@@ -1165,6 +1322,71 @@ const ticDocsuidParAll = async (objId1, requestBody, lang) => {
 
     try {
       await db.query(query);
+      await db.query('COMMIT');
+    } catch (err) {
+      console.error('Error executing queries, rolling back:', err.stack);
+      await db.query('ROLLBACK');
+      throw err; // Rethrow the error after rollback
+    }
+
+  } catch (error) {
+    console.error(`Error in transaction, rolling back: ${error}`);
+    throw error; // Rethrow the error to be handled by the caller
+  }
+
+};
+
+const ticDocsuidPosetilac = async (objId1, requestBody, lang) => {
+
+  try {
+    const ticDocRow = requestBody;
+    await db.query('BEGIN');
+
+    const query = ` 
+              update tic_docsuid
+                set first = '${ticDocRow.text}',
+                  last = '${ticDocRow.text}',
+                  uid = '${ticDocRow.idnum || ticDocRow.pib}',
+                  adress = '${ticDocRow.address}',
+                  city = '${ticDocRow.place}',
+                  country = '${ticDocRow.country}',
+                  phon = '${ticDocRow.tel}',
+                  email = '${ticDocRow.email}',
+                  par = ${ticDocRow.id},
+                  birthday = ${ticDocRow.birthday}
+              where 	docs  = ${objId1}
+              `;
+
+    const query1 = ` 
+              update tic_docs
+                set status = 99
+              where 	id  = ${objId1}
+              `;
+    const query2 = ` 
+              update tic_docs
+                set status = 99
+              where 	id  = ${objId1}
+              `;
+
+    // console.log(requestBody, 'ticDocRow=================================:', query, "-------------", ticDocRow);
+    const sqlRecenica =
+    `
+      select 	count(d.*)
+      from 	  tic_docsuid d
+      where 	d.docs = ${objId1}    
+    `
+    //const [rows] = await db.query(sqlRecenic);
+    
+
+    try {
+      await db.query(query);
+      await db.query(query1);
+      let result = await db.query(sqlRecenica);
+      let row = result.rows[0];
+      // console.log(row.count, "HHHHHHHHHH1111111111111111######################################################HHHHHHHHHHHHHHH", sqlRecenica)
+      if (row.count == 0) {
+        await db.query(query2);
+      }
       await db.query('COMMIT');
     } catch (err) {
       console.error('Error executing queries, rolling back:', err.stack);
@@ -1195,7 +1417,8 @@ const ticDocsuidPar = async (objId1, requestBody, lang) => {
                   country = '${ticDocRow.country}',
                   phon = '${ticDocRow.tel}',
                   email = '${ticDocRow.email}',
-                  par = ${ticDocRow.id}
+                  par = ${ticDocRow.id},
+                  birthday = ${ticDocRow.birthday}
               where 	docs  = ${objId1}
               `;
 
@@ -1242,7 +1465,7 @@ const ticDocsuidParNull = async (objId1, requestBody, lang) => {
                   par = null
               where 	docs  = ${objId1}
               `;
-              const query1 = ` 
+    const query1 = ` 
               update tic_docs
                 set status = 1
               where 	id  = ${objId1}
@@ -1308,7 +1531,8 @@ const ticEventCopy = async (requestBody) => {
         u_background_image := $29,
         u_loc_id := $30,
         u_auto_scale := $31,
-        u_auto_zoom := $32
+        u_auto_zoom := $32,
+        u_mesto := $33
     )`,
       values: [
         ticEventRow.id,
@@ -1342,7 +1566,8 @@ const ticEventCopy = async (requestBody) => {
         ticEventRow.background_image,
         ticEventRow.loc_id,
         ticEventRow.auto_scale,
-        ticEventRow.auto_zoom
+        ticEventRow.auto_zoom,
+        ticEventRow.mesto
       ]
     };
 
@@ -1598,6 +1823,45 @@ const ticDocstorno = async (par1, par2, objId1, requestBody, lang) => {
 };
 /****************************************************************************** */
 
+const ticDocpayments = async (requestBody, lang) => {
+  const client = await db.connect();
+
+  try {
+    let ok = false;
+    let sId = '11111111111111111111'
+
+    console.log(requestBody, "***************************ticDocpayments - PRE IF *******************************", requestBody.jsonObj)
+    const parsedBody = requestBody; //JSON.parse(requestBody.jsonObj);
+    if (parsedBody && Array.isArray(parsedBody)) {
+      console.log(parsedBody, "***************************ticDocpayments - IF *******************************")
+      // Iteriramo kroz objekte u parsedBody
+      for (const obj of parsedBody) {
+        console.log(obj, "***************************ticDocpayments - FOR *******************************")
+        sId = await uniqueId();
+        await db.query(
+          `
+          INSERT INTO tic_docpayment (id,	site,	doc, paymenttp,	amount,	bcontent,	ccard,	total,	tm,	usr,	status)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+          `,
+          [sId, null, obj.doc, obj.paymenttp, obj.amount, obj.bcontent, obj.ccard, obj.total, obj.tm, obj.usr, obj.status]
+        );
+        console.log(sId, "@@@*******copyGrpEventlocl - END FOR **********@@@@@+@@@@+@@")
+      }
+    }
+
+    await db.query("COMMIT");
+    ok = true;
+    return ok;
+  }
+  catch (error) {
+    if (db) {
+      await db.query("ROLLBACK");
+    }
+    throw error;
+  }
+};
+/****************************************************************************** */
+
 
 export default {
   getAgendaL,
@@ -1627,4 +1891,10 @@ export default {
   ticDocsuidParAllNull,
   ticDocsuidParNull,
   ticDocsuidPar,
+  ticDocdiscountAll,
+  ticDelDocdiscountEventAll,
+  ticDelDocdiscountAll,
+  ticDocpayments,
+  copyGrpEventart,
+  ticDocsuidPosetilac,
 };

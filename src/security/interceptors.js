@@ -139,3 +139,11 @@ export const checkPermissionsEx = async (req, res, next) => {
     });
   }
 };
+
+export const checkPermissionsAllSecure = (par1 = "1", par2 = "1") => {
+  return async (req, res, next) => {
+  // todo 
+  console.log('========================== checkPermissionsAllSecure',req)
+    next();
+  }
+}

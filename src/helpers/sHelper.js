@@ -89,6 +89,9 @@ const postFunction = async (
       case "tic_grpeventatts_s":
         result = await sModel.copyGrpEvent(objId1, par1, requestBody);
         break;
+      case "tic_grpeventart_s":
+        result = await sModel.copyGrpEventart(objId1, par1, requestBody);
+        break;
       case "tic_grpeventloc_s":
         result = await sModel.copyGrpEventloc(objId1, par1, par2, par3, begda, endda, requestBody);
         break;
@@ -134,14 +137,29 @@ const postFunction = async (
       case "tic_docsuidpar_s": // obrada stavke na prodaji
         result = await sModel.ticDocsuidPar(objId1, requestBody, lang)
         break;
+        case "tic_docsuidposetilac_s": // obrada stavke na prodaji
+        result = await sModel.ticDocsuidPosetilac(objId1, requestBody, lang)
+        break;        
       case "tic_docsuidparall_s": // obrada stavke na prodaji
         result = await sModel.ticDocsuidParAll(objId1, requestBody, lang)
         break;
       case "tic_docsuidparallnull_s": // obrada stavke na prodaji
         result = await sModel.ticDocsuidParAllNull(objId1, requestBody, lang)
         break;
-      case "tic_docsuidparnull_s": // obrada stavke na prodaji
+      case "tic_docsuidparnull_s":
         result = await sModel.ticDocsuidParNull(objId1, requestBody, lang)
+        break;
+      case "tic_docsdiscountall_s":
+        result = await sModel.ticDocdiscountAll(objId1, requestBody, lang)
+        break;
+      case "tic_deldocsdiscounteventall_s":
+        result = await sModel.ticDelDocdiscountEventAll(objId1, requestBody, lang)
+        break;
+      case "tic_deldocsdiscountall_s":
+        result = await sModel.ticDelDocdiscountAll(objId1, requestBody, lang)
+        break;
+      case "tic_docpayments_s":
+        result = await sModel.ticDocpayments(requestBody, lang)
         break;
       default:
         console.error("sHelper: Pogresan naziv za view-a - " + stm);

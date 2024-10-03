@@ -57,7 +57,8 @@ const entitiesInfo =
 			"color": "string",
 			"icon": "string",
 			"amount": "number",
-			"combining": "number"
+			"combining": "number",
+			"ctp": "string"
 		}
 	},
 	"tic_artcena": {
@@ -121,9 +122,9 @@ const entitiesInfo =
 		"attributes": {
 			"id": "number",
 			"site": "number",
-			"eventart1": "number",
-			"eventart2": "number",
-			"tp": "string"
+			"art": "number",
+			"eventart": "number",
+			"value": "string"
 		}
 	},
 	"tic_artprivilege": {
@@ -374,7 +375,11 @@ const entitiesInfo =
 			"reservation": "number",
 			"delivery": "number",
 			"paymenttp": "number",
-			"services": "string"
+			"services": "string",
+			"nusrsys": "string",
+			"nchannel": "string",
+			"nusr": "string",
+			"printfiskal": "number"
 		}
 	},
 	"tic_docb": {
@@ -425,24 +430,25 @@ const entitiesInfo =
 			"tmbck": "string",
 			"usr": "number",
 			"tel": "string",
-			"email": "string"
+			"email": "string",
+			"region": "number"
 		}
 	},
 	"tic_docdiscount": {
 		"attributes": {
-		  "id": "number",
-		  "site": "number",
-		  "doc": "number",
-		  "discount": "number",
-		  "eksternibroj": "string",
-		  "procenat": "number",
-		  "iznos": "number",
-		  "bcontent": "string",
-		  "opis": "string",
-		  "napomena": "string",
-    	  "postavka": "string"
+			"id": "number",
+			"site": "number",
+			"doc": "number",
+			"discount": "number",
+			"eksternibroj": "string",
+			"procenat": "number",
+			"iznos": "number",
+			"bcontent": "string",
+			"opis": "string",
+			"napomena": "string",
+			"postavka": "string"
 		}
-	  },
+	},
 	"tic_docpayment": {
 		"attributes": {
 			"id": "number",
@@ -451,7 +457,11 @@ const entitiesInfo =
 			"paymenttp": "number",
 			"amount": "number",
 			"bcontent": "number",
-			"ccard": "number"
+			"ccard": "number",
+			"total": "number",
+			"tm": "string",
+			"usr": "number",
+			"status": "number"
 		}
 	},
 	"tic_docs": {
@@ -545,7 +555,8 @@ const entitiesInfo =
 			"country": "string",
 			"phon": "string",
 			"email": "string",
-			"par": "number"
+			"par": "number",
+			"birthday": "string"
 		}
 	},
 	"tic_docvr": {
@@ -588,7 +599,9 @@ const entitiesInfo =
 			"par": "number",
 			"tmp": "number",
 			"season": "number",
-			"mapa": "number"
+			"mapa": "number",
+			"tm": "string",
+			"mesto": "number"
 		}
 	},
 	"tic_eventagenda": {
@@ -1022,28 +1035,38 @@ const entitiesInfo =
 		"attributes": {
 			"id": "number",
 			"site": "number",
-			"docs": "number",
-			"time": "string"
+			"doc": "number",
+			"time": "string",
+			"bcontent": "string",
+			"valid": "number",
+			"tp": "string",
+			"vr": "number",
+			"barcode": "string",
+			"mail": "string",
+			"usr": "number",
+			"tmupdate": "string",
+			"link": "string",
+			"ticket": "string"
 		}
 	},
 	"tic_docsdiscount": {
 		"attributes": {
-		  "id": "number",
-		  "site": "number",
-		  "docs": "number",
-		  "discount": "number",
-		  "eksternibroj": "string",
-		  "procenat": "number",
-		  "iznos": "number",
-		  "discountvalue": "number",
-		  "allitem": "number",
-		  "proc": "number",
-		  "bcontent": "string",
-		  "opis": "string",
-		  "napomena": "string",
-		  "postavka": "string"
+			"id": "number",
+			"site": "number",
+			"docs": "number",
+			"discount": "number",
+			"eksternibroj": "string",
+			"procenat": "number",
+			"iznos": "number",
+			"discountvalue": "number",
+			"allitem": "number",
+			"proc": "number",
+			"bcontent": "string",
+			"opis": "string",
+			"napomena": "string",
+			"postavka": "string"
 		}
-	  }	
+	}
 }
 export default {
 	entitiesInfo,

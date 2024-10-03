@@ -73,6 +73,9 @@ const getLista = async (objName, stm, objId, par1, par2, lang, par3, par4, par5,
       case "tic_docs_v":
         result = await vModel.getDocsL(objName, objId, lang);
         break;
+      case "tic_stampa_v":
+        result = await vModel.getStampaL(objId, lang);
+        break;
       case "tic_docsartikli_v":
         result = await vModel.getDocsArtikliL(objName, objId, lang);
         break;
@@ -169,9 +172,9 @@ const getLista = async (objName, stm, objId, par1, par2, lang, par3, par4, par5,
       case "tic_docdiscounttp_v":
         result = await vModel.getDocdiscounttpL(objName, objId, lang);
         break;
-        case "tic_docsdiscounttp_v":
-          result = await vModel.getDocsdiscounttpL(objName, objId, lang);
-          break        
+      case "tic_docsdiscounttp_v":
+        result = await vModel.getDocsdiscounttpL(objName, objId, lang);
+        break
       case "tic_docdiscount_v":
         result = await vModel.getDocdiscountL(objName, objId, lang);
         break;
@@ -210,6 +213,21 @@ const getLista = async (objName, stm, objId, par1, par2, lang, par3, par4, par5,
         break;
       case "tic_docsdiscountl_v":
         result = await vModel.getTicDocsdiscountL(objId, lang);
+        break;
+      case "tic_eventatts11l_v":
+        result = await vModel.getTicEventatts11V(objId, par1, lang);
+        break;
+      case "tic_docdiscountvalue_v":
+        result = await vModel.getTicDocsdiscountvalue(objId, lang);
+        break;
+      case "tic_docpayments_v":
+        result = await vModel.getDocPaymentS(objId, lang);
+        break;
+      case "tic_doccountprint_v":
+        result = await vModel.getCountPrint(objId, lang);
+        break;
+      case "tic_doccountpay_v":
+        result = await vModel.getCountPay(objId, lang);
         break;
       default:
         console.error("vHelper: Pogresan naziv za view-a");

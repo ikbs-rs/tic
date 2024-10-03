@@ -3,8 +3,10 @@ import abstruct from './models/abstructRoute.js'
 import abstructX from "./models/abstructXRoute.js";
 import fileRouter from "./services/fileRouter.js";
 import esirRouter from "./services/esirRouter.js";
+import allSecureRouter from "./services/allSecureRouter.js"
+import paymentPostbackRouter from "./services/paymentPostbackRouter.js"
 //import servicesRoute from './services/servicesRoute.js'
-import { checkJwt, checkPermissions, checkPermissionsEx } from '../security/interceptors.js'
+import { checkJwt, checkPermissions, checkPermissionsEx, checkPermissionsAllSecure } from '../security/interceptors.js'
 
 const router = express.Router();
 
@@ -27,7 +29,8 @@ router.use("/", (req, res, next) => {
 });
 
 router.use((req, res, next) => {
-  if (req.path.startsWith("/adm/services/sign")) {
+  console.log("----- REQ PATH -----", req.path);
+  if (req.path.startsWith("/adm/services/sign") || req.path.startsWith("/postback")) {
     return next();
   }
   console.log("Pre checkJwt");
@@ -78,6 +81,9 @@ router.use('/tic/eventtps', checkPermissions(), abstruct)
 router.use('/tic/file', checkPermissions(), fileRouter)
 
 router.use('/tic/esir', checkPermissions(), esirRouter)
+router.use('/tic/allsecure', checkPermissions(), allSecureRouter)
+// todo
+ router.use('/postback', checkPermissionsAllSecure(), paymentPostbackRouter)
 
 router.use('/tic/naime', checkPermissions(), abstruct) 
 router.use('/tic/parprivilege', checkPermissions(), abstruct) 
