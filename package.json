@@ -8,9 +8,11 @@
     "dev": "npx nodemon index.js",
     "devLocal": "copy .\\.envLocal .\\.env && npx nodemon index.js",
     "devBoban": "copy .\\.envBoban .\\.env && npx nodemon index.js",
+    "devTic": "cp .envDevTic .env && npx nodemon index.js", 
     "devDev": "copy .\\.envDev .\\.env && npx nodemon index.js",
     "devBrztest": "copy .\\.envBrztest .\\.env && npx --use-ipv4 nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "startTic": "cp .envDevTic .env && pm2 start index.js --name tic-app"
   },
   "author": "",
   "license": "ISC",
