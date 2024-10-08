@@ -264,7 +264,7 @@ const getEventartlinkL = async (objName, objId, lang) => {
   from	tic_eventartlink aa
   where aa.eventart = ${objId}
   `
-  console.log(sqlRecenica, "*******************getArtlinkL*********************"  )    
+  console.log(sqlRecenica, "*******************getArtlinkL*********************")
   //const [rows] = await db.query(sqlRecenic);
 
   let result = await db.query(sqlRecenica);
@@ -480,7 +480,7 @@ const getDocsArtikliL = async (objName, objId, lang) => {
       0 del
       from tic_docs aa
       join tic_doc d on aa.doc = d.id and aa.doc = ${objId}
-      join tic_artx_v a on aa.art = a.id and a.lang = 'sr_cyr'
+      join tic_artx_v a on aa.art = a.id and a.lang = '${lang || 'sr_cyr'}'
       join tic_arttp t on t.id = a.tp and t.code != 'Н'
       and aa.doc = d.id
   `
@@ -495,6 +495,31 @@ const getDocsArtikliL = async (objName, objId, lang) => {
     );
   }
 };
+
+const getDocsEventartcenaL = async (objName, objId, lang) => {
+  const sqlRecenica =
+    `
+select c.id, c.text || ' - ' ||trunc(a.value)||' '||v.code text, trunc(a.value) value
+      from tic_docs aa
+      join	tic_doc z on aa.doc = z.id
+      join tic_eventart d on aa.event = d.event and aa.art = d.art
+      join tic_eventartcena a on a.eventart = d.id and z."date" between a.begda and a.endda 
+      join  tic_cenax_v c on c.id = a.cena and c.lang = '${lang || 'sr_cyr'}'
+      join cmn_curr v on v.id = a.curr 
+      and aa.id = ${objId}
+  `
+  console.log(objId, "HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH getDocsEventartcenaL HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH", sqlRecenica)
+  let result = await db.query(sqlRecenica);
+  let rows = result.rows;
+  if (Array.isArray(rows)) {
+    return rows;
+  } else {
+    throw new Error(
+      `Greška pri dohvatanju slogova iz baze - abs find: ${rows}`
+    );
+  }
+};
+
 const getDocsArtikliPrintL = async (objName, objId, lang) => {
   const sqlRecenica =
     `
@@ -813,7 +838,7 @@ select *
 		    a.event, a.startda, a.starttm,
 		    a.cevent code, a.nevent text, a.venue,
 		    getTransactionstavke(a.id) nevent,
-        a.delivery, a.reservation, a.paymenttp, a.services, a.printfiskal,
+        a.delivery, a.reservation, a.paymenttp, a.services, a.printfiskal,a.status,
         a.opis,	
         a.cchannel, a.nchannel,
 		    sum(a.output) output,
@@ -850,14 +875,14 @@ select *
       from (
       select 	a.id, a.tm, a.kanal, a.npar, a.addrpar, a.telpar, a.pipar, a.idnum, a.idpar, a.plpar,  a.broj, a.storno,
             a.username, a.firstname, a.lastname, a.canceled, a.startda, a.starttm, a.event, a.atp, a.venue, a.nevent, a.cevent,
-            a.delivery, a.reservation, a.paymenttp, a.services, a.printfiskal,
+            a.delivery, a.reservation, a.paymenttp, a.services, a.printfiskal, a.status,
             a.opis, a.cchannel, a.nchannel,
             sum(a.tax) tax, sum(a.discount) discount, sum(a."output") "output", sum(a.potrazuje) potrazuje, max(a.tmreserv) tmreserv
       from  (			
           select 	du.id, du.tm, o."text" kanal, du.text npar, du.address addrpar, du.tel telpar, du.pib pipar, du.idnum, du.idpar, du.place plpar, 		
                 du.username, du.firstname, du.lastname, du.status canceled, du.broj, du.storno,
-                du.delivery, du.reservation, du.paymenttp, du.services, du.printfiskal,
-                e.id event, e."text" nevent, e.code cevent, 
+                du.delivery, du.reservation, du.paymenttp, du.services, du.printfiskal, du.status,
+                e.id event, e."text" nevent, e.code cevent,
                 ds.tax, ds.discount, ds."output", ds.potrazuje, ds.endtm tmreserv, e.endda startda, e.endtm starttm, 
                 atp.code atp, ll.text venue, du.opis,
                 du.cchannel, du.nnchannel nchannel
@@ -906,7 +931,7 @@ select *
               and ds.nart is not null 
         ) a
       group by a.id, a.tm, a.kanal, a.npar, a.addrpar, a.telpar, a.pipar, a.idnum, a.idpar, a.plpar,
-            a.delivery, a.reservation, a.paymenttp, a.services, a.printfiskal,
+            a.delivery, a.reservation, a.paymenttp, a.services, a.printfiskal, a.status,
             a.broj, a.storno, a.opis,	
             a.username, a.firstname, a.lastname, a.canceled, a.startda, a.starttm, a.event, a.atp, a.venue, a.nevent, a.nevent, a.cevent,
             a.cchannel, a.nchannel
@@ -914,12 +939,12 @@ select *
 group by a.id, a.tm, a.kanal, a.npar, a.addrpar, a.telpar, a.pipar, a.idnum, a.idpar, a.plpar, 		
             a.username, a.firstname, a.lastname, a.canceled, a.broj, a.storno,
 		    a.event, a.startda, a.starttm,
-        a.delivery, a.reservation, a.paymenttp, a.services, a.printfiskal,
+        a.delivery, a.reservation, a.paymenttp, a.services, a.printfiskal, a.status,
 		    a.cevent, a.nevent, a.venue, a.opis,
 		    a.cchannel, a.nchannel
     ) where 1=1	  
-        ` 
-        // + and1 + and2 + and3 + and4 + and5 + and6
+        `
+  // + and1 + and2 + and3 + and4 + and5 + and6
   console.log("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB TRANSAKCIJA BBBBBBBBBBBBBBBBB", sqlRecenica)
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
@@ -1493,6 +1518,26 @@ const getEventattsL = async (objName, objId, lang) => {
       `Greška pri dohvatanju slogova iz baze - abs find: ${rows}`
     );
   }
+};
+
+
+const getEventattsddL = async (objName, objId, par1, par2, lang) => {
+  const sqlRecenica =
+    `
+	select aa.id , aa.value , aa.text , aa."condition", aa.link, aa.minfee, aa.color
+	from	tic_eventatts aa, tic_eventattx_v a2
+	where aa.event = ${objId}
+  and   aa.att = a2.id
+	and   aa.value = '${par1}'::varchar
+	and   a2.lang = '${lang || 'sr_cyr'}'
+	and   a2.code = '${par2}'
+  `
+  console.log("WWWWWWWWWWWWWWWWWWWWWWWWWWWWgetEventattsddLWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW", sqlRecenica)
+
+  let result = await db.query(sqlRecenica);
+  let row = result.rows[0];
+
+  return row;
 };
 
 const getEventattstpL = async (objName, objId, par1, lang) => {
@@ -2146,6 +2191,60 @@ const getTicPrintgrpV = async (objId, par1, lang) => {
   }
 };
 
+const getTicEventPregledVV = async (objId, par1, lang) => {
+  const sqlRecenica =
+    `
+      select event, carttp, art, nart, min(sector) sector, trunc(sum(uprodaji)) uprodaji, trunc(sum(value)) nabcena, trunc(sum(nabvrednost)) nabvrednost,
+          trunc(sum(prodato)) prodato, sum(prodcena) prodcena, trunc(sum(iznos)) iznos,
+          trunc(sum(uprodaji))-trunc(sum(prodato)) slobodno
+      from (
+      select event, carttp, art, nart, sector::varchar sector, uprodaji, value, uprodaji* value nabvrednost, 0 prodato, 0 prodcena, 0 iznos 
+      from (
+      SELECT e."event", 'K' carttp, e.art, a.nart, e.sector, COUNT(*) uprodaji, ec.value, c."text" 
+      FROM tic_eventst e
+      JOIN tic_eventart a ON a."event" = ${objId} AND e.art = a.art
+      JOIN tic_eventartcena ec ON ec.eventart = a.id 
+          AND TO_CHAR(CURRENT_DATE, 'YYYYMMDD') BETWEEN ec.begda AND ec.endda
+      JOIN tic_cenax_v c ON ec.cena = c.id and c.code = 'R' and c.lang = '${lang || 'sr_cyr'}'
+      WHERE e.event = ${objId}
+      GROUP BY e."event", e.art, e.sector, ec.value, a.nart, c."text" 
+      order by c."text", a.nart 
+      ) a
+      union
+      select  event, carttp, art, nart, sector, 0, 0, 0, prodato, price,  prodato*price
+      from (
+      select 'PRO' tip, s."event", s.carttp, s.art, nart, s.sector, sum(s.output) prodato, s.price, c."text"  
+      from tic_docs s
+      join tic_doc d on d.id = s.doc and d.status = '2'
+      JOIN tic_cenax_v c ON s.cena = c.id  and c.lang = '${lang || 'sr_cyr'}'
+      where s.carttp = 'K' 
+      and 	s."event" = ${objId}
+      group by s."event", s.carttp, s.art, nart, s.sector, s.price, s.discount, c."text"
+      union all
+      select 'REZ', s."event", s.carttp, s.art, nart, s.sector, sum(s.output) prodato, s.price, c."text" 
+      from tic_docs s
+      join tic_doc d on d.id = s.doc and d.status = '1' and  d.endtm > TO_CHAR(NOW(), 'YYYYMMDDHH24MISS')
+      JOIN tic_cenax_v c ON s.cena = c.id and c.lang = '${lang || 'sr_cyr'}'
+      where s.carttp = 'K'
+      and 	s."event" = ${objId}
+      group by s."event", s.carttp, s.art, nart, s.sector, s.price, s.discount, d.endtm, c."text" 
+      ) a
+      ) b
+      group by event, carttp, art, nart
+      order by 4
+      `
+  console.log(sqlRecenica, "!!!!!!!!!!!***********************getTicEventPregledVV***********************!!!!!!!!!!!!!!!!!!!!!!!!!")
+  const result = await db.query(sqlRecenica);
+  const rows = result.rows;
+  if (Array.isArray(rows)) {
+    return rows;
+  } else {
+    throw new Error(
+      `Greška pri dohvatanju slogova iz baze - abs find: ${rows}`
+    );
+  }
+};
+
 
 const getTicChpermissV = async (par1, lang) => {
   const sqlRecenica =
@@ -2251,15 +2350,15 @@ const getTicDocsdiscountL = async (objid, lang) => {
     `
   //const [rows] = await db.query(sqlRecenic);
   console.log("HHHHHHHHHH2222222222222######################################################HHHHHHHHHHHHHHH", sqlRecenica)
-    let result = await db.query(sqlRecenica);
-    let rows = result.rows;
-    if (Array.isArray(rows)) {
-      return rows;
-    } else {
-      throw new Error(
-        `Greška pri dohvatanju slogova iz baze - abs find: ${rows}`
-      );
-    }
+  let result = await db.query(sqlRecenica);
+  let rows = result.rows;
+  if (Array.isArray(rows)) {
+    return rows;
+  } else {
+    throw new Error(
+      `Greška pri dohvatanju slogova iz baze - abs find: ${rows}`
+    );
+  }
 };
 
 const getEventattsobjcodeL = async (objId, par1, id, lang) => {
@@ -2335,7 +2434,7 @@ const getCountPrint = async (objId, lang) => {
 
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
-    return rows[0];
+  return rows[0];
 };
 
 const getCountPay = async (objId, lang) => {
@@ -2364,7 +2463,7 @@ const getCountPay = async (objId, lang) => {
 
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
-    return rows[0];
+  return rows[0];
 };
 
 const getTicDocsdiscountvalue = async (objId) => {
@@ -2483,4 +2582,7 @@ export default {
   getDocPaymentS,
   getCountPrint,
   getCountPay,
+  getDocsEventartcenaL,
+  getEventattsddL,
+  getTicEventPregledVV,
 };

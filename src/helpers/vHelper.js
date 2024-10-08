@@ -79,6 +79,9 @@ const getLista = async (objName, stm, objId, par1, par2, lang, par3, par4, par5,
       case "tic_docsartikli_v":
         result = await vModel.getDocsArtikliL(objName, objId, lang);
         break;
+      case "tic_docseventartcena_v":
+        result = await vModel.getDocsEventartcenaL(objName, objId, lang);
+        break;
       case "tic_docsartikliprint_v":
         result = await vModel.getDocsArtikliPrintL(objName, objId, lang);
         break;
@@ -114,6 +117,9 @@ const getLista = async (objName, stm, objId, par1, par2, lang, par3, par4, par5,
         break;
       case "tic_eventatts_v":
         result = await vModel.getEventattsL(objName, objId, lang);
+        break;
+      case "tic_eventattsdd_v":
+        result = await vModel.getEventattsddL(objName, objId, par1, par2, lang);
         break;
       case "tic_eventattstp_v":
         result = await vModel.getEventattstpL(objName, objId, par1, lang);
@@ -192,6 +198,9 @@ const getLista = async (objName, stm, objId, par1, par2, lang, par3, par4, par5,
         break;
       case "tic_printgrp_v":
         result = await vModel.getTicPrintgrpV(objId, par1, lang);
+        break;
+      case "tic_eventpregledv_v":
+        result = await vModel.getTicEventPregledVV(objId, par1, lang);
         break;
       case "tic_chpermiss_v":
         result = await vModel.getTicChpermissV(par1, lang);

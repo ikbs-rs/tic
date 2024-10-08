@@ -1488,7 +1488,117 @@ const ticDocsuidParNull = async (objId1, requestBody, lang) => {
   }
 
 };
+/******************************************************************************************* */
+const ticEventCopyS = async (requestBody) => {
 
+  const client = await db.connect();
+  try {
+    await client.query('BEGIN');
+    // await client.query('SET search_path TO iis,public;'); // Add this line
+    const ticEventRows = requestBody;
+    const mappedTicEventRows = ticEventRows.map(ticEventRow => ({
+      ...ticEventRow,
+      id: ticEventRow.event
+    }));    
+    for (let ticEventRow of mappedTicEventRows) {
+      const query = {
+        name: 'call-tic_event_copy',
+        text: `SELECT tic_event_copy(
+          u_id := $1,
+          u_site := $2,
+          u_code := $3,
+          u_text := $4,
+          u_tp := $5,
+          u_begda := $6,
+          u_endda := $7,
+          u_begtm := $8,
+          u_endtm := $9,
+          u_status := $10,
+          u_descript := $11,
+          u_note := $12,
+          u_event := $13,
+          u_ctg := $14,
+          u_loc := $15,
+          u_par := $16,
+          u_tmp := $17,
+          u_season := $18,
+          u_map_extent := $19,
+          u_map_min_zoom := $20,
+          u_map_max_zoom := $21,
+          u_map_max_resolution := $22,
+          u_tile_extent := $23,
+          u_tile_size := $24,
+          u_venue_id := $25,
+          u_enable_tiles := $26,
+          u_map_zoom_level := $27,
+          u_have_background := $28,
+          u_background_image := $29,
+          u_loc_id := $30,
+          u_auto_scale := $31,
+          u_auto_zoom := $32,
+          u_mesto := $33
+        )`,
+        values: [
+          ticEventRow.id,
+          ticEventRow.site,
+          ticEventRow.code,
+          ticEventRow.text,
+          ticEventRow.tp,
+          ticEventRow.begda,
+          ticEventRow.endda,
+          ticEventRow.begtm,
+          ticEventRow.endtm,
+          ticEventRow.status,
+          ticEventRow.descript,
+          ticEventRow.note,
+          ticEventRow.event,
+          ticEventRow.ctg,
+          ticEventRow.loc,
+          ticEventRow.par,
+          ticEventRow.tmp,
+          ticEventRow.season,
+          ticEventRow.map_extent,
+          ticEventRow.map_min_zoom,
+          ticEventRow.map_max_zoom,
+          ticEventRow.map_max_resolution,
+          ticEventRow.tile_extent,
+          ticEventRow.tile_size,
+          ticEventRow.venue_id,
+          ticEventRow.enable_tiles,
+          ticEventRow.map_zoom_level,
+          ticEventRow.have_background,
+          ticEventRow.background_image,
+          ticEventRow.loc_id,
+          ticEventRow.auto_scale,
+          ticEventRow.auto_zoom,
+          ticEventRow.mesto
+        ]
+      };
+
+      try {
+        console.log('Executing query for event:', ticEventRow.id);
+        const result = await client.query(query);
+        console.log('Query result for event:', result.rows[0]);
+      } catch (err) {
+        console.error(`Error in event ${ticEventRow.id}:`, err.stack);
+        throw err; // Rollover and stop transaction in case of error
+      }
+    }
+
+    await client.query('COMMIT');
+    console.log('All tic_events copied successfully');
+    return { success: true };
+  } catch (err) {
+    console.error('Transaction failed:', err);
+    await client.query('ROLLBACK');
+    throw err; // Return error to handle it higher up
+  } finally {
+    client.release(); // Release the database connection
+  }
+
+};
+
+/******************************************************************************************* */
 const ticEventCopy = async (requestBody) => {
 
   const client = await db.connect();
@@ -1897,4 +2007,5 @@ export default {
   ticDocpayments,
   copyGrpEventart,
   ticDocsuidPosetilac,
+  ticEventCopyS,
 };

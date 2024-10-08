@@ -119,6 +119,9 @@ const postFunction = async (
       case "tic_eventcopy_s": // obrada stavke na prodaji
         result = await sModel.ticEventCopy(requestBody);
         break;
+      case "tic_eventcopys_s": // obrada stavke na prodaji
+        result = await sModel.ticEventCopyS(requestBody);
+        break;
       case "tic_eventdeleteall_s": // obrada stavke na prodaji
         result = await sModel.ticEventDeleteAll(objId1);
         break;
@@ -137,9 +140,9 @@ const postFunction = async (
       case "tic_docsuidpar_s": // obrada stavke na prodaji
         result = await sModel.ticDocsuidPar(objId1, requestBody, lang)
         break;
-        case "tic_docsuidposetilac_s": // obrada stavke na prodaji
+      case "tic_docsuidposetilac_s": // obrada stavke na prodaji
         result = await sModel.ticDocsuidPosetilac(objId1, requestBody, lang)
-        break;        
+        break;
       case "tic_docsuidparall_s": // obrada stavke na prodaji
         result = await sModel.ticDocsuidParAll(objId1, requestBody, lang)
         break;

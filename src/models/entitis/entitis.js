@@ -490,6 +490,7 @@ const entitiesInfo =
 			"fee": "number",
 			"par": "number",
 			"descript": "string",
+			"cena": "number",
 			"storno": "string",
 			"nart": "string",
 			"row": "string",
@@ -507,7 +508,14 @@ const entitiesInfo =
 			"print": "number",
 			"pm": "number",
 			"rez": "number",
-			"sysuser": "number"
+			"sysuser": "number",
+			"feeonline" : "number",
+			"feeprint": "number",
+			"feepm": "number",
+			"feerez": "number",
+			"feedelivery": "number",
+			"carttp": "string",
+			"nevent": "string"  
 		}
 	},
 	"tic_docslink": {
