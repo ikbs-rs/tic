@@ -27,7 +27,7 @@ ESIR_API_KLJUC = ' 0a7b28208aba6f270ca1c3a8a8976a23'
 URL_BASE = '/ticketlines/api' #ne radi trenutno kada se prosledjuje route nije bitno sada
 
 #WEB_DOMEN = 'https://dev.app.ems.rs'
-WEB_DOMEN = 'https://172.16.26.245'
+WEB_DOMEN = 'https://188.93.122.138'
 APP_PORT = '8304'
 HTTPS_PORT = '8334'
 DATA_CENTAR = '3'
