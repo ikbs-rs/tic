@@ -35,7 +35,7 @@ router.use((req, res, next) => {
   }
   console.log("Pre checkJwt");
   checkJwt(req, res, next);
-  console.log("Dosao u checkJwt");
+  console.log("Dosao u checkJwt!!!");
 });
 
 // Moze da se svede na jedan ruter ali volim da vidim sta je sve implementirano!!!
@@ -99,7 +99,7 @@ router.use('/tic/stampa', checkPermissions(), abstruct)
 
 router.use('/tic/x/agenda', checkPermissions(), abstructX) 
 router.use('/tic/x/agendatp', checkPermissions(), abstructX) 
-router.use('/tic/x/art', checkPermissions(), abstructX) 
+router.use('/tic/x/art',  abstructX) 
 router.use('/tic/x/artgrp', checkPermissions(), abstructX) 
 router.use('/tic/x/arttp', checkPermissions(), abstructX) 
 router.use('/tic/x/cena', checkPermissions(), abstructX) 

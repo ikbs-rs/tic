@@ -17,7 +17,7 @@ export const checkJwt = async (req, res, next) => {
         "Adresa udaljenog servera nije definisana u .env datoteci."
       );
     } else {
-      if (jwtServer === "LOCAL") {
+      if (jwtServer === "LOCAL"||1==1) {
         console.log("CMN inteceptors 18!!");
         jwt.verify(token, jwtConfig.secret, (err, decoded) => {
           if (err) return res.status(401).json({ error: "Token invalid" });
@@ -29,7 +29,7 @@ export const checkJwt = async (req, res, next) => {
         console.log("*-*-*-*-*-checkJwtUrl*-*-*-*-*3333*-*", checkJwtUrl)
         const response = await axios.post(`${checkJwtUrl}`, {}, {
           headers: { Authorization: `Bearer ${token}` },
-          timeout: 2500 // vreme za koje se očekuje odgovor od udaljenog servera (u milisekundama)
+          timeout: 25500 // vreme za koje se očekuje odgovor od udaljenog servera (u milisekundama)
         });
         // provera statusa odgovora
         console.log(response.status, "*-*-*-*-*-response*-*-*-*-**-*", response.data.success)
@@ -48,7 +48,7 @@ export const checkJwt = async (req, res, next) => {
       }
     }
   } catch (error) {
-    console.log(error, "*-*-*-*-*-checkJwt error*-*-*-*-**-*")
+    console.log(error.message , "*-*-*-*-*-checkJwt error*-*-*-*-**-*")
     // u slučaju greške, vraćamo objekat sa informacijama o grešci
     return res.status(error.response?.status || 500).json({
       message: error.message || "Internal Server Error",
@@ -102,7 +102,7 @@ export const checkPermissions = (par1 = "1", par2 = "1") => {
         }
       }
     } catch (error) {
-      console.log(error, "*-*-*-*-*-checkPermissions error*-*-*-*-**-*")
+      console.log(error.message, "*-*-*-*-*-checkPermissions error*-*-*-*-**-*")
       // u slučaju greške, vraćamo objekat sa informacijama o grešci
       return res.status(error.response?.status || 500).json({
         message: error.message || "Internal  Server Error - roll",
@@ -131,7 +131,7 @@ export const checkPermissionsEx = async (req, res, next) => {
         .json({ message: "Nemate pravo pristupa ovom resursu - roll." });
     }
   } catch (error) {
-    console.log(error, "*-*-*-*-*-checkPermissions error*-*-*-*-**-*")
+    console.log(error.message, "*-*-*-*-*-checkPermissions error*-*-*-*-**-*")
     // u slučaju greške, vraćamo objekat sa informacijama o grešci
     return res.status(error.response?.status || 500).json({
       message: error.message || "Internal  Server Error - roll",
