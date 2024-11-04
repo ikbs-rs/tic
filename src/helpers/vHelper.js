@@ -184,9 +184,9 @@ const getLista = async (objName, stm, objId, par1, par2, lang, par3, par4, par5,
       case "tic_docdiscount_v":
         result = await vModel.getDocdiscountL(objName, objId, lang);
         break;
-      case "tic_eventattsdd_v":
-        result = await vModel.getEventAttsDDL(objName, objId, par1, lang);
-        break;
+      // case "tic_eventattsdd_v":
+      //   result = await vModel.getEventAttsDDL(objName, objId, par1, lang);
+      //   break;
       case "tic_locll_v":
         result = await vModel.getLocLLV(objName, objId, par1, lang);
         break;

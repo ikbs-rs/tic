@@ -28,15 +28,15 @@ router.use("/", (req, res, next) => {
   next();
 });
 
-router.use((req, res, next) => {
-  console.log("----- REQ PATH -----", req.path);
-  if (req.path.startsWith("/adm/services/sign") || req.path.startsWith("/postback")) {
-    return next();
-  }
-  console.log("Pre checkJwt");
-  checkJwt(req, res, next);
-  console.log("Dosao u checkJwt!!!");
-});
+// router.use((req, res, next) => {
+//   console.log("----- REQ PATH -----", req.path);
+//   if (req.path.startsWith("/adm/services/sign") || req.path.startsWith("/postback")) {
+//     return next();
+//   }
+//   console.log("Pre checkJwt");
+//   checkJwt(req, res, next);
+//   console.log("Dosao u checkJwt!!!");
+// });
 
 // Moze da se svede na jedan ruter ali volim da vidim sta je sve implementirano!!!
 router.use((req, res, next) => {

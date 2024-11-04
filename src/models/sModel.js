@@ -1212,7 +1212,7 @@ const ticDocdiscountAll = async (objId1, requestBody, lang) => {
               and s.event = ${ticDocRow.event}
               `;
 
-    console.log(queryStmt, 'ticDocRow=================================:', query, "-------------", ticDocRow);
+    console.log(queryStmt, 'ticDocRow=================================:', query, "-------3------", ticDocRow);
 
     try {
       await db.query(queryStmt);
@@ -1297,8 +1297,9 @@ const ticDocsuidParAll = async (objId1, requestBody, lang) => {
 
   try {
     const ticDocRow = requestBody;
+    // const ticDocRow = _ticDocRow[0]
+    console.log("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT", ticDocRow)
     await db.query('BEGIN');
-
     const query = ` 
               update tic_docsuid
                 set first = '${ticDocRow.text}',
@@ -1318,7 +1319,7 @@ const ticDocsuidParAll = async (objId1, requestBody, lang) => {
               )
               `;
 
-    console.log(requestBody, 'ticDocRow=================================:', query, "-------------", ticDocRow);
+    console.log(requestBody, 'ticDocRow=================================:', query, "-------4------", ticDocRow);
 
     try {
       await db.query(query);
@@ -1404,7 +1405,8 @@ const ticDocsuidPosetilac = async (objId1, requestBody, lang) => {
 const ticDocsuidPar = async (objId1, requestBody, lang) => {
 
   try {
-    const ticDocRow = requestBody;
+    const _ticDocRow = requestBody;
+    const ticDocRow = _ticDocRow[0]
     await db.query('BEGIN');
 
     const query = ` 
@@ -1428,7 +1430,7 @@ const ticDocsuidPar = async (objId1, requestBody, lang) => {
               where 	id  = ${objId1}
               `;
 
-    console.log(requestBody, 'ticDocRow=================================:', query, "-------------", ticDocRow);
+    console.log(requestBody, 'ticDocRow=================================:', query, "-------5------", ticDocRow);
 
     try {
       await db.query(query);
@@ -1470,7 +1472,7 @@ const ticDocsuidParNull = async (objId1, requestBody, lang) => {
                 set status = 1
               where 	id  = ${objId1}
               `;
-    console.log(requestBody, 'ticDocRow=================================:', query, "-------------", ticDocRow);
+    console.log(requestBody, 'ticDocRow=================================:', query, "-------6------", ticDocRow);
 
     try {
       await db.query(query);
