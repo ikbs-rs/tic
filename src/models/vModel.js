@@ -803,44 +803,57 @@ const getTransactionL = async (objName, lang, par1, par2, par3, par4, par5, par6
 /******************************************************************************************************************** */
 const getTransactionFL = async (objName, lang, par1, par2, par3, par4, par5, par6, par7, par8, par9, par10) => {
 
-  console.log(par6, "PAR6 ================================================")
+  console.log(par9, "PAR9 ================================================")
   let and1 = ''
-  if (par1 == `true`) {
-    and1 = ` and canceled = '0'`
+  if (par1 == `false`) {
+    and1 = ` and aa.statustransakcije != 0`
   }
   let and2 = ''
   if (par2 == `true`) {
-    and2 = ` and canceled = '0'`
+    and2 = ` and aa.statustransakcije = 5`
   }
   let and3 = ''
   if (par3 == `true`) {
-    and3 = ` and canceled = '0'`
+    and3 = ` and aa.statustransakcije = 6`
   }
   let and4 = ''
   if (par4 == `true`) {
-    and4 = ` and istekla = true`
+    and4 = ` and aa.statustransakcije = 9`
   }
   let and5 = ''
   if (par5 == `true`) {
-    and5 = ` and paid = 'true'`
+    and5 = ` and aa.statustransakcije = 21`
   }
   let and6 = ''
   if (par6 == `true`) {
-    and6 = ` and canceled = '0'`
+    and6 = ` and aa.statustransakcije = 20`
   }
-
+  let and7 = ''
+  if (par7 == `true`) {
+    and7 = ` and aa.statustransakcije = 11`
+  }
+  let and8 = ''
+  if (par8 == `true`) {
+    and8 = ` and aa.statustransakcije = 12`
+  }
+  let and9 = ''
+  if (par9 == `true`) {
+        and9 = ` and aa.statusdelivery = 4
+             and aa.statustransakcije != 0`
+  }
   const sqlRecenica =
     `
-select *
+    select aa.*
     from (
       select a.id, to_char( a.id, '0000000000000000000')||to_char( a.event, '0000000000000000000') ide, a.tm, a.kanal, a.npar, a.addrpar, a.telpar, a.pipar, a.idnum, a.idpar, a.plpar, 		
-            a.username, a.firstname, a.lastname, a.canceled, a.broj, a.storno,
+        a.username, a.firstname, a.lastname, a.canceled, a.broj, a.storno,
 		    a.event, a.startda, a.starttm,
 		    a.cevent code, a.nevent text, a.venue,
 		    getTransactionstavke(a.id) nevent,
-        a.delivery, a.reservation, a.paymenttp, a.services, a.printfiskal,a.status,
-        a.opis,	
-        a.cchannel, a.nchannel,
+	      a.delivery, a.paymenttp, a.services, a.status,
+	      a.opis,	
+	      a.cchannel, a.nchannel, a.statustransakcije,
+			  a.statusdelivery , a.reservation, a.statuspayment, a.statusstampa, a.printfiskal, a.endtm,
 		    sum(a.output) output,
              sum(a.tax) tax, sum(a.discount) discount, 
             sum(a."output") "output", sum(a.potrazuje) potrazuje,  max(a.tmreserv) tmreserv,
@@ -865,23 +878,26 @@ select *
             where dp.status = 1
             and dp.doc = a.id
             ) paid,	  
-            now()>to_timestamp(max(a.tmreserv), 'YYYYMMDDHH24MISS') istekla,
-            now()-to_timestamp(max(a.tmreserv), 'YYYYMMDDHH24MISS') raz,
+            --now()>to_timestamp(max(a.tmreserv), 'YYYYMMDDHH24MISS') istekla,
+            --now()-to_timestamp(max(a.tmreserv), 'YYYYMMDDHH24MISS') raz,
             coalesce((select max(dl.status) status
             from	tic_docdelivery dl
             where 	dl.doc = a.id
             ), '0') delivery_st,	    
-            sum(a.tax) tax, sum(a.discount) discount, sum(a."output") "output", sum(a.potrazuje) potrazuje
+            sum(a.tax) tax, sum(a.discount) discount, trunc(sum(a."output")) "output", trunc(sum(a.potrazuje)) potrazuje
       from (
       select 	a.id, a.tm, a.kanal, a.npar, a.addrpar, a.telpar, a.pipar, a.idnum, a.idpar, a.plpar,  a.broj, a.storno,
             a.username, a.firstname, a.lastname, a.canceled, a.startda, a.starttm, a.event, a.atp, a.venue, a.nevent, a.cevent,
-            a.delivery, a.reservation, a.paymenttp, a.services, a.printfiskal, a.status,
-            a.opis, a.cchannel, a.nchannel,
+            a.delivery, a.paymenttp, a.services,  a.status,
+            a.opis, a.cchannel, a.nchannel, a.statustransakcije,
+			      a.statusdelivery , a.reservation, a.statuspayment, a.statusstampa, a.printfiskal, a.endtm,
             sum(a.tax) tax, sum(a.discount) discount, sum(a."output") "output", sum(a.potrazuje) potrazuje, max(a.tmreserv) tmreserv
       from  (			
           select 	du.id, du.tm, o."text" kanal, du.text npar, du.address addrpar, du.tel telpar, du.pib pipar, du.idnum, du.idpar, du.place plpar, 		
                 du.username, du.firstname, du.lastname, du.status canceled, du.broj, du.storno,
-                du.delivery, du.reservation, du.paymenttp, du.services, du.printfiskal, du.status,
+                du.delivery, du.paymenttp, du.services,  du.status,
+                get_transaction_status(du.statusdelivery , du.reservation, du.statuspayment, du.statusstampa, du.printfiskal, du.endtm) statustransakcije,
+				        du.statusdelivery , du.reservation, du.statuspayment, du.statusstampa, du.printfiskal, du.endtm,
                 e.id event, e."text" nevent, e.code cevent,
                 ds.tax, ds.discount, ds."output", ds.potrazuje, ds.endtm tmreserv, e.endda startda, e.endtm starttm, 
                 atp.code atp, ll.text venue, du.opis,
@@ -889,13 +905,11 @@ select *
           from (
                 select p.text, p.address, p.site , p.tel , p.pib , p.idnum , p.place, p.id idpar,
                     u.username, u.firstname, u.lastname,
-                      COALESCE(LENGTH(dd.tmrec), 0) nodelivery, LENGTH(dd.tmcour) fordelivery, LENGTH(dd.datdelivery) indelivery, 
                       d.*, oo.code cchannel, oo.text nnchannel
                 from tic_doc d
                 join cmn_parx_v p  on d.usr = p.id 
                 		and p.lang = '${lang || 'sr_cyr'}'
                 left join adm_user u on d.usersys = u.id
-                left join tic_docdelivery dd on dd.doc = d.id
                 left join (
                 	select o.*
                 	from	cmn_objx_v o
@@ -931,20 +945,21 @@ select *
               and ds.nart is not null 
         ) a
       group by a.id, a.tm, a.kanal, a.npar, a.addrpar, a.telpar, a.pipar, a.idnum, a.idpar, a.plpar,
-            a.delivery, a.reservation, a.paymenttp, a.services, a.printfiskal, a.status,
+            a.delivery, a.paymenttp, a.services, a.status,
             a.broj, a.storno, a.opis,	
             a.username, a.firstname, a.lastname, a.canceled, a.startda, a.starttm, a.event, a.atp, a.venue, a.nevent, a.nevent, a.cevent,
-            a.cchannel, a.nchannel
+            a.cchannel, a.nchannel, a.statustransakcije,
+			      a.statusdelivery , a.reservation, a.statuspayment, a.statusstampa, a.printfiskal, a.endtm
       ) a	
-group by a.id, a.tm, a.kanal, a.npar, a.addrpar, a.telpar, a.pipar, a.idnum, a.idpar, a.plpar, 		
-            a.username, a.firstname, a.lastname, a.canceled, a.broj, a.storno,
-		    a.event, a.startda, a.starttm,
-        a.delivery, a.reservation, a.paymenttp, a.services, a.printfiskal, a.status,
-		    a.cevent, a.nevent, a.venue, a.opis,
-		    a.cchannel, a.nchannel
-    ) where 1=1	  
-        `
-  // + and1 + and2 + and3 + and4 + and5 + and6
+      group by a.id, a.tm, a.kanal, a.npar, a.addrpar, a.telpar, a.pipar, a.idnum, a.idpar, a.plpar, 		
+          a.username, a.firstname, a.lastname, a.canceled, a.broj, a.storno,
+		      a.event, a.startda, a.starttm,
+          a.delivery, a.reservation, a.paymenttp, a.services, a.status,
+		      a.cevent, a.nevent, a.venue, a.opis,
+		      a.cchannel, a.nchannel, a.statustransakcije,
+			    a.statusdelivery , a.reservation, a.statuspayment, a.statusstampa, a.printfiskal, a.endtm
+    ) aa where 1=1	  
+        ` + and1 + and2 + and3 + and4 + and5 + and6 + and7 + and8 + and9
   console.log("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB TRANSAKCIJA BBBBBBBBBBBBBBBBB", sqlRecenica)
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
