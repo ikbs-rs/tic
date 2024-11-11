@@ -560,7 +560,39 @@ const getDocsNaknadeL = async (objName, objId, lang) => {
     join tic_artx_v a on aa.art = a.id and a.lang = 'sr_cyr'
     join tic_arttp t on t.id = a.tp and t.code = 'Н'
     join tic_eventx_v e on e.id = aa.event
-    group by aa.doc, aa.tgp, aa.taxrate, aa.art, a.code, a.text, e.text
+    group by aa.doc, aa.tgp, aa.taxrate, aa.art, a.code, a.text, e.text	
+    union
+    select aa.doc id, aa.printtgp, aa.printtax, aa.printid, aa.printcode cart, aa.printtext nart, e.text nevent, 
+          sum(aa."output") "output" , sum(aa."potrazuje") "potrazuje" , sum(aa.rightcurr) rightcurr, sum(aa.discount) discount
+    from tic_docs aa
+    join tic_doc d on aa.doc = d.id and aa.doc = ${objId}
+    join tic_eventx_v e on e.id = aa.event
+    where aa.printid != -1
+    group by aa.doc, aa.printtgp, aa.printtax, aa.printid, aa.printcode, aa.printtext, e.text
+    union
+    select aa.doc id, aa.onlinetgp, aa.onlinetax, aa.onlineid, aa.onlinecode cart, aa.onlinetext nart, e.text nevent, 
+          sum(aa."output") "output" , sum(aa."potrazuje") "potrazuje" , sum(aa.rightcurr) rightcurr, sum(aa.discount) discount
+    from tic_docs aa
+    join tic_doc d on aa.doc = d.id and aa.doc = ${objId}
+    join tic_eventx_v e on e.id = aa.event
+    where aa.onlineid != -1
+    group by aa.doc, aa.onlinetgp, aa.onlinetax, aa.onlineid, aa.onlinecode, aa.onlinetext, e.text
+    union
+    select aa.doc id, aa.reztgp, aa.reztax, aa.rezid, aa.rezcode cart, aa.reztext nart, e.text nevent, 
+          sum(aa."output") "output" , sum(aa."potrazuje") "potrazuje" , sum(aa.rightcurr) rightcurr, sum(aa.discount) discount
+    from tic_docs aa
+    join tic_doc d on aa.doc = d.id and aa.doc = ${objId}
+    join tic_eventx_v e on e.id = aa.event
+    where aa.rezid != -1
+    group by aa.doc, aa.reztgp, aa.reztax, aa.rezid, aa.rezcode, aa.reztext, e.text
+    union
+    select aa.doc id, aa.pmtgp, aa.pmtax, aa.pmid, aa.pmcode cart, aa.pmtext nart, e.text nevent, 
+          sum(aa."output") "output" , sum(aa."potrazuje") "potrazuje" , sum(aa.rightcurr) rightcurr, sum(aa.discount) discount
+    from tic_docs aa
+    join tic_doc d on aa.doc = d.id and aa.doc = ${objId}
+    join tic_eventx_v e on e.id = aa.event
+    where aa.pmid != -1
+    group by aa.doc, aa.pmtgp, aa.pmtax, aa.pmid, aa.pmcode, aa.pmtext, e.text
   `
   console.log(objId, "*-*-*-*-*-*-*-*-*-@@@@@@@@@ getDocsL @@@@@@@@@@@", sqlRecenica)
   let result = await db.query(sqlRecenica);
