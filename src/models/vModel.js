@@ -885,7 +885,7 @@ const getTransactionFL = async (objName, lang, par1, par2, par3, par4, par5, par
 	      a.delivery, a.paymenttp, a.services, a.status,
 	      a.opis,	
 	      a.cchannel, a.nchannel, a.statustransakcije,
-			  a.statusdelivery , a.reservation, a.statuspayment, a.statusstampa, a.printfiskal, a.endtm,
+			  a.statusdelivery , a.reservation, a.statuspayment, a.statusstampa, a.printfiskal, a.statusfiskal, a.endtm,
 		    sum(a.output) output,
              sum(a.tax) tax, sum(a.discount) discount, 
             sum(a."output") "output", sum(a.potrazuje) potrazuje,  max(a.tmreserv) tmreserv,
@@ -922,12 +922,12 @@ const getTransactionFL = async (objName, lang, par1, par2, par3, par4, par5, par
             a.username, a.firstname, a.lastname, a.canceled, a.startda, a.starttm, a.event, a.atp, a.venue, a.nevent, a.cevent,
             a.delivery, a.paymenttp, a.services,  a.status,
             a.opis, a.cchannel, a.nchannel, a.statustransakcije,
-			      a.statusdelivery , a.reservation, a.statuspayment, a.statusstampa, a.printfiskal, a.endtm,
+			      a.statusdelivery , a.reservation, a.statuspayment, a.statusstampa, a.printfiskal, a.statusfiskal, a.endtm,
             sum(a.tax) tax, sum(a.discount) discount, sum(a."output") "output", sum(a.potrazuje) potrazuje, max(a.tmreserv) tmreserv
       from  (			
           select 	du.id, du.tm, o."text" kanal, du.text npar, du.address addrpar, du.tel telpar, du.pib pipar, du.idnum, du.idpar, du.place plpar, 		
                 du.username, du.firstname, du.lastname, du.status canceled, du.broj, du.storno,
-                du.delivery, du.paymenttp, du.services,  du.status,
+                du.delivery, du.paymenttp, du.services,  du.status, du.statusfiskal,
                 get_transaction_status(du.statusdelivery , du.reservation, du.statuspayment, du.statusstampa, du.printfiskal, du.endtm) statustransakcije,
 				        du.statusdelivery , du.reservation, du.statuspayment, du.statusstampa, du.printfiskal, du.endtm,
                 e.id event, e."text" nevent, e.code cevent,
@@ -981,7 +981,7 @@ const getTransactionFL = async (objName, lang, par1, par2, par3, par4, par5, par
             a.broj, a.storno, a.opis,	
             a.username, a.firstname, a.lastname, a.canceled, a.startda, a.starttm, a.event, a.atp, a.venue, a.nevent, a.nevent, a.cevent,
             a.cchannel, a.nchannel, a.statustransakcije,
-			      a.statusdelivery , a.reservation, a.statuspayment, a.statusstampa, a.printfiskal, a.endtm
+			      a.statusdelivery , a.reservation, a.statuspayment, a.statusstampa, a.printfiskal, a.statusfiskal, a.endtm
       ) a	
       group by a.id, a.tm, a.kanal, a.npar, a.addrpar, a.telpar, a.pipar, a.idnum, a.idpar, a.plpar, 		
           a.username, a.firstname, a.lastname, a.canceled, a.broj, a.storno,
@@ -989,7 +989,7 @@ const getTransactionFL = async (objName, lang, par1, par2, par3, par4, par5, par
           a.delivery, a.reservation, a.paymenttp, a.services, a.status,
 		      a.cevent, a.nevent, a.venue, a.opis,
 		      a.cchannel, a.nchannel, a.statustransakcije,
-			    a.statusdelivery , a.reservation, a.statuspayment, a.statusstampa, a.printfiskal, a.endtm
+			    a.statusdelivery , a.reservation, a.statuspayment, a.statusstampa, a.printfiskal, a.statusfiskal, a.endtm
     ) aa where 1=1	  
         ` + and1 + and2 + and3 + and4 + and5 + and6 + and7 + and8 + and9
   console.log("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB TRANSAKCIJA BBBBBBBBBBBBBBBBB", sqlRecenica)
