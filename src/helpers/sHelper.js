@@ -134,7 +134,7 @@ const postFunction = async (
       case "tic_setvalue_s": // obrada stavke na prodaji
         result = await sModel.ticSetValue(par1, par2, objId1, objId2);
         break;
-      case "tic_docstorno_s": // obrada stavke na prodaji
+      case "tic_docstorno_s":
         result = await sModel.ticDocstorno(par1, par2, objId1, requestBody, lang)
         break;
       case "tic_docsuidpar_s": // obrada stavke na prodaji

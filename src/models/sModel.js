@@ -1371,13 +1371,13 @@ const ticDocsuidPosetilac = async (objId1, requestBody, lang) => {
 
     // console.log(requestBody, 'ticDocRow=================================:', query, "-------------", ticDocRow);
     const sqlRecenica =
-    `
+      `
       select 	count(d.*)
       from 	  tic_docsuid d
       where 	d.docs = ${objId1}    
     `
     //const [rows] = await db.query(sqlRecenic);
-    
+
 
     try {
       await db.query(query);
@@ -1501,7 +1501,7 @@ const ticEventCopyS = async (requestBody) => {
     const mappedTicEventRows = ticEventRows.map(ticEventRow => ({
       ...ticEventRow,
       id: ticEventRow.event
-    }));    
+    }));
     for (let ticEventRow of mappedTicEventRows) {
       const query = {
         name: 'call-tic_event_copy',
@@ -1865,7 +1865,8 @@ const ticDocstorno = async (par1, par2, objId1, requestBody, lang) => {
       `
       INSERT INTO tic_doc
       SELECT $1 id, site, docvr, "date", to_char(now(), 'YYYYMMDDHH24MISS') tm, curr, currrate, usr, status, docobj, broj, obj2, opis, timecreation,
-	           1 storno, "year", channel, $2 sysusr,  endtm, reservation, 	delivery, paymenttp, services 
+	           1 storno, "year", channel, $2 sysusr,  endtm, reservation, 	delivery, paymenttp, services, nusrsys,	nchannel,
+	            nusr, 	statusdelivery,	1 statuspayment,	1 printfiskal,	statusstampa,	0 statusfiskal, 1 docstorno
       FROM tic_doc
       WHERE id = $3
     `,
@@ -1899,29 +1900,45 @@ const ticDocstorno = async (par1, par2, objId1, requestBody, lang) => {
         for (const obj of parsedBody) {
           console.log(obj, "***************************copyGrpEventlocl - FOR *******************************")
           sId = await uniqueId();
-          await db.query(
+          await client.query(
             `
-          INSERT INTO tic_docs (
-            id, site, doc, event, loc, art, tgp, taxrate, price, input, output, discount, curr, currrate, tax, 
-            duguje, potrazuje, leftcurr, rightcurr, begtm, endtm, status, fee, par, descript, cena, reztm, 
-            storno, nart, row, label, seat,  ticket, services, tickettp, delivery,
-            ulaz, sector, barcode, online, print, pm, rez, sysuser
-            )
-          VALUES 
-            ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, 
-            $24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36)
+            INSERT INTO tic_docs(
+                id, site, doc, event, loc, art, tgp, taxrate, price, input, output, discount, curr, currrate, tax, 
+                duguje, potrazuje, leftcurr, rightcurr, begtm, endtm, status, fee, par, descript, cena, reztm, 
+                storno, nart, row, label, seat, vreme,ticket, services, tickettp, delivery, 
+                ulaz, sector, barcode, online, print, pm, rez, sysuser, docstorno
+                )
+            SELECT 	nextval('iis.tic_table_id_seq') id, site, $1, event, loc, art, tgp, taxrate, price, input, -output, discount, curr, currrate, -tax, 
+                    duguje, -potrazuje, leftcurr, -rightcurr, null, null, status, fee, par, descript, cena, reztm, 
+                    1, nart, row, label, seat, now() vreme, ticket, services, tickettp, delivery,
+                    ulaz, sector, barcode, online, print, pm, rez, sysuser, 1 docstorno
+            FROM tic_docs
+            WHERE id = $2
           `,
-            [sId, obj.site, obj.doc, obj.event, obj.loc, obj.art, obj.tgp, obj.taxrate, obj.price, obj.input, -obj.output,
-              obj.discount, obj.curr, obj.currrate, -obj.tax, obj.duguje, -obj.potrazuje, obj.leftcurr, obj.rightcurr,
-              obj.begtm, obj.endtm, obj.status, obj.fee, obj.par, obj.descript, obj.cena, obj.reztm, obj.storno, obj.nart, obj.row,
-              obj.label, obj.seat, obj.ticket, obj.services, obj.tickettp, obj.delivery,
-              obj.ulaz, obj.sector, obj.barcode, obj.online, obj.print, obj.pm, obj.rez, obj.sysuser]
+            [uId, obj.id]
+          );
+
+          await client.query(
+            `
+            update tic_docs
+            SET docstorno = 1
+            WHERE id = $1
+          `,
+            [obj.id]
           );
           console.log(sId, "@@@*******copyGrpEventlocl - END FOR **********@@@", -obj.output, "@@+@@", uId, "@@+@@")
         }
       }
     }
 
+    await client.query(
+      `
+      update tic_doc
+      SET docstorno = 1
+      WHERE id = $1
+    `,
+      [objId1]
+    );
     await db.query("COMMIT");
     ok = true;
     return ok;
