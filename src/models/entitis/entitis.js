@@ -564,7 +564,8 @@ const entitiesInfo =
 			"phon": "string",
 			"email": "string",
 			"par": "number",
-			"birthday": "string"
+			"birthday": "string",
+			"kupac": "number"
 		}
 	},
 	"tic_docvr": {

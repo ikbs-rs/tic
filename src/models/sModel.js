@@ -106,7 +106,7 @@ const getEventartCena = async (objName, objId, objId1, lang) => {
     and   a.cena = c.id
     and c.lang = '${lang || 'en'}'
     `
-  console.log(sqlRecenica, "#######################getEventartCena###########################")
+  // console.log(sqlRecenica, "#######################getEventartCena###########################")
   //const [rows] = await db.query(sqlRecenic);
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
@@ -162,7 +162,7 @@ const autoEventatts = async (eventId) => {
 
 const copyEvent = async (eventId, tmpId, begda, endda) => {
 
-  console.log(tmpId, "*********copyEvent*******", eventId)
+  // console.log(tmpId, "*********copyEvent*******", eventId)
   const client = await db.connect(); // Povežite se s bazom podataka koristeći klijenta
 
   try {
@@ -170,18 +170,18 @@ const copyEvent = async (eventId, tmpId, begda, endda) => {
     let ok = false;
 
     // Prvo obrišite podatke
-    console.log("Brisem tic_eventst")
+    // console.log("Brisem tic_eventst")
     await client.query("DELETE FROM tic_eventst WHERE event = $1", [eventId]);
-    console.log("Brisem tic_eventartcena")
+    // console.log("Brisem tic_eventartcena")
     await client.query("DELETE FROM tic_eventartcena WHERE event = $1", [eventId]);
-    console.log("Brisem tic_eventart")
+    // console.log("Brisem tic_eventart")
     await client.query("DELETE FROM tic_eventart WHERE event = $1", [eventId]);
-    console.log("Brisem tic_eventobj")
+    // console.log("Brisem tic_eventobj")
     await client.query("DELETE FROM tic_eventobj WHERE event = $1", [eventId]);
     await client.query("DELETE FROM tic_eventatts WHERE event = $1", [eventId]);
 
     // Zatim umetnite nove podatke koristeći SELECT INTO
-    console.log("Inser  tic_eventatts")
+    // console.log("Inser  tic_eventatts")
     await client.query(
       `
       INSERT INTO tic_eventatts (id, site, event, att, value, valid, text, link)
@@ -192,7 +192,7 @@ const copyEvent = async (eventId, tmpId, begda, endda) => {
       [eventId, tmpId]
     );
 
-    console.log("Inser  tic_eventobj")
+    // console.log("Inser  tic_eventobj")
     await client.query(
       `
       INSERT INTO tic_eventobj (id, site, event, objtp, obj, begda, endda)
@@ -279,7 +279,7 @@ const copyEvent = async (eventId, tmpId, begda, endda) => {
 
 const copyEventSettings = async (eventId, tmpId, begda, endda) => {
 
-  console.log(tmpId, "*********copyEvent*******", eventId)
+  // console.log(tmpId, "*********copyEvent*******", eventId)
   const client = await db.connect(); // Povežite se s bazom podataka koristeći klijenta
 
   try {
@@ -287,7 +287,7 @@ const copyEventSettings = async (eventId, tmpId, begda, endda) => {
     let ok = false;
 
     // Prvo obrišite podatke
-    console.log("Brisem tic_eventatts")
+    // console.log("Brisem tic_eventatts")
     // await client.query("DELETE FROM tic_eventatts WHERE event = $1", [eventId]);
 
 
@@ -339,10 +339,10 @@ const activateEvent = async (eventId) => {
   try {
     await client.query("BEGIN"); // Početak transakcije
     let ok = false;
-    console.log("***********************-00****************************")
+    // console.log("***********************-00****************************")
     // Setuje se status 
     await client.query("UPDATE tic_event set status = 1 WHERE event = $1", [eventId]);
-    console.log("***********************00****************************")
+    // console.log("***********************00****************************")
 
     // Create row for tic_doc
     const docRows = await db.query(`
@@ -357,11 +357,11 @@ const activateEvent = async (eventId) => {
         `Dogadjaj već aktiviran: ${rows}`
       );
     }
-    console.log("***********************01*************************** eventId = ", eventId)
+    // console.log("***********************01*************************** eventId = ", eventId)
     let i = 0
     // const docvr = "22"
     for (const row of docRows.rows) {
-      console.log(eventId, "***********************02********************row********", row)
+      // console.log(eventId, "***********************02********************row********", row)
       // Insertuje se zaglavlje dokumenta - kupac organizator
       const docId = row.id
       const channel = 1
@@ -369,7 +369,7 @@ const activateEvent = async (eventId) => {
           INSERT INTO tic_doc (id , site, date, tm, curr, currrate, usr, status, docobj, broj, obj2, opis, timecreation, storno, year, docvr, endtm, usersys, channel)
           VALUES ($1, $2, $3, $4, $5, $6, $7, 2, $8, $9, $10, $11, $12, $13, $14, $15, $16, 1, 1773469083845922816)
         `, [docId, row.site, row.date, row.tm, row.curr, row.currrate, 1, row.docobj, row.broj, row.obj2, row.opis, row.timecreation, row.storno, row.year, row.docvr, '99991231235959']);
-      console.log(docId, "***********************02****************************", ++i)
+      // console.log(docId, "***********************02****************************", ++i)
       // Upit za sezonske doga]aje koji se primenjuju na pojedinacni
       // Ako se kupac prijavljuje onda je to rezervacija u suprotnom je odmah racun
 
@@ -390,9 +390,9 @@ const activateEvent = async (eventId) => {
           ) 
         `,
         [row.id, eventId, eventId]);
-      console.log(eventId, "***********************03****************************", docId)
+      // console.log(eventId, "***********************03****************************", docId)
       for (const row1 of docsRows.rows) {
-        console.log("***********************04****************************", row.id)
+        // console.log("***********************04****************************", row.id)
         //Insert stavki sezonskih karti. Cena i iznos se neupisuju.
         await db.query(`
           INSERT INTO tic_docs (id, site, doc, event, loc, art, tgp, taxrate, price, input, output, discount, curr, currrate, duguje, potrazuje,
@@ -422,7 +422,7 @@ const copyTpEventloc = async (eventId, par1, lang) => {
   const client = await db.connect();
   try {
 
-    console.log(par1, "*00**************************copyGrpEvent*******************************")
+    // console.log(par1, "*00**************************copyGrpEvent*******************************")
     let ok = false;
     let uId = '11111111111111111111'
     await client.query("BEGIN");
@@ -440,7 +440,7 @@ const copyTpEventloc = async (eventId, par1, lang) => {
     `, [eventId]);
     }
 
-    console.log(par1, "*02**************************DELETE*******************************", eventId)
+    // console.log(par1, "*02**************************DELETE*******************************", eventId)
     // Iteriramo kroz objekte u requestBody
     // Pretvorite string u niz objekata
     await client.query(
@@ -472,13 +472,13 @@ const copyTpEventloc = async (eventId, par1, lang) => {
 const copyGrpEventloc = async (eventId, par1, loc, tploc, begda, endda, requestBody) => {
 
   try {
-    console.log(par1, "***************************copyGrpEvent*******************************")
+    // console.log(par1, "***************************copyGrpEvent*******************************")
     let ok = false;
     let uId = '11111111111111111111'
     await db.query("BEGIN");
 
     if (par1 == 'true') {
-      console.log(par1, "***************************copyGrpEvent - delete *******************************")
+      // console.log(par1, "***************************copyGrpEvent - delete *******************************")
       await db.query(
         `
       delete from tic_eventloc
@@ -489,12 +489,12 @@ const copyGrpEventloc = async (eventId, par1, loc, tploc, begda, endda, requestB
     // Iteriramo kroz objekte u requestBody
     // Pretvorite string u niz objekata
     const parsedBody = JSON.parse(requestBody.jsonObj);
-    console.log(par1, "***************************copyGrpEvent 00 *******************************")
+    // console.log(par1, "***************************copyGrpEvent 00 *******************************")
     // Provera da li parsedBody ima svojstvo koje sadrži niz objekata
     if (parsedBody && Array.isArray(parsedBody)) {
       // Iteriramo kroz objekte u parsedBody
       for (const obj of parsedBody) {
-        console.log(obj, "***************************copyGrpEvent 01 *******************************")
+        // console.log(obj, "***************************copyGrpEvent 01 *******************************")
         uId = await uniqueId();
         // id numeric(20) NOT NULL,
         // site numeric(20) NULL,
@@ -512,8 +512,8 @@ const copyGrpEventloc = async (eventId, par1, loc, tploc, begda, endda, requestB
         // color varchar(100) NULL,
         // icon varchar(100) NULL, 
         // Insert rows into tic_eventatts using obj.id
-        console.log(
-          eventId, "@@@@@@@@@@@@@@@ BMV @@@@@@@@@@@@@@@")
+        // console.log(
+          // eventId, "@@@@@@@@@@@@@@@ BMV @@@@@@@@@@@@@@@")
 
         await db.query(`
             INSERT INTO tic_eventloc (id, site, event, loc, begda, endda, color, icon)
@@ -521,8 +521,8 @@ const copyGrpEventloc = async (eventId, par1, loc, tploc, begda, endda, requestB
         `, [uId, eventId, obj.id, begda, endda, obj.color, obj.icon]);
       }
     }
-    console.log(
-      eventId, "@@@@@@@@@@@@@ BMV @@@@@@@@@@@@@@@@@")
+    // console.log(
+      // eventId, "@@@@@@@@@@@@@ BMV @@@@@@@@@@@@@@@@@")
 
     await db.query("COMMIT"); // Confirm the transaction
     ok = true;
@@ -540,13 +540,13 @@ const copyGrpEventloc = async (eventId, par1, loc, tploc, begda, endda, requestB
 const copyGrpEventlocl = async (eventId, par1, loc, tploc, begda, endda, requestBody, eventloc) => {
 
   try {
-    console.log(eventloc, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ copyGrpEventlocl  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+    // console.log(eventloc, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ copyGrpEventlocl  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
     let ok = false;
     let uId = '11111111111111111111'
     await db.query("BEGIN");
-    console.log(par1, "@@****************copyGrpEventlocl - PRE delete ****************@@", eventId, "@@@@", loc)
+    // console.log(par1, "@@****************copyGrpEventlocl - PRE delete ****************@@", eventId, "@@@@", loc)
     if (par1 == 'true') {
-      console.log(par1, "***************************copyGrpEventlocl - delete *******************************")
+      // console.log(par1, "***************************copyGrpEventlocl - delete *******************************")
       await db.query(
         `
       delete from tic_loclink
@@ -559,12 +559,12 @@ const copyGrpEventlocl = async (eventId, par1, loc, tploc, begda, endda, request
     // Pretvorite string u niz objekata
     const parsedBody = JSON.parse(requestBody.jsonObj);
     // Provera da li parsedBody ima svojstvo koje sadrži niz objekata
-    console.log(parsedBody, "***************************copyGrpEventlocl - PRE IF *******************************")
+    // console.log(parsedBody, "***************************copyGrpEventlocl - PRE IF *******************************")
     if (parsedBody && Array.isArray(parsedBody)) {
-      console.log(parsedBody, "***************************copyGrpEventlocl - IF *******************************")
+      // console.log(parsedBody, "***************************copyGrpEventlocl - IF *******************************")
       // Iteriramo kroz objekte u parsedBody
       for (const obj of parsedBody) {
-        console.log(obj, "***************************copyGrpEventlocl - FOR *******************************")
+        // console.log(obj, "***************************copyGrpEventlocl - FOR *******************************")
         uId = await uniqueId();
         await db.query(
           `
@@ -575,7 +575,7 @@ const copyGrpEventlocl = async (eventId, par1, loc, tploc, begda, endda, request
           `,
           [uId, eventId, tploc, obj.tp, obj.id, tploc, eventloc, begda, endda, obj.color, obj.icon]
         );
-        console.log(eventId, "@@@*******copyGrpEventlocl - END FOR **********@@@", loc, "@@+@@", tploc, "@@+@@")
+        // console.log(eventId, "@@@*******copyGrpEventlocl - END FOR **********@@@", loc, "@@+@@", tploc, "@@+@@")
       }
     }
 
@@ -596,7 +596,7 @@ const copyGrpEventlocl = async (eventId, par1, loc, tploc, begda, endda, request
 const copyGrpEventart = async (eventId, par1, requestBody) => {
 
   try {
-    console.log(par1, "***************************copyGrpEvent!!!!!!!!*******************************")
+    // console.log(par1, "***************************copyGrpEvent!!!!!!!!*******************************")
     let ok = false;
     let uId = '11111111111111111111'
     await db.query("BEGIN");
@@ -608,12 +608,12 @@ const copyGrpEventart = async (eventId, par1, requestBody) => {
       where event = $1
     `, [eventId]);
     }
-    console.log(par1, "***************************copyGrpEvent!!!!!!!!*******************************")
+    // console.log(par1, "***************************copyGrpEvent!!!!!!!!*******************************")
     // Iteriramo kroz objekte u requestBody
     // Pretvorite string u niz objekata
     const parsedBody = JSON.parse(requestBody.jsonObj);
 
-    console.log(parsedBody, "5555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555")
+    // console.log(parsedBody, "5555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555")
     if (parsedBody && Array.isArray(parsedBody)) {
       // Iteriramo kroz objekte u parsedBody
       for (const obj of parsedBody) {
@@ -641,7 +641,7 @@ const copyGrpEventart = async (eventId, par1, requestBody) => {
 const copyGrpEvent = async (eventId, par1, requestBody) => {
 
   try {
-    console.log(par1, "***************************copyGrpEvent*******************************")
+    // console.log(par1, "***************************copyGrpEvent*******************************")
     let ok = false;
     let uId = '11111111111111111111'
     await db.query("BEGIN");
@@ -688,7 +688,7 @@ const copyEventatts = async (eventId, requestBody) => {
     let uId = '11111111111111111111'
     await db.query("BEGIN");
     const parsedBody = JSON.parse(requestBody.jsonObj);
-    console.log(parsedBody, "***************************copyGrpEvent*******************************")
+    // console.log(parsedBody, "***************************copyGrpEvent*******************************")
     uId = await uniqueId();
     // Insert rows into tic_eventatts using obj.id
     await db.query(`
@@ -712,7 +712,7 @@ const ticSetItem = async (objName, item, items) => {
   const attributeType = entities.entitiesInfo[objName].attributes[item];
   const value = attributeType === 'string' ? `'${items.usr}'` : items.usr;
   const sqlString = `UPDATE ${objName} set ${item} = ${value}  WHERE id = ${items.id}`;
-  console.log(sqlString, "55555555555555555555555555555555555555555555555555555", items)
+  // console.log(sqlString, "55555555555555555555555555555555555555555555555555555", items)
   const result = await db.query(sqlString);
   return result.rowCount;
 }
@@ -721,7 +721,7 @@ const ticSetValue = async (objName, item, itemValue, objId) => {
   const attributeType = entities.entitiesInfo[objName].attributes[item];
   const value = attributeType === 'string' ? `'${itemValue}'` : itemValue;
   const sqlString = `UPDATE ${objName} set ${item} = ${value}  WHERE id = ${objId}`;
-  console.log(sqlString, "55555555555555555555555555555555555555555555555555555", item)
+  // console.log(sqlString, "55555555555555555555555555555555555555555555555555555", item)
   const result = await db.query(sqlString);
   return result.rowCount;
 }
@@ -771,7 +771,7 @@ const obradaProdaja = async (par1, par2, requestBody) => {
         }
 
         _services = _services.filter(service => service.id !== 'RZV');
-        console.log(_ticDoc, par2, row, "## 1111 ####################################################################")
+        // console.log(_ticDoc, par2, row, "## 1111 ####################################################################")
         if (_ticDoc.reservation == '1') {
           const sqlUpit = `
           SELECT a.id, a.tgp, a."text", r.rate, b.event, b.condition, b.minfee
@@ -858,7 +858,7 @@ const obradaProdaja = async (par1, par2, requestBody) => {
           }
 
           _services = _services.filter(service => service.id !== 'RZV');
-          console.log(_ticDoc, par2, row, "## 1111 ####################################################################")
+          // console.log(_ticDoc, par2, row, "## 1111 ####################################################################")
           if (_ticDoc.reservation == '1') {
             const sqlUpit = `
             SELECT a.id, a.tgp, a."text", r.rate, b.event, b.value, b.condition, b.minfee
@@ -943,7 +943,7 @@ const obradaProdaja = async (par1, par2, requestBody) => {
 
       //ayuriraj zaglavlje      
     }
-    console.log("*************** COMMIT ************************")
+    // console.log("*************** COMMIT ************************")
     await db.query("COMMIT"); // Confirm the transaction
     ok = true;
 
@@ -1019,7 +1019,7 @@ const docSetService = async (requestBody) => {
     await db.query('BEGIN');
     // await client.query('SET search_path TO iis,public;'); // Add this line
     const ticDocRow = requestBody;
-    console.log('ticDocRow=================================:', ticDocRow);
+    // console.log('ticDocRow=================================:', ticDocRow);
     const query = {
       name: 'call-tic_docs_setservices',
       text: `SELECT tic_docs_setservices(
@@ -1076,15 +1076,15 @@ const docSetService = async (requestBody) => {
 
     try {
       client.on('notice', (msg) => {
-        console.log(msg);
+        // console.log(msg);
       });
 
-      console.log('Executing query:', query);
+      // console.log('Executing query:', query);
       const result = await client.query(query);
       // await new Promise(resolve => setTimeout(resolve, 5000));
-      console.log('Query result:', result);
+      // console.log('Query result:', result);
       await client.query('COMMIT');
-      console.log('tic_docs_setservices function executed successfully');
+      // console.log('tic_docs_setservices function executed successfully');
     } catch (err) {
       console.error(err.stack);
     }
@@ -1115,16 +1115,16 @@ const docSetCancelService = async (objId) => {
                     begtm = null
                 where doc = $1`;
 
-    console.log('ticDocRow=================================:', query1);
-    console.log('ticDocRow=================================:', query2);
+    // console.log('ticDocRow=================================:', query1);
+    // console.log('ticDocRow=================================:', query2);
 
     try {
-      console.log('Executing query:', query1);
+      // console.log('Executing query:', query1);
       await db.query(query1, [objId]);
       let result = await db.query(query2, [objId]);
-      console.log('Query result:', result);
+      // console.log('Query result:', result);
       await db.query('COMMIT');
-      console.log('tic_docs_cancel function executed successfully');
+      // console.log('tic_docs_cancel function executed successfully');
     } catch (err) {
       console.error('Error executing queries, rolling back:', err.stack);
       await db.query('ROLLBACK');
@@ -1163,10 +1163,10 @@ const ticDocsuidParAllNull = async (objId1, requestBody, lang) => {
               )
               `;
 
-    console.log('ticDocRow=================================:', query1);
+    // console.log('ticDocRow=================================:', query1);
 
     try {
-      console.log('Executing query:', query1);
+      // console.log('Executing query:', query1);
       await db.query(query1, [objId1]);
       await db.query('COMMIT');
     } catch (err) {
@@ -1212,7 +1212,7 @@ const ticDocdiscountAll = async (objId1, requestBody, lang) => {
               and s.event = ${ticDocRow.event}
               `;
 
-    console.log(queryStmt, 'ticDocRow=================================:', query, "-------3------", ticDocRow);
+    // console.log(queryStmt, 'ticDocRow=================================:', query, "-------3------", ticDocRow);
 
     try {
       await db.query(queryStmt);
@@ -1243,7 +1243,7 @@ const ticDelDocdiscountAll = async (objId1, requestBody, lang) => {
                   join  tic_doc d on d.id = s1.doc and d.id = ${ticDocRow.id}
               )               
               `;
-    console.log(queryStmt, 'ticDocRow=================================-------------', ticDocRow);
+    // console.log(queryStmt, 'ticDocRow=================================-------------', ticDocRow);
     try {
       await db.query(queryStmt);
       await db.query('COMMIT');
@@ -1275,7 +1275,7 @@ const ticDelDocdiscountEventAll = async (objId1, requestBody, lang) => {
               )               
               `;
 
-    console.log(queryStmt, 'ticDocRow=================================-------------', ticDocRow);
+    // console.log(queryStmt, 'ticDocRow=================================-------------', ticDocRow);
 
     try {
       await db.query(queryStmt);
@@ -1297,21 +1297,41 @@ const ticDocsuidParAll = async (objId1, requestBody, lang) => {
 
   try {
     const ticDocRow = requestBody;
+    if (ticDocRow.idnum==null) {
+      ticDocRow.idnum=''
+    }
+    if (ticDocRow.pib==null) {
+      ticDocRow.pib=''
+    }
+    const uid = ticDocRow.pib||ticDocRow.idnum||''
+    if (ticDocRow.adress==null) {
+      ticDocRow.adress=''
+    }
+    if (ticDocRow.place==null) {
+      ticDocRow.place=''
+    }    
+    if (ticDocRow.email==null) {
+      ticDocRow.email=''
+    }
+    if (ticDocRow.birthday==null) {
+      ticDocRow.birthday=''
+    }
     // const ticDocRow = _ticDocRow[0]
-    console.log("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT", ticDocRow)
-    await db.query('BEGIN');
+    // console.log("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT", ticDocRow)
+
     const query = ` 
               update tic_docsuid
-                set first = '${ticDocRow.text}',
-                  last = '${ticDocRow.text}',
-                  uid = '${ticDocRow.idnum || ticDocRow.pib}',
-                  adress = '${ticDocRow.address}',
-                  city = '${ticDocRow.place}',
-                  country = '${ticDocRow.country}',
-                  phon = '${ticDocRow.tel}',
-                  email = '${ticDocRow.email}',
-                  par = ${ticDocRow.id},
-                  birthday = '${ticDocRow.birthday}'
+                set first = '${ticDocRow?.first||ticDocRow?.text||ticDocRow?.textx}',
+                  last = '${ticDocRow?.last||ticDocRow?.text||ticDocRow?.textx}',
+                  uid = '${uid}',
+                  adress = '${ticDocRow?.address}',
+                  city = '${ticDocRow?.place}',
+                  country = '${ticDocRow?.country}',
+                  phon = '${ticDocRow?.tel}',
+                  email = '${ticDocRow?.email}',
+                  par = ${ticDocRow?.id},
+                  birthday = '${ticDocRow?.birthday}',
+                  kupac = 1
               where 	docs in (
                   select s.id
                   from	tic_docs s
@@ -1319,9 +1339,10 @@ const ticDocsuidParAll = async (objId1, requestBody, lang) => {
               )
               `;
 
-    console.log(requestBody, 'ticDocRow=================================:', query, "-------4------", ticDocRow);
+    // console.log(requestBody, 'ticDocRow=================================:', query, "-------4------", ticDocRow);
 
     try {
+      await db.query('BEGIN');
       await db.query(query);
       await db.query('COMMIT');
     } catch (err) {
@@ -1341,20 +1362,45 @@ const ticDocsuidPosetilac = async (objId1, requestBody, lang) => {
 
   try {
     const ticDocRow = requestBody;
-    await db.query('BEGIN');
+    if (ticDocRow.tp == 2) {
+      const parts = ticDocRow.textx.split(' '); // Podeli string na delove prema razmaku
+      ticDocRow.first = parts.slice(0, 1)[0]; // Prvi deo ide u `first`
+      ticDocRow.last = parts.slice(1).join(' '); // Svi ostali delovi spojeni u `last`
+  }
+  if (ticDocRow.idnum==null) {
+    ticDocRow.idnum=''
+  }
+  if (ticDocRow.pib==null) {
+    ticDocRow.pib=''
+  }
+  const uid = ticDocRow.pib||ticDocRow.idnum||''
+  if (ticDocRow.adress==null) {
+    ticDocRow.adress=''
+  }
+  if (ticDocRow.place==null) {
+    ticDocRow.place=''
+  }
+  if (ticDocRow.email==null) {
+    ticDocRow.email=''
+  }
+  if (ticDocRow.birthday==null) {
+    ticDocRow.birthday=''
+  }
+
 
     const query = ` 
               update tic_docsuid
-                set first = '${ticDocRow.text}',
-                  last = '${ticDocRow.text}',
-                  uid = '${ticDocRow.idnum || ticDocRow.pib}',
-                  adress = '${ticDocRow.address}',
-                  city = '${ticDocRow.place}',
-                  country = '${ticDocRow.country}',
-                  phon = '${ticDocRow.tel}',
-                  email = '${ticDocRow.email}',
-                  par = ${ticDocRow.id},
-                  birthday = ${ticDocRow.birthday}
+                set first = '${ticDocRow?.first||ticDocRow?.text||ticDocRow?.textx}',
+                  last = '${ticDocRow?.last||ticDocRow?.text||ticDocRow?.textx}',
+                  uid = '${uid}',
+                  adress = '${ticDocRow?.address}',
+                  city = '${ticDocRow?.place}',
+                  country = '${ticDocRow?.country}',
+                  phon = '${ticDocRow?.tel}',
+                  email = '${ticDocRow?.email}',
+                  par = ${ticDocRow?.id},
+                  birthday = '${ticDocRow?.birthday}',
+                  kupac = 0
               where 	docs  = ${objId1}
               `;
 
@@ -1369,7 +1415,7 @@ const ticDocsuidPosetilac = async (objId1, requestBody, lang) => {
               where 	id  = ${objId1}
               `;
 
-    // console.log(requestBody, 'ticDocRow=================================:', query, "-------------", ticDocRow);
+    // console.log(requestBody, '55UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU:', query, "-------------", ticDocRow);
     const sqlRecenica =
       `
       select 	count(d.*)
@@ -1378,8 +1424,8 @@ const ticDocsuidPosetilac = async (objId1, requestBody, lang) => {
     `
     //const [rows] = await db.query(sqlRecenic);
 
-
     try {
+      await db.query('BEGIN');
       await db.query(query);
       await db.query(query1);
       let result = await db.query(sqlRecenica);
@@ -1406,21 +1452,51 @@ const ticDocsuidPar = async (objId1, requestBody, lang) => {
 
   try {
     const _ticDocRow = requestBody;
-    const ticDocRow = _ticDocRow[0]
-    await db.query('BEGIN');
+    // console.log(requestBody, "TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT")
+    let ticDocRow;
+    if (Array.isArray(_ticDocRow)) {
+        ticDocRow = _ticDocRow[0];
+    } else {
+        ticDocRow = _ticDocRow;
+    }
+    if (ticDocRow.tp == 2) {
+      const parts = ticDocRow.textx.split(' '); // Podeli string na delove prema razmaku
+      ticDocRow.first = parts.slice(0, 1)[0]; // Prvi deo ide u `first`
+      ticDocRow.last = parts.slice(1).join(' '); // Svi ostali delovi spojeni u `last`
+  }
+  if (ticDocRow.idnum==null) {
+    ticDocRow.idnum=''
+  }
+  if (ticDocRow.pib==null) {
+    ticDocRow.pib=''
+  }
+  const uid = ticDocRow.pib||ticDocRow.idnum||''
+  if (ticDocRow.adress==null) {
+    ticDocRow.adress=''
+  }
+  if (ticDocRow.place==null) {
+    ticDocRow.place=''
+  }
+  if (ticDocRow.email==null) {
+    ticDocRow.email=''
+  }
+  if (ticDocRow.birthday==null) {
+    ticDocRow.birthday=''
+  }
 
     const query = ` 
               update tic_docsuid
-                set first = '${ticDocRow.text}',
-                  last = '${ticDocRow.text}',
-                  uid = '${ticDocRow.idnum || ticDocRow.pib}',
-                  adress = '${ticDocRow.address}',
-                  city = '${ticDocRow.place}',
-                  country = '${ticDocRow.country}',
-                  phon = '${ticDocRow.tel}',
-                  email = '${ticDocRow.email}',
-                  par = ${ticDocRow.id},
-                  birthday = ${ticDocRow.birthday}
+                set first = '${ticDocRow?.first||ticDocRow?.text||ticDocRow?.textx}',
+                  last = '${ticDocRow?.last||ticDocRow?.text||ticDocRow?.textx}',
+                  uid = '${uid}',
+                  adress = '${ticDocRow?.address}',
+                  city = '${ticDocRow?.place}',
+                  country = '${ticDocRow?.country}',
+                  phon = '${ticDocRow?.tel}',
+                  email = '${ticDocRow?.email}',
+                  par = ${ticDocRow?.id},
+                  birthday = '${ticDocRow?.birthday}',
+                  kupac = 1
               where 	docs  = ${objId1}
               `;
 
@@ -1430,9 +1506,10 @@ const ticDocsuidPar = async (objId1, requestBody, lang) => {
               where 	id  = ${objId1}
               `;
 
-    console.log(requestBody, 'ticDocRow=================================:', query, "-------5------", ticDocRow);
+    // console.log(requestBody, 'ticDocRow=================================:', query, "-------5------", ticDocRow);
 
     try {
+      await db.query('BEGIN');
       await db.query(query);
       await db.query(query1);
       await db.query('COMMIT');
@@ -1464,7 +1541,9 @@ const ticDocsuidParNull = async (objId1, requestBody, lang) => {
                   country = '',
                   phon = '',
                   email = '',
-                  par = null
+                  par = null,
+                  birthday = '',
+                  kupac = 0
               where 	docs  = ${objId1}
               `;
     const query1 = ` 
@@ -1472,7 +1551,7 @@ const ticDocsuidParNull = async (objId1, requestBody, lang) => {
                 set status = 1
               where 	id  = ${objId1}
               `;
-    console.log(requestBody, 'ticDocRow=================================:', query, "-------6------", ticDocRow);
+    // console.log(requestBody, 'ticDocRow=================================:', query, "-------6------", ticDocRow);
 
     try {
       await db.query(query);
@@ -1578,9 +1657,9 @@ const ticEventCopyS = async (requestBody) => {
       };
 
       try {
-        console.log('Executing query for event:', ticEventRow.id);
+        // console.log('Executing query for event:', ticEventRow.id);
         const result = await client.query(query);
-        console.log('Query result for event:', result.rows[0]);
+        // console.log('Query result for event:', result.rows[0]);
       } catch (err) {
         console.error(`Error in event ${ticEventRow.id}:`, err.stack);
         throw err; // Rollover and stop transaction in case of error
@@ -1588,7 +1667,7 @@ const ticEventCopyS = async (requestBody) => {
     }
 
     await client.query('COMMIT');
-    console.log('All tic_events copied successfully');
+    // console.log('All tic_events copied successfully');
     return { success: true };
   } catch (err) {
     console.error('Transaction failed:', err);
@@ -1608,7 +1687,7 @@ const ticEventCopy = async (requestBody) => {
     await client.query('BEGIN');
     // await client.query('SET search_path TO iis,public;'); // Add this line
     const ticEventRow = requestBody;
-    console.log('ticEventRow=================================:', ticEventRow);
+    // console.log('ticEventRow=================================:', ticEventRow);
     const query = {
       name: 'call-tic_event_copy',
       text: `SELECT tic_event_copy(
@@ -1685,14 +1764,14 @@ const ticEventCopy = async (requestBody) => {
 
     try {
       client.on('notice', (msg) => {
-        console.log(msg);
+        // console.log(msg);
       });
 
-      console.log('Executing query:', query);
+      // console.log('Executing query:', query);
       const result = await client.query(query);
-      console.log('Query result:', result);
+      // console.log('Query result:', result);
       await client.query('COMMIT');
-      console.log('tic_docs_setservices function executed successfully', result.rows[0]);
+      // console.log('tic_docs_setservices function executed successfully', result.rows[0]);
       return result.rows[0]
     } catch (err) {
       console.error(err.stack);
@@ -1715,7 +1794,7 @@ const ticEventSaveDate = async (requestBody) => {
     await client.query('BEGIN');
     // await client.query('SET search_path TO iis,public;'); // Add this line
     const ticEventRow = requestBody;
-    console.log('ticEventRow=================================:', ticEventRow);
+    // console.log('ticEventRow=================================:', ticEventRow);
     const query = {
       name: 'call-tic_event_savedate',
       text: `SELECT tic_event_savedate(
@@ -1790,14 +1869,14 @@ const ticEventSaveDate = async (requestBody) => {
 
     try {
       client.on('notice', (msg) => {
-        console.log(msg);
+        // console.log(msg);
       });
 
-      console.log('Executing query:', query);
+      // console.log('Executing query:', query);
       const result = await client.query(query);
-      console.log('Query result:', result);
+      // console.log('Query result:', result);
       await client.query('COMMIT');
-      console.log('tic_event_savedate function executed successfully', result.rows[0]);
+      // console.log('tic_event_savedate function executed successfully', result.rows[0]);
       return result.rows[0]
     } catch (err) {
       console.error(err.stack);
@@ -1829,14 +1908,14 @@ const ticEventDeleteAll = async (uId) => {
 
     try {
       client.on('notice', (msg) => {
-        console.log(msg);
+        // console.log(msg);
       });
 
-      console.log('Executing query:', query);
+      // console.log('Executing query:', query);
       const result = await client.query(query);
-      console.log('Query result:', result);
+      // console.log('Query result:', result);
       await client.query('COMMIT');
-      console.log('tic_eventdeleteall function executed successfully', result.rows[0]);
+      // console.log('tic_eventdeleteall function executed successfully', result.rows[0]);
       return { id: uId }
     } catch (err) {
       console.error(err.stack);
@@ -1856,7 +1935,7 @@ const ticDocstorno = async (par1, par2, objId1, requestBody, lang) => {
   const client = await db.connect();
 
   try {
-    console.log(par1, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ copyGrpEventlocl  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+    // console.log(par1, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ copyGrpEventlocl  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
     let ok = false;
     let uId = '11111111111111111111'
     let sId = '11111111111111111111'
@@ -1892,13 +1971,13 @@ const ticDocstorno = async (par1, par2, objId1, requestBody, lang) => {
         [uId, objId1]
       );
     } else {
-      console.log(requestBody, "***************************copyGrpEventlocl - PRE IF *******************************", requestBody.jsonObj)
+      // console.log(requestBody, "***************************copyGrpEventlocl - PRE IF *******************************", requestBody.jsonObj)
       const parsedBody = requestBody; //JSON.parse(requestBody.jsonObj);
       if (parsedBody && Array.isArray(parsedBody)) {
-        console.log(parsedBody, "***************************copyGrpEventlocl - IF *******************************")
+        // console.log(parsedBody, "***************************copyGrpEventlocl - IF *******************************")
         // Iteriramo kroz objekte u parsedBody
         for (const obj of parsedBody) {
-          console.log(obj, "***************************copyGrpEventlocl - FOR *******************************")
+          // console.log(obj, "***************************copyGrpEventlocl - FOR *******************************")
           sId = await uniqueId();
           await client.query(
             `
@@ -1926,7 +2005,7 @@ const ticDocstorno = async (par1, par2, objId1, requestBody, lang) => {
           `,
             [obj.id]
           );
-          console.log(sId, "@@@*******copyGrpEventlocl - END FOR **********@@@", -obj.output, "@@+@@", uId, "@@+@@")
+          // console.log(sId, "@@@*******copyGrpEventlocl - END FOR **********@@@", -obj.output, "@@+@@", uId, "@@+@@")
         }
       }
     }
@@ -1959,13 +2038,13 @@ const ticDocpayments = async (requestBody, lang) => {
     let ok = false;
     let sId = '11111111111111111111'
 
-    console.log(requestBody, "***************************ticDocpayments - PRE IF *******************************", requestBody.jsonObj)
+    // console.log(requestBody, "***************************ticDocpayments - PRE IF *******************************", requestBody.jsonObj)
     const parsedBody = requestBody; //JSON.parse(requestBody.jsonObj);
     if (parsedBody && Array.isArray(parsedBody)) {
-      console.log(parsedBody, "***************************ticDocpayments - IF *******************************")
+      // console.log(parsedBody, "***************************ticDocpayments - IF *******************************")
       // Iteriramo kroz objekte u parsedBody
       for (const obj of parsedBody) {
-        console.log(obj, "***************************ticDocpayments - FOR *******************************")
+        // console.log(obj, "***************************ticDocpayments - FOR *******************************")
         sId = await uniqueId();
         await db.query(
           `
@@ -1974,7 +2053,7 @@ const ticDocpayments = async (requestBody, lang) => {
           `,
           [sId, null, obj.doc, obj.paymenttp, obj.amount, obj.bcontent, obj.ccard, obj.total, obj.tm, obj.usr, obj.status]
         );
-        console.log(sId, "@@@*******copyGrpEventlocl - END FOR **********@@@@@+@@@@+@@")
+        // console.log(sId, "@@@*******copyGrpEventlocl - END FOR **********@@@@@+@@@@+@@")
       }
     }
 

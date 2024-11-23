@@ -14,7 +14,7 @@ const router = express.Router();
 router.use(express.json())
 
 router.use("/", (req, res, next) => {
-   console.log("Dosao u index");
+  //  console.log("Dosao u index");
   const urlParts = req.url.split("/");
   // Dohvatam iz URL-a, koju tabelu obradjujen i setuje --- req.objName ****** TABELU
   // .../adm/menu/... adm je modul a menu je tabela
@@ -24,7 +24,7 @@ router.use("/", (req, res, next) => {
   if (urlParts[2] === "x") { // za tebele koje imaju visejezicku podrsku
     req.objName = urlParts[1] + "_" + urlParts[3];
   }
-  console.log("Dosao u index");
+  // console.log("Dosao u index");
   next();
 });
 
@@ -40,7 +40,7 @@ router.use("/", (req, res, next) => {
 
 // Moze da se svede na jedan ruter ali volim da vidim sta je sve implementirano!!!
 router.use((req, res, next) => {
-  console.log("Dosao do ruta");
+  // console.log("Dosao do ruta");
   next();
 });
 

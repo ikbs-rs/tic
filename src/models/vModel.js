@@ -98,7 +98,7 @@ const getArtL = async (objName, lang) => {
   and	t.lang = '${lang || 'sr_cyr'}'
   and	g.lang = '${lang || 'sr_cyr'}'
   `
-  console.log("****************getArtL*****************", sqlRecenica)
+  // console.log("****************getArtL*****************", sqlRecenica)
   //const [rows] = await db.query(sqlRecenic);
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
@@ -119,7 +119,7 @@ const getLocartL = async (objName, objId, lang) => {
   from	tic_artloc aa
   where aa.loc = ${objId}
   `
-  console.log(sqlRecenica, "*******************sqlRecenica*********************")
+  // console.log(sqlRecenica, "*******************sqlRecenica*********************")
   //const [rows] = await db.query(sqlRecenic);
 
   let result = await db.query(sqlRecenica);
@@ -148,7 +148,7 @@ const getEventartL = async (objName, objId, lang) => {
   and aa.lang = '${lang || 'sr_cyr'}'  
   and	t.lang = '${lang || 'sr_cyr'}'
   `
-  console.log(sqlRecenica, "*************getEventartL*************")
+  // console.log(sqlRecenica, "*************getEventartL*************")
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
   if (Array.isArray(rows)) {
@@ -193,7 +193,7 @@ const getArtlocL = async (objName, objId, lang) => {
   from	tic_artloc aa
   where aa.art = ${objId}
   `
-  console.log(sqlRecenica, "*******************sqlRecenica*********************")
+  // console.log(sqlRecenica, "*******************sqlRecenica*********************")
   //const [rows] = await db.query(sqlRecenic);
 
   let result = await db.query(sqlRecenica);
@@ -264,7 +264,7 @@ const getEventartlinkL = async (objName, objId, lang) => {
   from	tic_eventartlink aa
   where aa.eventart = ${objId}
   `
-  console.log(sqlRecenica, "*******************getArtlinkL*********************")
+  // console.log(sqlRecenica, "*******************getArtlinkL*********************")
   //const [rows] = await db.query(sqlRecenic);
 
   let result = await db.query(sqlRecenica);
@@ -287,7 +287,29 @@ const getEventartcenaTL = async (objName, objId, par1, lang) => {
   and aa.att = a2.id
   and aa.event = ${objId}
   `
-  console.log(sqlRecenica, "*******************getEventartcenaTL*********************")
+  // console.log(sqlRecenica, "*******************getEventartcenaTL*********************")
+  //const [rows] = await db.query(sqlRecenic);
+
+  let result = await db.query(sqlRecenica);
+  let rows = result.rows;
+  if (Array.isArray(rows)) {
+    return rows;
+  } else {
+    throw new Error(
+      `Greška pri dohvatanju slogova iz baze - abs find: ${rows}`
+    );
+  }
+};
+
+const getEventattsCodeValueL = async (objName, objId, par1, lang) => {
+  const sqlRecenica =
+    `
+    select aa.id, a2.code catt, a2.text natt, a2.code, aa.value val1, aa.text val2, aa.condition val3, aa.link val4, aa.minfee val5
+    from	tic_eventatts aa 
+    join tic_eventattx_v a2 on  aa.att = a2.id and a2.code = '${par1}'
+    where aa.event = ${objId}
+    `
+  // console.log(sqlRecenica, "*******************getEventartcenaTL*********************")
   //const [rows] = await db.query(sqlRecenic);
 
   let result = await db.query(sqlRecenica);
@@ -365,7 +387,7 @@ const getDocsuidProdajaLista = async (objName, objId, lang) => {
     left  join  tic_docsuid u on aa.id = u.docs
     where aa.doc = ${objId}
     `
-  console.log(sqlRecenica, "*******************getDocsuidProdajaLista*********************")
+  // console.log(sqlRecenica, "*******************getDocsuidProdajaLista*********************")
   //const [rows] = await db.query(sqlRecenic);
 
   let result = await db.query(sqlRecenica);
@@ -455,7 +477,7 @@ const getDocsL = async (objName, objId, lang) => {
   where aa.doc = ${objId}
   and aa.doc = d.id
   `
-  console.log(objId, "*-*-*-*-*-*-*-*-*-@@@@@@@@@ getDocsL @@@@@@@@@@@", sqlRecenica)
+  // console.log(objId, "*-*-*-*-*-*-*-*-*-@@@@@@@@@ getDocsL @@@@@@@@@@@", sqlRecenica)
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
   if (Array.isArray(rows)) {
@@ -484,7 +506,7 @@ const getDocsArtikliL = async (objName, objId, lang) => {
       join tic_arttp t on t.id = a.tp and t.code != 'Н'
       and aa.doc = d.id
   `
-  console.log(objId, "*-*-*-*-*-*-*-*-*-@@@@@@@@@ getDocsL @@@@@@@@@@@", sqlRecenica)
+  // console.log(objId, "*-*-*-*-*-*-*-*-*-@@@@@@@@@ getDocsL @@@@@@@@@@@", sqlRecenica)
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
   if (Array.isArray(rows)) {
@@ -508,7 +530,7 @@ select c.id, c.text || ' - ' ||trunc(a.value)||' '||v.code text, trunc(a.value) 
       join cmn_curr v on v.id = a.curr 
       and aa.id = ${objId}
   `
-  console.log(objId, "HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH getDocsEventartcenaL HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH", sqlRecenica)
+  // console.log(objId, "HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH getDocsEventartcenaL HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH", sqlRecenica)
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
   if (Array.isArray(rows)) {
@@ -538,7 +560,7 @@ const getDocsArtikliPrintL = async (objName, objId, lang) => {
       and aa.doc = d.id
       where aa.print = 1
   `
-  console.log(objId, "*-*-*-*-*-*-*-*-*-@@@@@@@@@ getDocsL @@@@@@@@@@@", sqlRecenica)
+  // console.log(objId, "*-*-*-*-*-*-*-*-*-@@@@@@@@@ getDocsL @@@@@@@@@@@", sqlRecenica)
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
   if (Array.isArray(rows)) {
@@ -594,7 +616,7 @@ const getDocsNaknadeL = async (objName, objId, lang) => {
     where aa.pmid != -1
     group by aa.doc, aa.pmtgp, aa.pmtax, aa.pmid, aa.pmcode, aa.pmtext, e.text
   `
-  console.log(objId, "*-*-*-*-*-*-*-*-*-@@@@@@@@@ getDocsL @@@@@@@@@@@", sqlRecenica)
+  // console.log(objId, "*-*-*-*-*-*-*-*-*-@@@@@@@@@ getDocsL @@@@@@@@@@@", sqlRecenica)
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
   if (Array.isArray(rows)) {
@@ -636,7 +658,7 @@ const getTransactionL = async (objName, lang, par1, par2, par3, par4, par5, par6
   //     GROUP BY a.id, a.tm, a.docvr, a.usr, p.code, p."text", b.event, e."text", e.begda, a.status, b.status, b.curr, c.code, d."text", trtp
   // ORDER BY  a.tm DESC
   //   `
-  console.log(par6, "PAR6 ================================================")
+  // console.log(par6, "PAR6 ================================================")
   let and1 = ''
   if (par1 == `true`) {
     and1 = ` and canceled = '0'`
@@ -820,7 +842,7 @@ const getTransactionL = async (objName, lang, par1, par2, par3, par4, par5, par6
             a.opis
     ) where 1=1		  
         ` + and1 + and2 + and3 + and4 + and5 + and6
-  console.log("*-*-*-*-*-*-*-*-*-1111111 objId 111111111", sqlRecenica)
+  // console.log("*-*-*-*-*-*-*-*-*-1111111 objId 111111111", sqlRecenica)
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
   if (Array.isArray(rows)) {
@@ -835,7 +857,7 @@ const getTransactionL = async (objName, lang, par1, par2, par3, par4, par5, par6
 /******************************************************************************************************************** */
 const getTransactionFL = async (objName, lang, par1, par2, par3, par4, par5, par6, par7, par8, par9, par10) => {
 
-  console.log(par9, "PAR9 ================================================")
+  // console.log(par9, "PAR9 ================================================")
   let and1 = ''
   if (par1 == `false`) {
     and1 = ` and aa.statustransakcije != 0`
@@ -996,7 +1018,7 @@ const getTransactionFL = async (objName, lang, par1, par2, par3, par4, par5, par
 			    a.statusdelivery , a.reservation, a.statuspayment, a.statusstampa, a.printfiskal, a.statusfiskal, a.endtm
     ) aa where 1=1	  
         ` + and1 + and2 + and3 + and4 + and5 + and6 + and7 + and8 + and9 + and10
-  console.log("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB TRANSAKCIJA BBBBBBBBBBBBBBBBB", sqlRecenica)
+  // console.log("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB TRANSAKCIJA BBBBBBBBBBBBBBBBB", sqlRecenica)
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
   if (Array.isArray(rows)) {
@@ -1035,7 +1057,7 @@ const getPrivilegeL = async (objName, lang) => {
 	      aa.tp, getValueById(aa.tp, 'tic_privilegetpx_v', 'code', '${lang || 'sr_cyr'}') ctp , getValueById(aa.tp, 'tic_privilegetpx_v', 'text', '${lang || 'sr_cyr'}') ntp
   from	tic_privilegex_v aa
   where aa.lang = '${lang || 'sr_cyr'}'`
-  console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
+  // console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
   if (Array.isArray(rows)) {
@@ -1055,7 +1077,7 @@ const getPrivilegediscountL = async (objName, objId, lang) => {
   from	tic_privilegediscount aa
   where aa.privilege = ${objId}
   `
-  console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
+  // console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
   if (Array.isArray(rows)) {
@@ -1075,7 +1097,7 @@ const getPrivilegelinkL = async (objName, objId, lang) => {
   from	tic_privilegelink aa
   where aa.privilege2 = ${objId}
   `
-  console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
+  // console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
   if (Array.isArray(rows)) {
@@ -1098,7 +1120,7 @@ const getPrivilegecondL = async (objName, objId, lang) => {
   from	tic_privilegecond aa
   where aa.privilege = ${objId}
   `
-  console.log("*-*-*-*-*-*-*-*-*-getPrivilegecondL", sqlRecenica)
+  // console.log("*-*-*-*-*-*-*-*-*-getPrivilegecondL", sqlRecenica)
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
   if (Array.isArray(rows)) {
@@ -1118,7 +1140,7 @@ const getParprivilegeL = async (objName, objId, lang) => {
   from	tic_parprivilege aa
   where aa.par = ${objId}
   `
-  console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
+  // console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
   if (Array.isArray(rows)) {
@@ -1136,7 +1158,7 @@ const getDiscountL = async (objName, lang) => {
   aa.tp, getValueById(aa.tp, 'tic_discounttpx_v', 'code', '${lang || 'sr_cyr'}') ctp , getValueById(aa.tp, 'tic_discounttpx_v', 'text', '${lang || 'sr_cyr'}') ntp
 from	tic_discountx_v aa
 where aa.lang = '${lang || 'sr_cyr'}'`
-  console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
+  // console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
   if (Array.isArray(rows)) {
@@ -1165,7 +1187,7 @@ and p.lang = '${lang || 'sr_cyr'}'
 and c.lang = '${lang || 'sr_cyr'}'
 and v.lang = '${lang || 'sr_cyr'}'
   `
-  console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
+  // console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
 
   let result = await db.query(sqlRecenica);
   let rows = result.rows
@@ -1196,7 +1218,7 @@ and p.lang = '${lang || 'sr_cyr'}'
 and c.lang = '${lang || 'sr_cyr'}'
 and v.lang = '${lang || 'sr_cyr'}'
   `
-  console.log("*-*-*-*-*-*-*-*-*-getTicDocByNumV21111111", sqlRecenica)
+  // console.log("*-*-*-*-*-*-*-*-*-getTicDocByNumV21111111", sqlRecenica)
 
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
@@ -1225,7 +1247,7 @@ const getTicDocsByNumV = async (item, objId, lang) => {
   and p.lang = '${lang || 'sr_cyr'}'
   and c.lang = '${lang || 'sr_cyr'}'
   `
-  console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
+  // console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
 
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
@@ -1245,7 +1267,7 @@ const getTicDocdeliveryByNumV = async (item, objId, lang) => {
   from  tic_docdelivery aa
   where  ${item} = ${objId}
   `
-  console.log("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHgetTicDocdeliveryByNumVH", sqlRecenica)
+  // console.log("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHgetTicDocdeliveryByNumVH", sqlRecenica)
 
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
@@ -1264,7 +1286,7 @@ const getTransactionsByNumV = async (item, objId, lang) => {
   from  tic_docs aa
   where  ${item} = ${objId}
   `
-  console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
+  // console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
 
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
@@ -1284,7 +1306,7 @@ const getTicDocpaymentByNumV = async (item, objId, lang) => {
   from  tic_docpayment aa
   where  ${item} = ${objId}
   `
-  console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
+  // console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
 
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
@@ -1307,7 +1329,7 @@ const getChannelByTxtV = async (objName, item, objId, lang) => {
   and ${item} = '${objId}'
   and a.lang = '${lang || 'sr_cyr'}'
   `
-  console.log("*-*-*-*-*-*-*-*-*-getCmnSpedicijaByTxtV-1111111111111111", sqlRecenica)
+  // console.log("*-*-*-*-*-*-*-*-*-getCmnSpedicijaByTxtV-1111111111111111", sqlRecenica)
 
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
@@ -1329,7 +1351,7 @@ const getCmnSpedicijaByTxtV = async (objName, item, objId, lang) => {
   and ${item} = '${objId}'
   and a.lang = '${lang || 'sr_cyr'}'
   `
-  console.log("*-*-*-*-*-*-*-*-*-getCmnSpedicijaByTxtV-1111111111111111", sqlRecenica)
+  // console.log("*-*-*-*-*-*-*-*-*-getCmnSpedicijaByTxtV-1111111111111111", sqlRecenica)
 
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
@@ -1363,7 +1385,7 @@ const getEventL = async (objName, lang) => {
   and ctg.lang = '${lang || 'sr_cyr'}'
   and l.lang = '${lang || 'sr_cyr'}'
   `
-  console.log("**************************getEventL******************************", sqlRecenica)
+  // console.log("**************************getEventL******************************", sqlRecenica)
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
   if (Array.isArray(rows)) {
@@ -1392,7 +1414,7 @@ const getEventTmpL = async (objName, lang) => {
   and tp.lang = '${lang || 'sr_cyr'}'
   and ctg.lang = '${lang || 'sr_cyr'}'
   `
-  console.log("**************************getEventL******************************", sqlRecenica)
+  // console.log("**************************getEventL******************************", sqlRecenica)
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
   if (Array.isArray(rows)) {
@@ -1428,7 +1450,7 @@ const getEventProdajaL = async (objName, lang) => {
     and l1.lang = '${lang || 'sr_cyr'}' 
     where aa.lang = '${lang || 'sr_cyr'}'
     `
-  console.log("**************************getEventProdajaL******************************", sqlRecenica)
+  // console.log("**************************getEventProdajaL******************************", sqlRecenica)
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
   if (Array.isArray(rows)) {
@@ -1456,7 +1478,7 @@ const getEventAttsDDL = async (objName, objId, par1, lang) => {
   and t.code = '${par1}'
   and aa.status = 1
   `
-  console.log("@@@@@@@@**************************getEventAttsDDL 01 ******************************@@@@@@", sqlRecenica)
+  // console.log("@@@@@@@@**************************getEventAttsDDL 01 ******************************@@@@@@", sqlRecenica)
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
   if (Array.isArray(rows)) {
@@ -1508,7 +1530,7 @@ const getEventCena = async (objName, objId, lang) => {
     and c.lang = '${lang || 'sr_cyr'}'
     and a.art = ${objId}
     `
-  console.log(sqlRecenica, "#######################getEventCena###########################")
+  // console.log(sqlRecenica, "#######################getEventCena###########################")
   //const [rows] = await db.query(sqlRecenic);
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
@@ -1533,7 +1555,7 @@ const getEventattL = async (objName, lang) => {
   from	tic_eventattx_v aa
   where aa.lang = '${lang || 'sr_cyr'}'
   `
-  console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
+  // console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
 
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
@@ -1558,7 +1580,7 @@ const getEventattsL = async (objName, objId, lang) => {
   and   a2.lang = '${lang || 'sr_cyr'}'
   order by a2.code
   `
-  console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
+  // console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
 
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
@@ -1583,7 +1605,7 @@ const getEventattsddL = async (objName, objId, par1, par2, lang) => {
 	and   a2.lang = '${lang || 'sr_cyr'}'
 	and   a2.code = '${par2}'
   `
-  console.log("WWWWWWWWWWWWWWWWWWWWWWWWWWWWgetEventattsddLWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW", sqlRecenica)
+  // console.log("WWWWWWWWWWWWWWWWWWWWWWWWWWWWgetEventattsddLWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW", sqlRecenica)
 
   let result = await db.query(sqlRecenica);
   let row = result.rows[0];
@@ -1604,7 +1626,7 @@ const getEventattstpL = async (objName, objId, par1, lang) => {
   and   a2.lang = '${lang || 'sr_cyr'}'
   order by a2.code
   `
-  console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
+  // console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
 
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
@@ -1628,7 +1650,7 @@ const getEventobjL = async (objName, objId, lang) => {
   and   aa.obj = a2.id
   and   a2.lang = '${lang || 'sr_cyr'}'
   `
-  console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
+  // console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
 
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
@@ -1715,7 +1737,7 @@ const getEventlocTpL = async (objName, objId, par1, lang) => {
   and ( b.tp = CASE WHEN ${par1} = -1 THEN b.tp  ELSE ${par1}  END )
   and b.lang = '${lang || 'sr_cyr'}'`
 
-  console.log("*-*-*-*-*-*-*-*-*- getEventstL @@@@@@@@@@@@@@@@@", sqlRecenica)
+  // console.log("*-*-*-*-*-*-*-*-*- getEventstL @@@@@@@@@@@@@@@@@", sqlRecenica)
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
   if (Array.isArray(rows)) {
@@ -1734,7 +1756,7 @@ const getEventcenatpL = async (objName, objId, lang) => {
   from	tic_eventcenatp aa
   where aa.event = ${objId}`
   //const [rows] = await db.query(sqlRecenic);
-  console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
+  // console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
   if (Array.isArray(rows)) {
@@ -1776,7 +1798,7 @@ const getEventstL = async (objName, objId, lang) => {
   `
   // where aa.event = ${objId}
   // `      
-  console.log("*-*-*-*-*-*-*-*-*- getEventstL 1111111111111111", sqlRecenica)
+  // console.log("*-*-*-*-*-*-*-*-*- getEventstL 1111111111111111", sqlRecenica)
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
   if (Array.isArray(rows)) {
@@ -1804,7 +1826,7 @@ const getDocdeliveryL = async (objName, objId, lang) => {
   `
   // where aa.event = ${objId}
   // `      
-  console.log("*-*-*-*-*-*-*-*-*- getEventstL 1111111111111111", sqlRecenica)
+  // console.log("*-*-*-*-*-*-*-*-*- getEventstL 1111111111111111", sqlRecenica)
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
   if (Array.isArray(rows)) {
@@ -1837,7 +1859,7 @@ const getDocdiscounttpL = async (objName, objId, lang) => {
     group by e."text" , a."text" , tp."text", s.minfee, s.text, s.value, tp.code
   `
 
-  console.log("*-*-*-*-*-*-*-*-*- getEventstL 1111111111111111", sqlRecenica)
+  // console.log("*-*-*-*-*-*-*-*-*- getEventstL 1111111111111111", sqlRecenica)
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
   if (Array.isArray(rows)) {
@@ -1871,7 +1893,7 @@ const getDocsdiscounttpL = async (objName, objId, lang) => {
     group by e."text" , a."text" , tp."text", s.minfee, s.text, s.value, tp.code
   `
 
-  console.log("*-*-*-*-*-*-*-*-*- getEventstL 1111111111111111", sqlRecenica)
+  // console.log("*-*-*-*-*-*-*-*-*- getEventstL 1111111111111111", sqlRecenica)
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
   if (Array.isArray(rows)) {
@@ -1904,7 +1926,7 @@ const getDocdiscountL = async (objName, objId, lang) => {
     and d.doc = ${objId}
   `
 
-  console.log("*-*-*-*-*-*-*-*-*- getEventstL 1111111111111111", sqlRecenica)
+  // console.log("*-*-*-*-*-*-*-*-*- getEventstL 1111111111111111", sqlRecenica)
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
   if (Array.isArray(rows)) {
@@ -1929,7 +1951,7 @@ const getDocdeliveryLL = async (objName, objId, lang) => {
   `
   // where aa.event = ${objId}
   // `      
-  console.log("*-*-*-*-*-*-*-*-*- getEventstL 1111111111111111", sqlRecenica)
+  // console.log("*-*-*-*-*-*-*-*-*- getEventstL 1111111111111111", sqlRecenica)
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
   if (Array.isArray(rows)) {
@@ -2072,7 +2094,7 @@ const getTicartpricecurrF = async (objName, eventid, objid, lang) => {
     and   ac.endda >= to_char(current_date, 'yyyymmdd')
   `
   //const [rows] = await db.query(sqlRecenic);
-  console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
+  // console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
   if (Array.isArray(rows)) {
@@ -2099,7 +2121,7 @@ const getTicarttgpratecurrF = async (objName, eventid, objid, lang) => {
     and   tr.endda >= to_char(current_date, 'yyyymmdd')
   `
   //const [rows] = await db.query(sqlRecenic);
-  console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
+  // console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
   if (Array.isArray(rows)) {
@@ -2121,7 +2143,7 @@ const getTicpardiscountcurrF = async (objName, eventid, objid, lang) => {
     and     pd.privilege = pg.id     
   `
   //const [rows] = await db.query(sqlRecenic);
-  console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
+  // console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
   if (Array.isArray(rows)) {
@@ -2145,7 +2167,7 @@ const getLocLLV = async (objName, objId, par1, lang) => {
       and l.id = ll.loc1
       and ll.loc2 = ${par1}
     `
-  console.log(sqlRecenica, "@@@@@@@@@@@@@*****************getLocLLV***********/////////@@@@@@@@@@@@@@")
+  // console.log(sqlRecenica, "@@@@@@@@@@@@@*****************getLocLLV***********/////////@@@@@@@@@@@@@@")
   //const [rows] = await db.query(sqlRecenic);
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
@@ -2168,7 +2190,7 @@ const getTicLoclinkV = async (objName, objId, par1, lang) => {
     where 	l.loc2  = ${objId}
     and   l.event = ${par1}
     `
-  console.log(sqlRecenica, "***********************getCmnLoclinkV***********************")
+  // console.log(sqlRecenica, "***********************getCmnLoclinkV***********************")
   const result = await db.query(sqlRecenica);
   const rows = result.rows;
   if (Array.isArray(rows)) {
@@ -2199,7 +2221,7 @@ const getTicEventchpermissV = async (objName, objId, par1, lang) => {
         AND u.id = CASE WHEN ${par1} = 1 THEN u.id ELSE ${par1} END
         )
       `
-  console.log(sqlRecenica, "!!!!!!!!!!!***********************getTicEventpermiss***********************!!!!!!!!!!!!!!!!!!!!!!!!!")
+  // console.log(sqlRecenica, "!!!!!!!!!!!***********************getTicEventpermiss***********************!!!!!!!!!!!!!!!!!!!!!!!!!")
   const result = await db.query(sqlRecenica);
   const rows = result.rows;
   if (Array.isArray(rows)) {
@@ -2230,7 +2252,7 @@ const getTicPrintgrpV = async (objId, par1, lang) => {
       and ea.art = s.art 
       order by l."text", s.rownum::numeric, s.code1::numeric
       `
-  console.log(sqlRecenica, "!!!!!!!!!!!***********************getTicEventpermiss***********************!!!!!!!!!!!!!!!!!!!!!!!!!")
+  // console.log(sqlRecenica, "!!!!!!!!!!!***********************getTicEventpermiss***********************!!!!!!!!!!!!!!!!!!!!!!!!!")
   const result = await db.query(sqlRecenica);
   const rows = result.rows;
   if (Array.isArray(rows)) {
@@ -2284,7 +2306,7 @@ const getTicEventPregledVV = async (objId, par1, lang) => {
       group by event, carttp, art, nart
       order by 4
       `
-  console.log(sqlRecenica, "!!!!!!!!!!!***********************getTicEventPregledVV***********************!!!!!!!!!!!!!!!!!!!!!!!!!")
+  // console.log(sqlRecenica, "!!!!!!!!!!!***********************getTicEventPregledVV***********************!!!!!!!!!!!!!!!!!!!!!!!!!")
   const result = await db.query(sqlRecenica);
   const rows = result.rows;
   if (Array.isArray(rows)) {
@@ -2314,7 +2336,7 @@ const getTicChpermissV = async (par1, lang) => {
         AND u.id = CASE WHEN ${par1} = 1 THEN u.id ELSE ${par1} END
         )
       `
-  console.log(sqlRecenica, "55555555555555***********************getTicEventpermiss***********************555555555555")
+  // console.log(sqlRecenica, "55555555555555***********************getTicEventpermiss***********************555555555555")
   const result = await db.query(sqlRecenica);
   const rows = result.rows;
   if (Array.isArray(rows)) {
@@ -2338,7 +2360,7 @@ const getTicDocActivUser = async (objName, objid, lang) => {
       and     d.usersys = ${objid}    
     `
   //const [rows] = await db.query(sqlRecenic);
-  console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
+  // console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
   if (Array.isArray(rows)) {
@@ -2360,7 +2382,7 @@ const getTicEventatts11V = async (objid, lang) => {
       where s.event =  ${objid}    
     `
   //const [rows] = await db.query(sqlRecenic);
-  console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
+  // console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
   if (Array.isArray(rows)) {
@@ -2400,7 +2422,7 @@ const getTicDocsdiscountL = async (objid, lang) => {
       where 	d.docs = ${objid}    
     `
   //const [rows] = await db.query(sqlRecenic);
-  console.log("HHHHHHHHHH2222222222222######################################################HHHHHHHHHHHHHHH", sqlRecenica)
+  // console.log("HHHHHHHHHH2222222222222######################################################HHHHHHHHHHHHHHH", sqlRecenica)
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
   if (Array.isArray(rows)) {
@@ -2422,7 +2444,7 @@ const getEventattsobjcodeL = async (objId, par1, id, lang) => {
       join 	cmn_objtp ot on ot.id = o.tp and ot.code = '${id}'
       where aa.event = ${objId}
     `
-  console.log(sqlRecenica, "*******************getEventartcenaTL*********************")
+  // console.log(sqlRecenica, "*******************getEventartcenaTL*********************")
   //const [rows] = await db.query(sqlRecenic);
 
   let result = await db.query(sqlRecenica);
@@ -2444,7 +2466,7 @@ const getDocPaymentS = async (objId, lang) => {
       join 	cmn_paymenttpx_v t on aa.paymenttp = t.id 
       where aa.doc = ${objId}
     `
-  console.log(sqlRecenica, "*******************getEventartcenaTL*********************")
+  // console.log(sqlRecenica, "*******************getEventartcenaTL*********************")
   //const [rows] = await db.query(sqlRecenic);
 
   let result = await db.query(sqlRecenica);
@@ -2480,7 +2502,7 @@ const getCountPrint = async (objId, lang) => {
       )
       )
     `
-  console.log(sqlRecenica, "*******************getCountPrint*********************")
+  // console.log(sqlRecenica, "*******************getCountPrint*********************")
   //const [rows] = await db.query(sqlRecenic);
 
   let result = await db.query(sqlRecenica);
@@ -2509,7 +2531,7 @@ const getCountPay = async (objId, lang) => {
       )
       )
     `
-  console.log(sqlRecenica, "*******************getCountPrint*********************")
+  // console.log(sqlRecenica, "*******************getCountPrint*********************")
   //const [rows] = await db.query(sqlRecenic);
 
   let result = await db.query(sqlRecenica);
@@ -2524,7 +2546,7 @@ const getTicDocsdiscountvalue = async (objId) => {
       FROM tic_docs s
       WHERE  s.doc = ${objId}
   `
-  console.log(sqlRecenica, "*******************getDocZbirniiznosL*********************")
+  // console.log(sqlRecenica, "*******************getDocZbirniiznosL*********************")
   //const [rows] = await db.query(sqlRecenic);
 
   let result = await db.query(sqlRecenica);
@@ -2545,7 +2567,7 @@ const getDocZbirniiznosL = async (objId) => {
       FROM tic_docs s
       WHERE  s.doc = ${objId}
   `
-  console.log(sqlRecenica, "*******************getDocZbirniiznosL*********************")
+  // console.log(sqlRecenica, "*******************getDocZbirniiznosL*********************")
   //const [rows] = await db.query(sqlRecenic);
 
   let result = await db.query(sqlRecenica);
@@ -2636,4 +2658,5 @@ export default {
   getDocsEventartcenaL,
   getEventattsddL,
   getTicEventPregledVV,
+  getEventattsCodeValueL,
 };

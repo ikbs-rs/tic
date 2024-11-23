@@ -24,8 +24,8 @@ const getListaC = async (objName, stm, sqlstmt, lang) => {
 
 const getLista = async (objName, stm, objId, par1, par2, lang, par3, par4, par5, par6, par7, par8, par9, par10) => {
   try {
-    console.log(objId, "*******Helper!!!!!!*********", stm);
-    console.log(objName, stm, objId, par1, par2, lang, par3, par4, par5, par6, par7, par8, par9, par10, '5555555555555555555555555555555555555555555555555555555555555555555555555555555555')
+    // console.log(objId, "*******Helper!!!!!!*********", stm);
+    // console.log(objName, stm, objId, par1, par2, lang, par3, par4, par5, par6, par7, par8, par9, par10, '5555555555555555555555555555555555555555555555555555555555555555555555555555555555')
     let result = {};
     switch (stm) {
       case "tic_agenda_v":
@@ -123,6 +123,9 @@ const getLista = async (objName, stm, objId, par1, par2, lang, par3, par4, par5,
         break;
       case "tic_eventattstp_v":
         result = await vModel.getEventattstpL(objName, objId, par1, lang);
+        break;
+      case "tic_eventattscodevaluel_v":
+        result = await vModel.getEventattsCodeValueL(objName, objId, par1, lang);
         break;
       case "tic_eventtps_v":
         result = await vModel.getEventtpsL(objName, objId, lang);
