@@ -635,7 +635,8 @@ const entitiesInfo =
 			"discount": "number",
 			"color": "string",
 			"icon": "string",
-			"maxkol": "number"
+			"maxkol": "number",
+			"kolicinaulaz": "number"
 		}
 	},
 	"tic_eventatttp": {

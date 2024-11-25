@@ -1297,25 +1297,34 @@ const ticDocsuidParAll = async (objId1, requestBody, lang) => {
 
   try {
     const ticDocRow = requestBody;
-    if (ticDocRow.idnum==null) {
+    if (ticDocRow?.idnum==null) {
       ticDocRow.idnum=''
     }
-    if (ticDocRow.pib==null) {
+    if (ticDocRow?.pib==null) {
       ticDocRow.pib=''
     }
     const uid = ticDocRow.pib||ticDocRow.idnum||''
-    if (ticDocRow.adress==null) {
+    if (ticDocRow?.adress==null) {
       ticDocRow.adress=''
     }
-    if (ticDocRow.place==null) {
+    if (ticDocRow?.place==null) {
       ticDocRow.place=''
     }    
-    if (ticDocRow.email==null) {
+    if (ticDocRow?.email==null) {
       ticDocRow.email=''
     }
-    if (ticDocRow.birthday==null) {
+    if (ticDocRow?.birthday==null) {
       ticDocRow.birthday=''
     }
+    if (ticDocRow?.country==null) {
+      ticDocRow.country=''
+    }    
+    if (ticDocRow?.city==null) {
+      ticDocRow.city=''
+    }       
+    if (ticDocRow?.phon==null) {
+      ticDocRow.phon=''
+    }     
     // const ticDocRow = _ticDocRow[0]
     // console.log("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT", ticDocRow)
 
@@ -1367,24 +1376,33 @@ const ticDocsuidPosetilac = async (objId1, requestBody, lang) => {
       ticDocRow.first = parts.slice(0, 1)[0]; // Prvi deo ide u `first`
       ticDocRow.last = parts.slice(1).join(' '); // Svi ostali delovi spojeni u `last`
   }
-  if (ticDocRow.idnum==null) {
+  if (ticDocRow?.idnum==null) {
     ticDocRow.idnum=''
   }
-  if (ticDocRow.pib==null) {
+  if (ticDocRow?.pib==null) {
     ticDocRow.pib=''
   }
   const uid = ticDocRow.pib||ticDocRow.idnum||''
-  if (ticDocRow.adress==null) {
+  if (ticDocRow?.adress==null) {
     ticDocRow.adress=''
   }
-  if (ticDocRow.place==null) {
+  if (ticDocRow?.place==null) {
     ticDocRow.place=''
-  }
-  if (ticDocRow.email==null) {
+  }    
+  if (ticDocRow?.email==null) {
     ticDocRow.email=''
   }
-  if (ticDocRow.birthday==null) {
+  if (ticDocRow?.birthday==null) {
     ticDocRow.birthday=''
+  }
+  if (ticDocRow?.country==null) {
+    ticDocRow.country=''
+  }    
+  if (ticDocRow?.city==null) {
+    ticDocRow.city=''
+  }       
+  if (ticDocRow?.phon==null) {
+    ticDocRow.phon=''
   }
 
 

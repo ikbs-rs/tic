@@ -136,11 +136,9 @@ const getLocartL = async (objName, objId, lang) => {
 const getEventartL = async (objName, objId, lang) => {
   const sqlRecenica =
     `
-  select ea.id, ea.site, ea."event", ea.discount, ea.descript, ea.begda, ea.endda , aa.site, aa.code, aa.text, aa.eancode, aa.qrcode, aa.valid, aa.lang, aa.grammcase,
-        ea.art, aa.code cart, ea.nart, ea.color,
-        aa.tgp,t.code ctgp, t.text ntgp,
-        aa.code||' '||aa.text cnart,
-        aa.combining, ea.maxkol
+  select ea.* , aa.site, aa.code, aa.text, aa.eancode, aa.qrcode, aa.valid, aa.lang, aa.grammcase,
+        aa.code cart, aa.tgp, t.code ctgp, t.text ntgp, aa.code||' '||aa.text cnart,
+        aa.combining
   from tic_eventart ea, tic_artx_v aa, cmn_tgpx_v t
   where ea.event = ${objId}
   and ea.art = aa.id
@@ -160,6 +158,30 @@ const getEventartL = async (objName, objId, lang) => {
   }
 };
 
+const getEventartulazL = async (objName, objId, lang) => {
+  const sqlRecenica =
+    `
+  select ea.* , aa.site, aa.code, aa.text, aa.eancode, aa.qrcode, aa.valid, aa.lang, aa.grammcase,
+        aa.code cart, aa.text nart, aa.tgp, t.code ctgp, t.text ntgp, aa.code||' '||aa.text cnart,
+        aa.combining
+  from tic_eventart ea, tic_artx_v aa, cmn_tgpx_v t
+  where ea.event = ${objId}
+  and ea.art = aa.id
+  and aa.tgp = t.id  
+  and aa.lang = '${lang || 'sr_cyr'}'  
+  and	t.lang = '${lang || 'sr_cyr'}'
+  `
+  // console.log(sqlRecenica, "*************getEventartL*************")
+  let result = await db.query(sqlRecenica);
+  let rows = result.rows;
+  if (Array.isArray(rows)) {
+    return rows;
+  } else {
+    throw new Error(
+      `Greška pri dohvatanju slogova iz baze - abs find: ${rows}`
+    );
+  }
+};
 // const getEventartlinkL = async (objName, objId, lang) => {
 //   const sqlRecenica =
 //     `
@@ -2659,4 +2681,5 @@ export default {
   getEventattsddL,
   getTicEventPregledVV,
   getEventattsCodeValueL,
+  getEventartulazL,
 };

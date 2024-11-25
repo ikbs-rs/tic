@@ -49,6 +49,9 @@ const getLista = async (objName, stm, objId, par1, par2, lang, par3, par4, par5,
       case "tic_eventart_v":
         result = await vModel.getEventartL(objName, objId, lang);
         break;
+        case "tic_eventartulaz_v":
+          result = await vModel.getEventartulazL(objName, objId, lang);
+          break;        
       case "tic_eventartlink_v":
         result = await vModel.getEventartlinkL(objName, objId, lang);
         break;
