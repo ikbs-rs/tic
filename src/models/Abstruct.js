@@ -5,7 +5,7 @@ const saltRounds = 10;
 
 //# add function
 const add = async (sqlQuery) => {
-  console.log("*************add**********", sqlQuery)
+  // console.log("*************add**********", sqlQuery)
   const result = await db.query(sqlQuery);
   return result.rowCount;
 };
@@ -13,7 +13,7 @@ const add = async (sqlQuery) => {
 //# find function
 const find = async (objName) => {
   const sqlRecenic = `SELECT * FROM ${objName}`;
-  console.log("*************find**********", sqlQuery)
+  // console.log("*************find**********", sqlQuery)
   //const [rows] = await db.query(sqlRecenic);
   const result = await db.query(sqlRecenic);
   const rows = result.rows;
@@ -33,7 +33,7 @@ const findById = async (objName, id) => {
 
 //# update function
 const update = async (sqlQuery) => {
-  console.log("*************update**********", sqlQuery)
+  // console.log("*************update**********", sqlQuery)
   const result = await db.query(sqlQuery);
   return result.rowCount;
 };
@@ -41,7 +41,7 @@ const update = async (sqlQuery) => {
 //# delete function
 const remove = async (objName, id) => {
   try {
-    console.log(`DELETE FROM ${objName} WHERE id = ${id}`, "**************remove***************")
+    // console.log(`DELETE FROM ${objName} WHERE id = ${id}`, "**************remove***************")
     const result = await db.query(`DELETE FROM ${objName} WHERE id = ${id}`);
     return result.rowCount;
   } catch (err) {
