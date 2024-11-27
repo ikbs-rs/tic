@@ -513,7 +513,7 @@ const copyGrpEventloc = async (eventId, par1, loc, tploc, begda, endda, requestB
         // icon varchar(100) NULL, 
         // Insert rows into tic_eventatts using obj.id
         // console.log(
-          // eventId, "@@@@@@@@@@@@@@@ BMV @@@@@@@@@@@@@@@")
+        // eventId, "@@@@@@@@@@@@@@@ BMV @@@@@@@@@@@@@@@")
 
         await db.query(`
             INSERT INTO tic_eventloc (id, site, event, loc, begda, endda, color, icon)
@@ -522,7 +522,7 @@ const copyGrpEventloc = async (eventId, par1, loc, tploc, begda, endda, requestB
       }
     }
     // console.log(
-      // eventId, "@@@@@@@@@@@@@ BMV @@@@@@@@@@@@@@@@@")
+    // eventId, "@@@@@@@@@@@@@ BMV @@@@@@@@@@@@@@@@@")
 
     await db.query("COMMIT"); // Confirm the transaction
     ok = true;
@@ -682,6 +682,7 @@ const copyGrpEvent = async (eventId, par1, requestBody) => {
     throw error;
   }
 };
+
 const copyEventatts = async (eventId, requestBody) => {
   try {
     let ok = false;
@@ -1198,7 +1199,6 @@ const ticDocdiscountAll = async (objId1, requestBody, lang) => {
               ) 
               and id != ${ticDocRow.id}
               and discount = ${ticDocRow.discount}
-              
               `;
 
     const query = ` 
@@ -1297,41 +1297,41 @@ const ticDocsuidParAll = async (objId1, requestBody, lang) => {
 
   try {
     const ticDocRow = requestBody;
-    if (ticDocRow?.idnum==null) {
-      ticDocRow.idnum=''
+    if (ticDocRow?.idnum == null) {
+      ticDocRow.idnum = ''
     }
-    if (ticDocRow?.pib==null) {
-      ticDocRow.pib=''
+    if (ticDocRow?.pib == null) {
+      ticDocRow.pib = ''
     }
-    const uid = ticDocRow.pib||ticDocRow.idnum||''
-    if (ticDocRow?.adress==null) {
-      ticDocRow.adress=''
+    const uid = ticDocRow.pib || ticDocRow.idnum || ''
+    if (ticDocRow?.adress == null) {
+      ticDocRow.adress = ''
     }
-    if (ticDocRow?.place==null) {
-      ticDocRow.place=''
-    }    
-    if (ticDocRow?.email==null) {
-      ticDocRow.email=''
+    if (ticDocRow?.place == null) {
+      ticDocRow.place = ''
     }
-    if (ticDocRow?.birthday==null) {
-      ticDocRow.birthday=''
+    if (ticDocRow?.email == null) {
+      ticDocRow.email = ''
     }
-    if (ticDocRow?.country==null) {
-      ticDocRow.country=''
-    }    
-    if (ticDocRow?.city==null) {
-      ticDocRow.city=''
-    }       
-    if (ticDocRow?.phon==null) {
-      ticDocRow.phon=''
-    }     
+    if (ticDocRow?.birthday == null) {
+      ticDocRow.birthday = ''
+    }
+    if (ticDocRow?.country == null) {
+      ticDocRow.country = ''
+    }
+    if (ticDocRow?.city == null) {
+      ticDocRow.city = ''
+    }
+    if (ticDocRow?.phon == null) {
+      ticDocRow.phon = ''
+    }
     // const ticDocRow = _ticDocRow[0]
     // console.log("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT", ticDocRow)
 
     const query = ` 
               update tic_docsuid
-                set first = '${ticDocRow?.first||ticDocRow?.text||ticDocRow?.textx}',
-                  last = '${ticDocRow?.last||ticDocRow?.text||ticDocRow?.textx}',
+                set first = '${ticDocRow?.first || ticDocRow?.text || ticDocRow?.textx}',
+                  last = '${ticDocRow?.last || ticDocRow?.text || ticDocRow?.textx}',
                   uid = '${uid}',
                   adress = '${ticDocRow?.address}',
                   city = '${ticDocRow?.place}',
@@ -1375,41 +1375,41 @@ const ticDocsuidPosetilac = async (objId1, requestBody, lang) => {
       const parts = ticDocRow.textx.split(' '); // Podeli string na delove prema razmaku
       ticDocRow.first = parts.slice(0, 1)[0]; // Prvi deo ide u `first`
       ticDocRow.last = parts.slice(1).join(' '); // Svi ostali delovi spojeni u `last`
-  }
-  if (ticDocRow?.idnum==null) {
-    ticDocRow.idnum=''
-  }
-  if (ticDocRow?.pib==null) {
-    ticDocRow.pib=''
-  }
-  const uid = ticDocRow.pib||ticDocRow.idnum||''
-  if (ticDocRow?.adress==null) {
-    ticDocRow.adress=''
-  }
-  if (ticDocRow?.place==null) {
-    ticDocRow.place=''
-  }    
-  if (ticDocRow?.email==null) {
-    ticDocRow.email=''
-  }
-  if (ticDocRow?.birthday==null) {
-    ticDocRow.birthday=''
-  }
-  if (ticDocRow?.country==null) {
-    ticDocRow.country=''
-  }    
-  if (ticDocRow?.city==null) {
-    ticDocRow.city=''
-  }       
-  if (ticDocRow?.phon==null) {
-    ticDocRow.phon=''
-  }
+    }
+    if (ticDocRow?.idnum == null) {
+      ticDocRow.idnum = ''
+    }
+    if (ticDocRow?.pib == null) {
+      ticDocRow.pib = ''
+    }
+    const uid = ticDocRow.pib || ticDocRow.idnum || ''
+    if (ticDocRow?.adress == null) {
+      ticDocRow.adress = ''
+    }
+    if (ticDocRow?.place == null) {
+      ticDocRow.place = ''
+    }
+    if (ticDocRow?.email == null) {
+      ticDocRow.email = ''
+    }
+    if (ticDocRow?.birthday == null) {
+      ticDocRow.birthday = ''
+    }
+    if (ticDocRow?.country == null) {
+      ticDocRow.country = ''
+    }
+    if (ticDocRow?.city == null) {
+      ticDocRow.city = ''
+    }
+    if (ticDocRow?.phon == null) {
+      ticDocRow.phon = ''
+    }
 
 
     const query = ` 
               update tic_docsuid
-                set first = '${ticDocRow?.first||ticDocRow?.text||ticDocRow?.textx}',
-                  last = '${ticDocRow?.last||ticDocRow?.text||ticDocRow?.textx}',
+                set first = '${ticDocRow?.first || ticDocRow?.text || ticDocRow?.textx}',
+                  last = '${ticDocRow?.last || ticDocRow?.text || ticDocRow?.textx}',
                   uid = '${uid}',
                   adress = '${ticDocRow?.address}',
                   city = '${ticDocRow?.place}',
@@ -1473,39 +1473,39 @@ const ticDocsuidPar = async (objId1, requestBody, lang) => {
     // console.log(requestBody, "TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT")
     let ticDocRow;
     if (Array.isArray(_ticDocRow)) {
-        ticDocRow = _ticDocRow[0];
+      ticDocRow = _ticDocRow[0];
     } else {
-        ticDocRow = _ticDocRow;
+      ticDocRow = _ticDocRow;
     }
     if (ticDocRow.tp == 2) {
       const parts = ticDocRow.textx.split(' '); // Podeli string na delove prema razmaku
       ticDocRow.first = parts.slice(0, 1)[0]; // Prvi deo ide u `first`
       ticDocRow.last = parts.slice(1).join(' '); // Svi ostali delovi spojeni u `last`
-  }
-  if (ticDocRow.idnum==null) {
-    ticDocRow.idnum=''
-  }
-  if (ticDocRow.pib==null) {
-    ticDocRow.pib=''
-  }
-  const uid = ticDocRow.pib||ticDocRow.idnum||''
-  if (ticDocRow.adress==null) {
-    ticDocRow.adress=''
-  }
-  if (ticDocRow.place==null) {
-    ticDocRow.place=''
-  }
-  if (ticDocRow.email==null) {
-    ticDocRow.email=''
-  }
-  if (ticDocRow.birthday==null) {
-    ticDocRow.birthday=''
-  }
+    }
+    if (ticDocRow.idnum == null) {
+      ticDocRow.idnum = ''
+    }
+    if (ticDocRow.pib == null) {
+      ticDocRow.pib = ''
+    }
+    const uid = ticDocRow.pib || ticDocRow.idnum || ''
+    if (ticDocRow.adress == null) {
+      ticDocRow.adress = ''
+    }
+    if (ticDocRow.place == null) {
+      ticDocRow.place = ''
+    }
+    if (ticDocRow.email == null) {
+      ticDocRow.email = ''
+    }
+    if (ticDocRow.birthday == null) {
+      ticDocRow.birthday = ''
+    }
 
     const query = ` 
               update tic_docsuid
-                set first = '${ticDocRow?.first||ticDocRow?.text||ticDocRow?.textx}',
-                  last = '${ticDocRow?.last||ticDocRow?.text||ticDocRow?.textx}',
+                set first = '${ticDocRow?.first || ticDocRow?.text || ticDocRow?.textx}',
+                  last = '${ticDocRow?.last || ticDocRow?.text || ticDocRow?.textx}',
                   uid = '${uid}',
                   adress = '${ticDocRow?.address}',
                   city = '${ticDocRow?.place}',
@@ -2086,8 +2086,43 @@ const ticDocpayments = async (requestBody, lang) => {
     throw error;
   }
 };
-/****************************************************************************** */
 
+/****************************************************************************** */
+const setRezervation = async (docId, par1, requestBody) => {
+
+  try {
+    console.log(docId, par1, "HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH")
+    let ok = false;
+
+    await db.query("BEGIN");
+
+    await db.query(
+      `
+      update  tic_doc
+      set   endtm = $2,
+            status = '1',
+            reservation = 1
+      where id = $1
+      `, [docId, par1]);
+
+    await db.query(
+      `
+      update  tic_docs
+      set   endtm = $2
+      where doc = $1
+      `, [docId, par1]);
+
+    await db.query("COMMIT"); // Confirm the transaction
+    ok = true;
+
+    return ok;
+  } catch (error) {
+    if (db) {
+      await db.query("ROLLBACK"); // Rollback the transaction in case of an error
+    }
+    throw error;
+  }
+};
 
 export default {
   getAgendaL,
@@ -2124,4 +2159,5 @@ export default {
   copyGrpEventart,
   ticDocsuidPosetilac,
   ticEventCopyS,
+  setRezervation,
 };

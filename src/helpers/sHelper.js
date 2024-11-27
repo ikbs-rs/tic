@@ -164,6 +164,9 @@ const postFunction = async (
       case "tic_docpayments_s":
         result = await sModel.ticDocpayments(requestBody, lang)
         break;
+      case "tic_setreservation_s":
+        result = await sModel.setRezervation(objId1, par1, requestBody);
+        break;
       default:
         console.error("sHelper: Pogresan naziv za view-a - " + stm);
     }
