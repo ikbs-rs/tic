@@ -8,7 +8,7 @@ const saltRounds = 10
 
 const add = async (objName, objData) => {
   try {
-    console.log(objData.id, "***********AbstructHelper****************")
+    // console.log(objData.id, "***********AbstructHelper****************")
     if (!objData.id || objData.id == null) {
       objData.id = await uniqueId();
       if (objName === "tic_doc") {
@@ -25,18 +25,18 @@ const add = async (objName, objData) => {
       objData.password = hashedPassword;
     }
     // Mozda mi ovo ne treba jer dolazi sa fronta !!!
-    console.log(objName, "@ 00 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@", objData)
+    // console.log(objName, "@ 00 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@", objData)
     if (objName === "tic_doc") {
       const pBroj = await randomTenDigit(objData.id)
       objData.broj = pBroj;
     }
-    console.log(objName, "@ 01 @@@@@@@@@@@@@@@@@@@@@@@@ AB_HELPER 33 @@@@@@@@@@@@@@@@@@@@@@@@@@", objData.broj)
+    // console.log(objName, "@ 01 @@@@@@@@@@@@@@@@@@@@@@@@ AB_HELPER 33 @@@@@@@@@@@@@@@@@@@@@@@@@@", objData.broj)
 
     const sqlQuery = await abstructQuery.getInsertQuery(objName, objData);
 
     const result = await abstractModel.add(sqlQuery);
 
-    console.log(objName, "@ 03 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@", objData)
+    console.log(sqlQuery, "@ 03 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@", objData)
 
     if (objName === "tic_doc" || objName === "tic_eventatts") {
       return objData
@@ -81,9 +81,9 @@ const getByStext = async (objName, value) => {
 
 const update = async (objName, objData) => {
   try {
-    console.log(objData, "***************11111111111111************", objName)
+    // console.log(objData, "***************11111111111111************", objName)
     const sqlQuery = await abstructQuery.getUpdateQuery(objName, objData);
-    console.log(objData, "***************2222222222222************", sqlQuery)
+    // console.log(objData, "***************2222222222222************", sqlQuery)
     const result = await abstractModel.update(sqlQuery);
     return result;
   } catch (err) {

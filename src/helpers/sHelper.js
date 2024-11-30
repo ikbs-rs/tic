@@ -22,7 +22,7 @@ const getLista2 = async (objName, stm, objId, objId1, lang) => {
 
 const getLista = async (objName, stm, objId, lang) => {
   try {
-    console.log("*******Helper*********", stm);
+    // console.log("*******Helper*********", stm);
     let result = {};
     switch (stm) {
       case "tic_art_v":
@@ -60,7 +60,7 @@ const postFunction = async (
   requestBody
 ) => {
   try {
-    console.log(par1, "* par1 ******Helper*********", stm);
+    // console.log(par1, "* par1 ******Helper*********", stm);
     let result = {};
     switch (stm) {
       case "tic_eventtpatt_s":

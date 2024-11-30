@@ -12,7 +12,7 @@ const getLista = async (req, res) => {
 
 const getLista2 = async (req, res) => {
   try {
-    console.log(req.query, "*********getLista2**********")
+    // console.log(req.query, "*********getLista2**********")
     const item = await sHelper.getLista2( req.objName, req.query.stm, req.query.objid, req.query.objid1, req.query.sl||'en');
     res.status(200).json({ item }); 
   } catch (err) {
@@ -24,7 +24,7 @@ const postFunction = async (req, res) => {
   try {
     
     const requestBody = req.body || {};
-    console.log(req.query, "*********postFunction**********")
+    // console.log(req.query, "*********postFunction**********")
     const item = await sHelper.postFunction( 
         req.query.att||0, 
         req.query.objName1||0, 
