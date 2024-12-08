@@ -379,7 +379,9 @@ const entitiesInfo =
 			"nusrsys": "string",
 			"nchannel": "string",
 			"nusr": "string",
-			"printfiskal": "number"
+			"printfiskal": "number",
+			"masssale": "number",
+			"endsale": "number"
 		}
 	},
 	"tic_docb": {
@@ -461,7 +463,9 @@ const entitiesInfo =
 			"total": "number",
 			"tm": "string",
 			"usr": "number",
-			"status": "number"
+			"status": "number",
+			"vrednost": "string",
+			"description": "string"
 		}
 	},
 	"tic_docs": {

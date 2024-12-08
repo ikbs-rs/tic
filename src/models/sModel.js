@@ -1139,6 +1139,31 @@ const docSetCancelService = async (objId) => {
 
 };
 
+const docSetEndSaleService = async (objId) => {
+
+  try {
+    await db.query('BEGIN');
+
+    const query1 = ` update tic_doc  
+              set endsale = 1 
+              where id = $1`;
+
+    try {
+      await db.query(query1, [objId]);
+      await db.query('COMMIT');
+    } catch (err) {
+      console.error('Error executing queries, rolling back:', err.stack);
+      await db.query('ROLLBACK');
+      throw err; 
+    }
+
+  } catch (error) {
+    console.error(`Error in transaction, rolling back: ${error}`);
+    throw error; 
+  }
+
+};
+
 const ticDocsuidParAllNull = async (objId1, requestBody, lang) => {
 
   try {
@@ -1156,7 +1181,8 @@ const ticDocsuidParAllNull = async (objId1, requestBody, lang) => {
                   phon = '',
                   email = '',
                   par = null,
-                  birthday = ''
+                  birthday = '',
+                  kupac = 0
               where 	docs in (
                   select s.id
                   from	tic_docs s
@@ -1382,7 +1408,9 @@ const ticDocsuidPosetilac = async (objId1, requestBody, lang) => {
     if (ticDocRow?.pib == null) {
       ticDocRow.pib = ''
     }
-    const uid = ticDocRow.pib || ticDocRow.idnum || ''
+    if (ticDocRow?.uid == null) {
+      ticDocRow.uid = ''
+    }
     if (ticDocRow?.adress == null) {
       ticDocRow.adress = ''
     }
@@ -1410,7 +1438,7 @@ const ticDocsuidPosetilac = async (objId1, requestBody, lang) => {
               update tic_docsuid
                 set first = '${ticDocRow?.first || ticDocRow?.text || ticDocRow?.textx}',
                   last = '${ticDocRow?.last || ticDocRow?.text || ticDocRow?.textx}',
-                  uid = '${uid}',
+                  uid = '${ticDocRow?.uid}',
                   adress = '${ticDocRow?.address}',
                   city = '${ticDocRow?.place}',
                   country = '${ticDocRow?.country}',
@@ -2066,10 +2094,10 @@ const ticDocpayments = async (requestBody, lang) => {
         sId = await uniqueId();
         await db.query(
           `
-          INSERT INTO tic_docpayment (id,	site,	doc, paymenttp,	amount,	bcontent,	ccard,	total,	tm,	usr,	status)
-          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+          INSERT INTO tic_docpayment (id,	site,	doc, paymenttp,	amount,	bcontent,	ccard,	total,	tm,	usr,	status,	vrednost,	description)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
           `,
-          [sId, null, obj.doc, obj.paymenttp, obj.amount, obj.bcontent, obj.ccard, obj.total, obj.tm, obj.usr, obj.status]
+          [sId, null, obj.doc, obj.paymenttp, obj.amount, obj.bcontent, obj.ccard, obj.total, obj.tm, obj.usr, obj.status, obj.vrednost, obj.description]
         );
         // console.log(sId, "@@@*******copyGrpEventlocl - END FOR **********@@@@@+@@@@+@@")
       }
@@ -2160,4 +2188,5 @@ export default {
   ticDocsuidPosetilac,
   ticEventCopyS,
   setRezervation,
+  docSetEndSaleService,
 };

@@ -116,6 +116,9 @@ const postFunction = async (
       case "tic_docsetcancel_s": // obrada stavke na prodaji
         result = await sModel.docSetCancelService(objId1);
         break;
+        case "tic_docsetendsale_s": // obrada stavke na prodaji
+        result = await sModel.docSetEndSaleService(objId1);
+        break;        
       case "tic_eventcopy_s": // obrada stavke na prodaji
         result = await sModel.ticEventCopy(requestBody);
         break;
