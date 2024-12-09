@@ -307,6 +307,7 @@ const getEventartcenaTL = async (objName, objId, par1, lang) => {
   from	tic_eventatts aa, tic_eventattx_v a2
   where a2.code = '${par1}'
   and aa.att = a2.id
+  and a2.valid = 1
   and aa.event = ${objId}
   `
   // console.log(sqlRecenica, "*******************getEventartcenaTL*********************")
@@ -328,7 +329,7 @@ const getEventattsCodeValueL = async (objName, objId, par1, lang) => {
     `
     select aa.id, a2.code catt, a2.text natt, a2.code, aa.value val1, aa.text val2, aa.condition val3, aa.link val4, aa.minfee val5
     from	tic_eventatts aa 
-    join tic_eventattx_v a2 on  aa.att = a2.id and a2.code = '${par1}'
+    join tic_eventattx_v a2 on  aa.att = a2.id and a2.code = '${par1}' and a2.valid = 1
     where aa.event = ${objId}
     `
   // console.log(sqlRecenica, "*******************getEventartcenaTL*********************")
@@ -1565,6 +1566,29 @@ const getEventCena = async (objName, objId, lang) => {
   }
 };
 
+const getEventattgL = async (objName, lang) => {
+  const sqlRecenica =
+    `
+  select aa.id , aa.site , aa.code , aa.text, aa.valid, aa.ddlist, aa.link, aa.linktp, aa.description,
+        aa.lang, aa.grammcase,
+        aa.inputtp, getValueById(aa.inputtp, 'cmn_inputtpx_v', 'code', '${lang || 'sr_cyr'}') cinputtp, getValueById(aa.inputtp, 'cmn_inputtpx_v', 'text', '${lang || 'sr_cyr'}') ninputtp,
+        aa.tp, getValueById(aa.tp, 'tic_eventatttpx_v', 'code', '${lang || 'sr_cyr'}') ctp, getValueById(aa.tp, 'tic_eventatttpx_v', 'text', '${lang || 'sr_cyr'}') ntp
+  from	tic_eventattx_v aa
+  where aa.lang = '${lang || 'sr_cyr'}'
+  and aa.valid = 1
+  `
+  // console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
+
+  let result = await db.query(sqlRecenica);
+  let rows = result.rows;
+  if (Array.isArray(rows)) {
+    return rows;
+  } else {
+    throw new Error(
+      `Greška pri dohvatanju slogova iz baze - abs find: ${rows}`
+    );
+  }
+};
 
 
 const getEventattL = async (objName, lang) => {
@@ -1599,6 +1623,7 @@ const getEventattsL = async (objName, objId, lang) => {
   from	tic_eventatts aa, tic_eventattx_v a2
   where aa.event = ${objId}
   and   aa.att = a2.id
+  and   a2.valid = 1
   and   a2.lang = '${lang || 'sr_cyr'}'
   order by a2.code
   `
@@ -1623,6 +1648,7 @@ const getEventattsddL = async (objName, objId, par1, par2, lang) => {
 	from	tic_eventatts aa, tic_eventattx_v a2
 	where aa.event = ${objId}
   and   aa.att = a2.id
+  and   a2.valid = 1
 	and   aa.value = '${par1}'::varchar
 	and   a2.lang = '${lang || 'sr_cyr'}'
 	and   a2.code = '${par2}'
@@ -1645,6 +1671,7 @@ const getEventattstpL = async (objName, objId, par1, lang) => {
   where aa.event = ${objId}
   and   case ${par1} when '-1' then a2.tp else ${par1} end = a2.tp
   and   aa.att = a2.id
+  and   a2.valid = 1
   and   a2.lang = '${lang || 'sr_cyr'}'
   order by a2.code
   `
@@ -1868,7 +1895,7 @@ const getDocdiscounttpL = async (objName, objId, lang) => {
             e.text ||', '|| a."text" ||', '|| tp."text" ||'- val: '|| coalesce(min(s."condition"), ' ')||', '||coalesce(s.minfee::text, ' ') text
     from 	tic_eventx_v e
     join 	tic_eventatts s on s.event = e.id 
-    join 	tic_eventattx_v a on a.id = s.att and a.code like '09.01%'
+    join 	tic_eventattx_v a on a.id = s.att and a.code like '09.01%' and a.valid = 1
           and a.lang = '${lang || 'sr_cyr'}'
     left join 	tic_privilegex_v tp on trim(s.value) = tp.id::text
           and tp.lang = '${lang || 'sr_cyr'}'    
@@ -1902,7 +1929,7 @@ const getDocsdiscounttpL = async (objName, objId, lang) => {
             tp."text" ||'- val: '|| coalesce(min(s."condition"), ' ')||', '||coalesce(s.minfee::text, ' ') text
     from 	tic_eventx_v e
     join 	tic_eventatts s on s.event = e.id 
-    join 	tic_eventattx_v a on a.id = s.att and a.code like '09.01%'
+    join 	tic_eventattx_v a on a.id = s.att and a.code like '09.01%' and a.valid = 1
           and a.lang = '${lang || 'sr_cyr'}'
     left join 	tic_privilegex_v tp on trim(s.value) = tp.id::text
           and tp.lang = '${lang || 'sr_cyr'}'    
@@ -1936,7 +1963,7 @@ const getDocdiscountL = async (objName, objId, lang) => {
       select 	max(s.id) aid, e.text ||', '|| a."text" ||', '|| tp."text" ||'- val: '|| coalesce(min(s."condition"), ' ')||', '||coalesce(s.minfee::text, ' ') text
       from 	tic_eventx_v e
       join 	tic_eventatts s on s.event = e.id 
-      join 	tic_eventattx_v a on a.id = s.att and a.code like '09.01%'
+      join 	tic_eventattx_v a on a.id = s.att and a.code like '09.01%' and a.valid = 1
       left join 	tic_privilegex_v tp on trim(s.value) = tp.id::text
       where 	e.id in (
           select s.event
@@ -2399,7 +2426,7 @@ const getTicEventatts11V = async (objid, lang) => {
     `
       select t.code, t.text, o.text nvalue, o.code cvalue
       from tic_eventatts s
-      join tic_eventatt t on t.id = s.att and t.code like '11.%'
+      join tic_eventatt t on t.id = s.att and t.code like '11.%' and t.valid = 1
       join cmn_obj o on o.id::text = s.value 
       where s.event =  ${objid}    
     `
@@ -2461,7 +2488,7 @@ const getEventattsobjcodeL = async (objId, par1, id, lang) => {
     `
       select  a2.code catt, a2.text natt, o.code cobj, o.text nobj, aa.* 
       from	tic_eventatts aa 
-      join 	tic_eventattx_v a2 on aa.att = a2.id and a2.code = '${par1}'
+      join 	tic_eventattx_v a2 on aa.att = a2.id and a2.code = '${par1}' and a2.valid = 1
       join 	cmn_objx_v o on o.id::"text" = aa.value and o.lang = '${lang || 'sr_cyr'}'
       join 	cmn_objtp ot on ot.id = o.tp and ot.code = '${id}'
       where aa.event = ${objId}
@@ -2682,4 +2709,5 @@ export default {
   getTicEventPregledVV,
   getEventattsCodeValueL,
   getEventartulazL,
+  getEventattgL,
 };
