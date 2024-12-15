@@ -347,7 +347,8 @@ const activateEvent = async (eventId) => {
     // Create row for tic_doc
     const docRows = await db.query(`
       SELECT nextval('tic_table_id_seq') id , null site, to_char(NOW(), 'YYYYMMDD') "date", to_char(NOW(), 'YYYYMMDDHH24MISS') tm, 1 curr, 1 currrate, 22 docvr,
-      a.par usr, 1 status, 1 docobj, a.id broj, $1 obj2, '$$NADREDJENI$$ ' opis, to_char(NOW(), 'YYYYMMDDHH24MISS') timecreation, 0 storno, to_char(NOW(), 'YYYY') "year", a.status currStatus
+      a.par usr, 1 status, 1 docobj, a.id broj, $1 obj2, '$$NADREDJENI$$ ' opis, to_char(NOW(), 'YYYYMMDDHH24MISS') timecreation, 0 storno, to_char(NOW(), 'YYYY') "year", 
+      a.status currStatus
       FROM tic_event a
       WHERE a.id = $2
     `,
@@ -1436,7 +1437,7 @@ const ticDocsuidPosetilac = async (objId1, requestBody, lang) => {
 
     const query = ` 
               update tic_docsuid
-                set first = '${ticDocRow?.first || ticDocRow?.text || ticDocRow?.textx}',
+              set first = '${ticDocRow?.first || ticDocRow?.text || ticDocRow?.textx}',
                   last = '${ticDocRow?.last || ticDocRow?.text || ticDocRow?.textx}',
                   uid = '${ticDocRow?.uid}',
                   adress = '${ticDocRow?.address}',
@@ -1446,7 +1447,7 @@ const ticDocsuidPosetilac = async (objId1, requestBody, lang) => {
                   email = '${ticDocRow?.email}',
                   par = ${ticDocRow?.id},
                   birthday = '${ticDocRow?.birthday}',
-                  kupac = 0
+                  kupac = '${ticDocRow?.kupac}'
               where 	docs  = ${objId1}
               `;
 
@@ -1817,8 +1818,8 @@ const ticEventCopy = async (requestBody) => {
       const result = await client.query(query);
       // console.log('Query result:', result);
       await client.query('COMMIT');
-      // console.log('tic_docs_setservices function executed successfully', result.rows[0]);
-      return result.rows[0]
+      console.log('tic_docs_setservices function executed successfully', result.rows[0]);
+      return result.rows[0].tic_event_copy
     } catch (err) {
       console.error(err.stack);
       await client.query('ROLLBACK'); // Rollback the transaction in case of error

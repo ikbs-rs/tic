@@ -6,6 +6,7 @@ dotenv.config()
 
 // PostgreSQL Connection
 const pool = new Pool({
+  max: 200,
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
   user: process.env.DB_USER,
