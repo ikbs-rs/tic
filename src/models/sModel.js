@@ -1110,7 +1110,8 @@ const docSetCancelService = async (objId) => {
     await db.query('BEGIN');
 
     const query1 = ` update tic_doc  
-              set status = 4 
+              set status = 4,
+                    endtm = null
               where id = $1`;
     const query2 = ` update tic_docs  
                 set endtm = null,
