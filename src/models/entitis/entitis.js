@@ -171,7 +171,8 @@ const entitiesInfo =
 			"begtm": "string",
 			"endtm": "string",
 			"color": "string",
-			"icon": "string"
+			"icon": "string",
+			"rbr": "number"
 		}
 	},
 	"tic_arttax": {
@@ -640,7 +641,8 @@ const entitiesInfo =
 			"color": "string",
 			"icon": "string",
 			"maxkol": "number",
-			"kolicinaulaz": "number"
+			"kolicinaulaz": "number",
+			"rbr": "number"
 		}
 	},
 	"tic_eventatttp": {
@@ -750,7 +752,8 @@ const entitiesInfo =
 			"begda": "string",
 			"endda": "string",
 			"color": "string",
-			"icon": "string"
+			"icon": "string",
+			"rbr": "number"
 		}
 	},
 	"tic_loclink": {

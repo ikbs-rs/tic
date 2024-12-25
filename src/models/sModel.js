@@ -2124,6 +2124,24 @@ const setRezervation = async (docId, par1, requestBody) => {
     console.log(docId, par1, "HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH")
     let ok = false;
 
+    const paymentCheckResult = await db.query(
+      `
+      SELECT paymenttp 
+      FROM tic_doc 
+      WHERE id = $1
+      `,
+      [docId]
+    );
+
+    if (paymentCheckResult.rows.length === 0) {
+      throw new Error(`Document with id ${docId} not found.`);
+    }
+
+    const { paymenttp } = paymentCheckResult.rows[0];
+    if (paymenttp === null) {
+      throw new Error(`Payment type (paymenttp) is NULL for document with id ${docId}.`);
+    }    
+
     await db.query("BEGIN");
 
     await db.query(

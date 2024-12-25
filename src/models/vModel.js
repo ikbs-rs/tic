@@ -1691,7 +1691,7 @@ const getEventattstpL = async (objName, objId, par1, lang) => {
 const getEventobjL = async (objName, objId, lang) => {
   const sqlRecenica =
     `
-  select aa.id , aa.site , aa.event , aa.begda, aa.endda, aa.begtm, aa.endtm, a2.lang , a2.grammcase , aa.color, aa.icon,
+  select aa.id , aa.site , aa.event , aa.begda, aa.endda, aa.begtm, aa.endtm, a2.lang , a2.grammcase , aa.color, aa.icon, aa.rbr,
         aa.objtp, getValueById(aa.objtp, 'cmn_objtpx_v', 'code', '${lang || 'sr_cyr'}') cobjtp, getValueById(aa.objtp, 'cmn_objtpx_v', 'text', '${lang || 'sr_cyr'}') nobjtp,
         aa.obj, a2.code cobj, a2.text nobj
   from	tic_eventobj aa, cmn_objx_v a2
@@ -1777,7 +1777,7 @@ const getEventlocL = async (objName, objId, lang) => {
 
 const getEventlocTpL = async (objName, objId, par1, lang) => {
   const sqlRecenica =
-    `select aa.id , aa.site , aa.event , aa.begda, aa.endda, aa.loc,
+    `select aa.id , aa.site , aa.event , aa.begda, aa.endda, aa.loc, aa.rbr,
         b.code cloc, b.text nloc, b.valid, b.graftp, b.latlongs, b.radius, aa.color, b.fillcolor, b.originfillcolor, b.rownum, b.grammcase, b.text textx,
         b.tp loctp, getValueById(b.tp, 'cmn_loctpx_v', 'code', '${lang || 'sr_cyr'}') cloctp, getValueById(b.tp, 'cmn_loctpx_v', 'text', '${lang || 'sr_cyr'}') nloctp
   from  tic_eventloc aa, cmn_locx_v b
