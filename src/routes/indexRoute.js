@@ -4,6 +4,7 @@ import abstructX from "./models/abstructXRoute.js";
 import fileRouter from "./services/fileRouter.js";
 import esirRouter from "./services/esirRouter.js";
 import allSecureRouter from "./services/allSecureRouter.js"
+import emailRouter from "./services/emailRouter.js"
 import paymentPostbackRouter from "./services/paymentPostbackRouter.js"
 //import servicesRoute from './services/servicesRoute.js'
 import { checkJwt, checkPermissions, checkPermissionsEx, checkPermissionsAllSecure } from '../security/interceptors.js'
@@ -82,6 +83,7 @@ router.use('/tic/file', checkPermissions(), fileRouter)
 
 router.use('/tic/esir', checkPermissions(), esirRouter)
 router.use('/tic/allsecure', checkPermissions(), allSecureRouter)
+router.use('/tic/email', checkPermissions(), emailRouter)
 // todo
  router.use('/postback', checkPermissionsAllSecure(), paymentPostbackRouter)
 

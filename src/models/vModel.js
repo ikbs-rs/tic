@@ -1688,6 +1688,57 @@ const getEventattstpL = async (objName, objId, par1, lang) => {
   }
 };
 
+const getEventclszgrL = async (objId, lang) => {
+  const sqlRecenica =
+  `
+  select a2.code,
+        aa.value, aa.text, aa.condition, aa.link, aa.minfee, aa.valid
+  from	tic_eventatts aa, tic_eventatt a2
+  where aa.event = ${objId}
+  and   aa.att = a2.id
+  and   aa.valid = 1
+  and   a2.code in ('00.00.', '00.01.', '00.02.', '10.01.', '10.02.', '10.03.')
+  order by a2.code
+  `
+  // console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
+
+  let result = await db.query(sqlRecenica);
+  let rows = result.rows;
+  if (Array.isArray(rows)) {
+    return rows;
+  } else {
+    throw new Error(
+      `Greška pri dohvatanju slogova iz baze - abs find: ${rows}`
+    );
+  }
+};
+
+const getEventdocsclszL = async (objId, lang) => {
+  const sqlRecenica =
+  `
+  select distinct a2.code, aa.value, td.uid, td.email
+  from	tic_eventatts aa, tic_eventatt a2, tic_docs s, tic_docsuid td 
+  where aa.event = ${objId}
+  and   aa.att = a2.id
+  and   aa.valid = 1
+  and   a2.code in ('00.00.', '00.01.')
+  and 	s."event"::text = aa.value 
+  and s.id = td.docs 
+  order by a2.code
+  `
+  // console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
+
+  let result = await db.query(sqlRecenica);
+  let rows = result.rows;
+  if (Array.isArray(rows)) {
+    return rows;
+  } else {
+    throw new Error(
+      `Greška pri dohvatanju slogova iz baze - abs find: ${rows}`
+    );
+  }
+};
+
 const getEventobjL = async (objName, objId, lang) => {
   const sqlRecenica =
     `
@@ -2710,4 +2761,6 @@ export default {
   getEventattsCodeValueL,
   getEventartulazL,
   getEventattgL,
+  getEventclszgrL,
+  getEventdocsclszL,
 };
