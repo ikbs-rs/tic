@@ -1156,12 +1156,12 @@ const docSetEndSaleService = async (objId) => {
     } catch (err) {
       console.error('Error executing queries, rolling back:', err.stack);
       await db.query('ROLLBACK');
-      throw err; 
+      throw err;
     }
 
   } catch (error) {
     console.error(`Error in transaction, rolling back: ${error}`);
-    throw error; 
+    throw error;
   }
 
 };
@@ -2118,10 +2118,93 @@ const ticDocpayments = async (requestBody, lang) => {
 };
 
 /****************************************************************************** */
+/****************************************************************************** */
+
+const ticStampaKopija = async (requestBody, lang) => {
+
+  try {
+    let ok = false;
+    let sId = '11111111111111111111'
+
+    const ticDocs = requestBody.ticDocs;
+    const ticStampa = requestBody.ticStampa;
+    let barcode = null
+    const maxAttempts = 20;
+    if (ticDocs && Array.isArray(ticDocs)) {
+      for (const obj of ticDocs) {
+        let attempt = 0;
+        while (attempt < maxAttempts) {
+          attempt++;
+          barcode = Math.floor(1000000000000000 + Math.random() * 9000000000000000).toString();
+
+          const sqlRecenica = `
+            SELECT COUNT(*) AS broj
+            FROM tic_docs s
+            WHERE s.doc = $1
+            AND s.barcodevalue = $2
+          `;
+          const result = await db.query(sqlRecenica, [obj.doc, barcode]);
+          const brojSlogova = parseInt(result.rows[0].broj, 10);
+
+          if (brojSlogova === 0) {
+            console.log(`Barcode generated successfully: ${barcode}`);
+            break;
+          }
+
+          if (attempt === maxAttempts) {
+            console.error("Failed to generate a unique barcode after 20 attempts.");
+            throw new Error("Unable to generate a unique barcode.");
+          }
+        }
+
+        await db.query(
+          `
+            update tic_docs
+            SET barcodevalue = '${barcode}'
+            WHERE id = $1
+          `,
+          [obj.id]
+        );
+
+        sId = await uniqueId();
+        await db.query(
+          `
+              INSERT INTO tic_docsbarcodes (id, site,	docs, barcode, value,	status,	tp,	vreme,	usr)
+              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+              `,
+          [sId, null, obj.id, obj.barcodevalue, barcode, 1, 1, ticStampa.tmupdate, ticStampa.usr]
+        );
+      }
+    }
+
+    sId = await uniqueId();
+    await db.query(
+      `
+          INSERT INTO tic_stampa (id,	site,	doc, time,	bcontent,	valid,	tp,	vr,	barcode,	mail,	usr, tmupdate, link, ticket)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+          `,
+      [sId, ticStampa.site, ticStampa.doc, ticStampa.time, null, ticStampa.valid, ticStampa.tp, ticStampa.vr, ticStampa.barcode,
+        ticStampa.mail, ticStampa.usr, ticStampa.tmupdate, ticStampa.link, ticStampa.ticket
+      ]
+    );
+
+    await db.query("COMMIT");
+    ok = true;
+    return sId;
+  }
+  catch (error) {
+    if (db) {
+      await db.query("ROLLBACK");
+    }
+    throw error;
+  }
+};
+
+/****************************************************************************** */
 const setRezervation = async (docId, par1, requestBody) => {
 
   try {
-    console.log(docId, par1, "HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH")
+    // console.log(docId, par1, "HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH")
     let ok = false;
 
     const paymentCheckResult = await db.query(
@@ -2140,7 +2223,7 @@ const setRezervation = async (docId, par1, requestBody) => {
     const { paymenttp } = paymentCheckResult.rows[0];
     if (paymenttp === null) {
       throw new Error(`Payment type (paymenttp) is NULL for document with id ${docId}.`);
-    }    
+    }
 
     await db.query("BEGIN");
 
@@ -2161,6 +2244,49 @@ const setRezervation = async (docId, par1, requestBody) => {
       `, [docId, par1]);
 
     await db.query("COMMIT"); // Confirm the transaction
+    ok = true;
+
+    return ok;
+  } catch (error) {
+    if (db) {
+      await db.query("ROLLBACK"); // Rollback the transaction in case of an error
+    }
+    throw error;
+  }
+};
+
+/****************************************************************************** */
+const ticticDocB = async (docId, requestBody, lang) => {
+
+  try {
+    // console.log(docId, requestBody, "HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH")
+    let ok = false;
+    let sId = '11111111111111111111'
+
+    const parsedBody = requestBody;
+
+    await db.query("BEGIN");
+
+    ok = await db.query(
+      `
+      delete FROM tic_docb
+      WHERE doc = $1
+      and tp = $2
+      `,
+      [parsedBody.doc, parsedBody.tp]
+    );
+
+    sId = await uniqueId();
+    await db.query(
+      `
+            INSERT INTO tic_docb (id,	site,	doc, tp,	bcontent,	vreme,	event,	ceventatt,	vrednost,	napomena)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+            `,
+      [sId, parsedBody.site, parsedBody.doc, parsedBody.tp, parsedBody.bcontent, parsedBody.vreme, parsedBody.event, parsedBody.ceventatt, parsedBody.vrednost,
+        parsedBody.napomena]
+    );
+
+    await db.query("COMMIT");
     ok = true;
 
     return ok;
@@ -2209,4 +2335,6 @@ export default {
   ticEventCopyS,
   setRezervation,
   docSetEndSaleService,
+  ticStampaKopija,
+  ticticDocB,
 };

@@ -116,9 +116,9 @@ const postFunction = async (
       case "tic_docsetcancel_s": // obrada stavke na prodaji
         result = await sModel.docSetCancelService(objId1);
         break;
-        case "tic_docsetendsale_s": // obrada stavke na prodaji
+      case "tic_docsetendsale_s": // obrada stavke na prodaji
         result = await sModel.docSetEndSaleService(objId1);
-        break;        
+        break;
       case "tic_eventcopy_s": // obrada stavke na prodaji
         result = await sModel.ticEventCopy(requestBody);
         break;
@@ -169,6 +169,12 @@ const postFunction = async (
         break;
       case "tic_setreservation_s":
         result = await sModel.setRezervation(objId1, par1, requestBody);
+        break;
+      case "tic_stampakopija_s":
+        result = await sModel.ticStampaKopija(requestBody, lang);
+        break;
+      case "tic_docb_s":
+        result = await sModel.ticticDocB(objId1, requestBody, lang);
         break;
       default:
         console.error("sHelper: Pogresan naziv za view-a - " + stm);
