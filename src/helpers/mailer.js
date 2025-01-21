@@ -1,7 +1,7 @@
 
 import nodemailer from 'nodemailer';
 
-const sendEmail = async ({ user, transaction, payment, items, imageSrc }) => {
+const sendEmail = async ({ user, transaction, payment, items, imageSrc, attachments }) => {
   const emailContent = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; color: #333;">
       <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse: collapse; margin: 20px auto;">
@@ -35,15 +35,15 @@ const sendEmail = async ({ user, transaction, payment, items, imageSrc }) => {
               </thead>
               <tbody>
                 ${items
-                  .map(
-                    (item) =>
-                      `<tr>
+      .map(
+        (item) =>
+          `<tr>
                         <td>${item.seat}</td>
                         <td>${item.row}</td>
                         <td>${item.nart} RSD</td>
                       </tr>`
-                  )
-                  .join('')}
+      )
+      .join('')}
               </tbody>
             </table>
             <p style="margin-top: 20px; font-size: 14px;">Za sva pitanja, obratite se na <a href="mailto:office@ticketline.rs" style="color: #4CAF50; text-decoration: none;">office@ticketline.rs</a>.</p>
@@ -61,18 +61,27 @@ const sendEmail = async ({ user, transaction, payment, items, imageSrc }) => {
       user: 'test@ticketline.rs',
       pass: 'Hun_3030',
     },
+    tls: {
+      rejectUnauthorized: false, // Ovo isključuje proveru sertifikata
+    },
   });
 
   const mailOptions = {
     from: 'Ticketline <no-reply@ticketline.com>',
-    to: user.email,
+    to: "bobanmvasiljevic@gmail.com",
+    // to: user.email,
     subject: 'Potvrda o kupovini ulaznica',
-    html: emailContent,
+    html: "Proba",
+    // html: emailContent,
+    attachments: attachments || [], // Dodaj priloge, ako postoje
   };
-
-  await transporter.sendMail(mailOptions);
+  await transporter.verify();
+  console.log("Pokušavam da pošaljem e-mail...");
+  const status = await transporter.sendMail(mailOptions);
+  console.log("E-mail uspešno poslat:", status.response);
+  return status.response;
 };
 
 export default {
-    sendEmail,
+  sendEmail,
 };
