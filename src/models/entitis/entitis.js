@@ -570,7 +570,11 @@ const entitiesInfo =
 			"email": "string",
 			"par": "number",
 			"birthday": "string",
-			"kupac": "number"
+			"kupac": "number",
+			"brojcl": "string",
+			"linkcl": "string",
+			"brojsz": "string",
+			"linksz": "string"
 		}
 	},
 	"tic_docvr": {

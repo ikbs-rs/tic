@@ -67,19 +67,26 @@ const sendEmail = async ({ user, transaction, payment, items, imageSrc, attachme
   });
 
   const mailOptions = {
-    from: 'Ticketline <no-reply@ticketline.com>',
-    to: "bobanmvasiljevic@gmail.com",
+    from: 'test@ticketline.rs',
+    to: 'bobanmvasiljevic@gmail.com',
+    cc: ['bobanmvasiljevic@gmail.com', 'bmvasiljevic@yahoo.com'],
+    bcc: ['bobanmvasiljevic@gmail.com', 'bmvasiljevic@yahoo.com'], 
     // to: user.email,
-    subject: 'Potvrda o kupovini ulaznica',
-    html: "Proba",
+    subject: 'Potvrda o kupovini ulaznica###',
+    html: "Proba da li ovo fercera",
     // html: emailContent,
     attachments: attachments || [], // Dodaj priloge, ako postoje
   };
   await transporter.verify();
   console.log("Pokušavam da pošaljem e-mail...");
-  const status = await transporter.sendMail(mailOptions);
-  console.log("E-mail uspešno poslat:", status.response);
-  return status.response;
+  // const status = await transporter.sendMail(mailOptions);
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      return console.error('Error sending email:', error);
+    }
+    console.log('Email sent:', info.response);
+  });
+  return true
 };
 
 export default {

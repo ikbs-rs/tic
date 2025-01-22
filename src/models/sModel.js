@@ -1184,7 +1184,11 @@ const ticDocsuidParAllNull = async (objId1, requestBody, lang) => {
                   email = '',
                   par = null,
                   birthday = '',
-                  kupac = 0
+                  kupac = 0,
+                  brojcl = '',
+                  linkcl = '',
+                  brojsz = '',
+                  linksz = '$'
               where 	docs in (
                   select s.id
                   from	tic_docs s
@@ -1354,7 +1358,7 @@ const ticDocsuidParAll = async (objId1, requestBody, lang) => {
       ticDocRow.phon = ''
     }
     // const ticDocRow = _ticDocRow[0]
-    // console.log("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT", ticDocRow)
+    console.log("xxxTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT", ticDocRow)
 
     const query = ` 
               update tic_docsuid
@@ -1435,7 +1439,7 @@ const ticDocsuidPosetilac = async (objId1, requestBody, lang) => {
       ticDocRow.phon = ''
     }
 
-
+    console.log("aaTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT", ticDocRow)
     const query = ` 
               update tic_docsuid
               set first = '${ticDocRow?.first || ticDocRow?.text || ticDocRow?.textx}',
@@ -1448,7 +1452,11 @@ const ticDocsuidPosetilac = async (objId1, requestBody, lang) => {
                   email = '${ticDocRow?.email}',
                   par = ${ticDocRow?.id},
                   birthday = '${ticDocRow?.birthday}',
-                  kupac = '${ticDocRow?.kupac}'
+                  kupac = '${ticDocRow?.kupac}',
+                  brojcl = '${ticDocRow?.brojcl}',
+                  linkcl = '${ticDocRow?.linkcl}',
+                  brojsz = '${ticDocRow?.brojsz}',
+                  linksz = '${ticDocRow?.linksz}'
               where 	docs  = ${objId1}
               `;
 
@@ -1544,7 +1552,9 @@ const ticDocsuidPar = async (objId1, requestBody, lang) => {
                   email = '${ticDocRow?.email}',
                   par = ${ticDocRow?.id},
                   birthday = '${ticDocRow?.birthday}',
-                  kupac = 1
+                  kupac = 1,
+                  brojcl = '',
+                  brojsz = ''
               where 	docs  = ${objId1}
               `;
 
@@ -1591,7 +1601,9 @@ const ticDocsuidParNull = async (objId1, requestBody, lang) => {
                   email = '',
                   par = null,
                   birthday = '',
-                  kupac = 0
+                  kupac = 0,
+                  brojcl = '',
+                  brojsz = ''
               where 	docs  = ${objId1}
               `;
     const query1 = ` 

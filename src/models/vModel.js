@@ -1716,7 +1716,7 @@ const getEventclszgrL = async (objId, lang) => {
 const getEventdocsclszL = async (objId, lang) => {
   const sqlRecenica =
   `
-  select distinct a2.code, aa.value, td.uid, td.email
+  select a2.code, aa.value, td.uid, td.email, max(s.barcodevalue) barcodevalue
   from	tic_eventatts aa, tic_eventatt a2, tic_docs s, tic_docsuid td 
   where aa.event = ${objId}
   and   aa.att = a2.id
@@ -1724,9 +1724,10 @@ const getEventdocsclszL = async (objId, lang) => {
   and   a2.code in ('00.00.', '00.01.')
   and 	s."event"::text = aa.value 
   and s.id = td.docs 
+  group by a2.code, aa.value, td.uid, td.email
   order by a2.code
   `
-  console.log("*-*-*-*-*-*-*-*-*-1111111111111111", sqlRecenica)
+  console.log("*-*-*-*-*-*-*-*-*-1111111111111111HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH", sqlRecenica)
 
   let result = await db.query(sqlRecenica);
   let rows = result.rows;
