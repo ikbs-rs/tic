@@ -20,7 +20,7 @@ const sendEmail = async ({ user, transaction, payment, items, imageSrc, attachme
             <h2 style="color: #333;">Poštovani/a, ${user.text}!</h2>
             <p style="font-size: 16px;">Zahvaljujemo se na vašoj kupovini putem Ticketline-a. Vaša transakcija je uspešno završena, a vaše ulaznice su spremne!</p>
             <h3 style="color: #333;">Detalji transakcije:</h3>
-            <p><strong>Broj narudžbine:</strong> ${transaction.id}</p>
+            <p><strong>Broj narudžbine:</strong> ${transaction.broj}</p>
             <p><strong>Ukupan iznos:</strong> ${payment.amount || 'N/A'} RSD</p>
             <p><strong>Način plaćanja:</strong> Kartica (Kod: ${payment.id})</p>
             <p><strong>Datum transakcije:</strong> ${new Date(transaction.updated_at).toLocaleDateString()}</p>
@@ -67,13 +67,13 @@ const sendEmail = async ({ user, transaction, payment, items, imageSrc, attachme
   });
 
   const mailOptions = {
-    from: 'test@ticketline.rs',
-    to: 'bobanmvasiljevic@gmail.com',
-    cc: ['bobanmvasiljevic@gmail.com', 'bmvasiljevic@yahoo.com'],
-    bcc: ['bobanmvasiljevic@gmail.com', 'bmvasiljevic@yahoo.com'], 
+    from: 'Ticketline <no-reply@ticketline.rs>',
+    to: user.email,
+    cc: ['bobanmvasiljevic@gmail.com'],
+    bcc: [], 
     // to: user.email,
     subject: 'Potvrda o kupovini ulaznica###',
-    html: "Proba da li ovo fercera",
+    html: "Tekst koji se salje kupcu uz fiskalni racun!!",
     // html: emailContent,
     attachments: attachments || [], // Dodaj priloge, ako postoje
   };

@@ -2271,7 +2271,7 @@ const setRezervation = async (docId, par1, requestBody) => {
 const ticticDocB = async (docId, requestBody, lang) => {
 
   try {
-    // console.log(docId, requestBody, "HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH")
+    // console.log(requestBody, "HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH")
     let ok = false;
     let sId = '11111111111111111111'
 

@@ -36,7 +36,7 @@ const add = async (objName, objData) => {
 
     const result = await abstractModel.add(sqlQuery);
 
-    console.log(sqlQuery, "@ 03 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@", objData)
+    // console.log(sqlQuery, "@ 03 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@", objData)
 
     if (objName === "tic_doc" || objName === "tic_eventatts") {
       return objData
