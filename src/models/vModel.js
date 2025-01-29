@@ -435,7 +435,7 @@ const getDocpaymentL = async (objName, objId, lang) => {
   join  adm_user a on a.id = aa.usr
   where aa.doc = ${objId}
   `
-  //console.log(sqlRecenica, "*******************getArtcenaL*********************"  )    
+  console.log(sqlRecenica, "*******************getArtcenaL*********************"  )    
   //const [rows] = await db.query(sqlRecenic);
 
   let result = await db.query(sqlRecenica);
@@ -2380,9 +2380,18 @@ const getTicEventPregledVV = async (objId, par1, lang) => {
       JOIN tic_eventartcena ec ON ec.eventart = a.id 
           AND TO_CHAR(CURRENT_DATE, 'YYYYMMDD') BETWEEN ec.begda AND ec.endda
       JOIN tic_cenax_v c ON ec.cena = c.id and c.code = 'R' and c.lang = '${lang || 'sr_cyr'}'
+      JOIN tic_event ev on ev.id = e.event and ev.mapa = 1
       WHERE e.event = ${objId}
       GROUP BY e."event", e.art, e.sector, ec.value, a.nart, c."text" 
-      order by c."text", a.nart 
+      union 
+      select e.id event, 'K' carttp, ea.art, ea.nart, null sector, ea.maxkol uprodaji, ec.value, tc.text
+      from tic_event e
+      join tic_eventart ea on ea."event" = e.id and TO_DATE(ea.begda, 'YYYYMMDD') <= current_date and tO_DATE(ea.endda, 'YYYYMMDD') >= current_date
+      join tic_eventartcena ec on ec.eventart = ea.id and TO_DATE(ec.begda, 'YYYYMMDD') <= current_date and tO_DATE(ec.endda, 'YYYYMMDD') >= current_date
+      join tic_cenax_v tc on tc.id = ec.cena and tc.code = 'R'
+      where e.id = ${objId}
+      and e.mapa = 0
+      order by "text", nart 
       ) a
       union
       select  event, carttp, art, nart, sector, 0, 0, 0, prodato, price,  prodato*price
