@@ -2686,6 +2686,44 @@ const getDocZbirniiznosL = async (objId) => {
 
 };
 
+
+const getOsnovni1IzvL = async (objId, lang) => {
+  const sqlRecenica =
+    `
+      select x.id, x.text, sum(x.brtrans) brtrans, sum(x.brkarti) brkarti, sum(x.iznos) iznos, sum(x.popust) popust, sum(x.reztrans) reztrans, sum(x.rezkarti) rezkarti, sum (x.reziznos) reziznos
+      from (
+        select 	t.id, t."text" , count(distinct d.broj) brtrans, count(*) brkarti, sum(s.potrazuje) iznos, sum(s.discount) popust, 0 reztrans, 0 rezkarti, 0 reziznos
+        from	tic_doc d
+        left join 	cmn_paymenttpx_v t on t.id = d.paymenttp  and t.lang = '${lang || 'sr_cyr'}'
+        join 	tic_docs s on s.doc = d.id
+        where	d.reservation != 1
+        and	d.status not in ('0', '-1')
+        group by t.id, t."text"
+        union 
+        select 	t.id, t."text" , count(distinct d.broj) brtrans, count(*) brkarti, sum(s.potrazuje) iznos, sum(s.discount) popust,  count(distinct d.broj) reztrans,count(*) rezkarti, sum(s.potrazuje) reziznos
+        from	tic_doc d
+        left join 	cmn_paymenttpx_v t on t.id = d.paymenttp  and t.lang = '${lang || 'sr_cyr'}'
+        join 	tic_docs s on s.doc = d.id
+        where	d.reservation = 1
+        and	d.status not in ('0', '-1')
+        group by t.id, t."text"
+      ) x
+      group by x.id, x.text
+    `
+  console.log(sqlRecenica, "*******************getOsnovni1IzvL*********************")
+
+  let result = await db.query(sqlRecenica);
+  let rows = result.rows;
+  if (Array.isArray(rows)) {
+    return rows;
+  } else {
+    throw new Error(
+      `Greška pri dohvatanju slogova iz baze - abs find: ${rows}`
+    );
+  }
+
+};
+
 export default {
   getListaC,
   getAgendaL,
@@ -2773,4 +2811,5 @@ export default {
   getEventattgL,
   getEventclszgrL,
   getEventdocsclszL,
+  getOsnovni1IzvL,
 };
