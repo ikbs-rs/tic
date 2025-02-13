@@ -127,6 +127,9 @@ const getLista = async (objName, stm, objId, par1, par2, lang, par3, par4, par5,
       case "tic_eventattsdd_v":
         result = await vModel.getEventattsddL(objName, objId, par1, par2, lang);
         break;
+      case "tic_eventview_v":
+        result = await vModel.getEventView(objId, par1, lang);
+        break;
       case "tic_eventattstp_v":
         result = await vModel.getEventattstpL(objName, objId, par1, lang);
         break;
@@ -151,6 +154,9 @@ const getLista = async (objName, stm, objId, par1, par2, lang, par3, par4, par5,
         break;
       case "tic_eventloctp_v":
         result = await vModel.getEventlocTpL(objName, objId, par1, lang);
+        break;
+      case "tic_doc_log_v":
+        result = await vModel.getDoc_logL(par1, par2, par3, lang);
         break;
       case "tic_eventcenatp_v":
         result = await vModel.getEventcenatpL(objName, objId, lang);

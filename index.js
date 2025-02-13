@@ -1,4 +1,5 @@
 import express  from 'express'
+import bodyParser from 'body-parser'
 import dotenv from 'dotenv'
 import cors from 'cors'
 import router from './src/routes/indexRoute.js' 
@@ -11,6 +12,9 @@ const app = express()
 dotenv.config()
 app.use(cors())
 
+// Povećanje limita za JSON payload
+app.use(bodyParser.json({ limit: '50mb' })); // Povećava limit na 50MB
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 const httpPort = process.env.APP_PORT || 3000; // HTTP port
 const httpsPort = process.env.HTTPS_PORT || 3443; // HTTPS port

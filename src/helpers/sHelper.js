@@ -128,6 +128,9 @@ const postFunction = async (
       case "tic_eventdeleteall_s": // obrada stavke na prodaji
         result = await sModel.ticEventDeleteAll(objId1);
         break;
+        case "tic_eventview_s": // obrada stavke na prodaji
+        result = await sModel.ticEventView(objId1, requestBody);
+        break;        
       case "tic_eventsavedate_s": // obrada stavke na prodaji
         result = await sModel.ticEventSaveDate(requestBody);
         break;

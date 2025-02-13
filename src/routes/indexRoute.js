@@ -98,6 +98,7 @@ router.use('/tic/privilegelink', checkPermissions(), abstruct)
 router.use('/tic/seatloc', checkPermissions(), abstruct) 
 router.use('/tic/seattpatts', checkPermissions(), abstruct) 
 router.use('/tic/stampa', checkPermissions(), abstruct)
+router.use('/tic/tic_eventview', checkPermissions(), abstruct)
 
 router.use('/tic/x/agenda', checkPermissions(), abstructX) 
 router.use('/tic/x/agendatp', checkPermissions(), abstructX) 

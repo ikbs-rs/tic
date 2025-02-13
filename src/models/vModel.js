@@ -1829,14 +1829,41 @@ const getEventlocL = async (objName, objId, lang) => {
 
 const getEventlocTpL = async (objName, objId, par1, lang) => {
   const sqlRecenica =
-    `select aa.id , aa.site , aa.event , aa.begda, aa.endda, aa.loc, aa.rbr,
-        b.code cloc, b.text nloc, b.valid, b.graftp, b.latlongs, b.radius, aa.color, b.fillcolor, b.originfillcolor, b.rownum, b.grammcase, b.text textx,
+    `select aa.*,
+        b.code cloc, b.text nloc, b.valid, b.graftp, b.latlongs, b.radius, b.fillcolor, b.originfillcolor, b.rownum, b.grammcase, b.text textx,
         b.tp loctp, getValueById(b.tp, 'cmn_loctpx_v', 'code', '${lang || 'sr_cyr'}') cloctp, getValueById(b.tp, 'cmn_loctpx_v', 'text', '${lang || 'sr_cyr'}') nloctp
   from  tic_eventloc aa, cmn_locx_v b
   where aa.event = ${objId}
   and aa.loc = b.id
   and ( b.tp = CASE WHEN ${par1} = -1 THEN b.tp  ELSE ${par1}  END )
   and b.lang = '${lang || 'sr_cyr'}'`
+
+  // console.log("*-*-*-*-*-*-*-*-*- getEventstL @@@@@@@@@@@@@@@@@", sqlRecenica)
+  let result = await db.query(sqlRecenica);
+  let rows = result.rows;
+  if (Array.isArray(rows)) {
+    return rows;
+  } else {
+    throw new Error(
+      `Greška pri dohvatanju slogova iz baze - abs find: ${rows}`
+    );
+  }
+};
+
+const getDoc_logL = async (par1, par2, par3, lang) => {
+  const sqlRecenica =
+  ` 
+  select aa.*
+  from  doc_log aa
+  where aa.table_name = '${par1}'
+  and   aa.table_id = ${par2}
+  union 
+  select aa.*
+  from  doc_log aa
+  where aa.table_name = '${par3}'
+  and   aa.parent_id = ${par2}
+  order  by change_time
+  `
 
   // console.log("*-*-*-*-*-*-*-*-*- getEventstL @@@@@@@@@@@@@@@@@", sqlRecenica)
   let result = await db.query(sqlRecenica);
@@ -2724,6 +2751,36 @@ const getOsnovni1IzvL = async (objId, lang) => {
 
 };
 
+const getEventView = async (objid, tp, lang) => {
+  let sqlRecenica =''
+    if (tp=='LONG') {
+      sqlRecenica =
+      `
+        select 	d."long" slika
+        from 	  tic_eventview d
+        where 	d.id = ${objid}    
+      `      
+    } else {
+      sqlRecenica =
+      `
+        select 	d."short" slika
+        from 	  tic_eventview d
+        where 	d.id = ${objid}    
+      `       
+    }
+  
+  try {
+    let result = await db.query(sqlRecenica);
+    let row = result.rows[0];
+    // console.log(row, "HHHHHHHHHH1111111111111111######################################################HHHHHHHHHHHHHHH", sqlRecenica)
+    return row;
+  } catch (error) {
+    throw new Error(
+      `Greška pri dohvatanju slogova iz baze - abs find: ${rows}`
+    );
+  }
+};
+
 export default {
   getListaC,
   getAgendaL,
@@ -2812,4 +2869,6 @@ export default {
   getEventclszgrL,
   getEventdocsclszL,
   getOsnovni1IzvL,
+  getDoc_logL,
+  getEventView
 };

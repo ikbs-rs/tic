@@ -2310,6 +2310,48 @@ const ticticDocB = async (docId, requestBody, lang) => {
   }
 };
 
+const ticEventView = async (uId, requestBody) => {
+
+  try {
+    // console.log(requestBody, "HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH")
+    let ok = false;
+    let sId = '11111111111111111111'
+
+    const parsedBody = requestBody;
+
+    await db.query("BEGIN");
+
+    ok = await db.query(
+      `
+      delete FROM tic_eventview
+      WHERE id = $1
+      `,
+      [uId]
+    );
+
+    sId = await uniqueId();
+    await db.query(
+      `
+            INSERT INTO tic_eventview (id,	site,	tp, event,	"short",	"long")
+            VALUES ($1, $2, $3, $4, $5, $6)
+            `,
+      [uId, parsedBody.site, 'AA', uId, parsedBody.short, parsedBody.long]
+    );
+
+    await db.query("COMMIT");
+    ok = true;
+
+    return ok;
+  } catch (error) {
+    if (db) {
+      await db.query("ROLLBACK"); // Rollback the transaction in case of an error
+    }
+    throw error;
+  }
+
+};
+
+
 export default {
   getAgendaL,
   getArtL,
@@ -2349,4 +2391,5 @@ export default {
   docSetEndSaleService,
   ticStampaKopija,
   ticticDocB,
+  ticEventView,
 };

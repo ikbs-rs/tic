@@ -757,7 +757,8 @@ const entitiesInfo =
 			"endda": "string",
 			"color": "string",
 			"icon": "string",
-			"rbr": "number"
+			"rbr": "number",
+			"kapacitet": "number"
 		}
 	},
 	"tic_loclink": {
@@ -1086,6 +1087,16 @@ const entitiesInfo =
 			"opis": "string",
 			"napomena": "string",
 			"postavka": "string"
+		}
+	},
+	"tic_eventview": {
+		"attributes": {
+			"id": "number",
+			"site": "number",
+			"tp": "string",
+			"event": "number",
+			"short": "string",
+			"long": "string"
 		}
 	}
 }
