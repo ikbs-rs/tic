@@ -341,13 +341,13 @@ const activateEvent = async (eventId) => {
     let ok = false;
     // console.log("***********************-00****************************")
     // Setuje se status 
-    await client.query("UPDATE tic_event set status = 1 WHERE event = $1", [eventId]);
+    await client.query("UPDATE tic_event set status = 1 WHERE id = $1", [eventId]);
     // console.log("***********************00****************************")
 
     // Create row for tic_doc
     const docRows = await db.query(`
       SELECT nextval('tic_table_id_seq') id , null site, to_char(NOW(), 'YYYYMMDD') "date", to_char(NOW(), 'YYYYMMDDHH24MISS') tm, 1 curr, 1 currrate, 22 docvr,
-      a.par usr, 1 status, 1 docobj, a.id broj, $1 obj2, '$$NADREDJENI$$ ' opis, to_char(NOW(), 'YYYYMMDDHH24MISS') timecreation, 0 storno, to_char(NOW(), 'YYYY') "year", 
+      a.par usr, -1 status, a.id docobj, -1 broj, $1 obj2, '$$NADREDJENI$$ ' opis, to_char(NOW(), 'YYYYMMDDHH24MISS') timecreation, 0 storno, to_char(NOW(), 'YYYY') "year", 
       a.status currStatus
       FROM tic_event a
       WHERE a.id = $2
@@ -375,7 +375,7 @@ const activateEvent = async (eventId) => {
       // Ako se kupac prijavljuje onda je to rezervacija u suprotnom je odmah racun
 
       const docsRows = await db.query(`
-          SELECT nextval('tic_table_id_seq') id, d.site, $1 doc, $2 event, d.loc, d.art, d.tgp, d.taxrate, 0 price, d.input, d.output, 
+          SELECT nextval('tic_table_id_seq') id, d.site, $1 doc, d.event, d.loc, d.art, d.tgp, d.taxrate, 0 price, d.input, d.output, 
           0 discount, d.curr, d.currrate, 0 duguje, 0 potrazuje, 0 leftcurr, 0 rightcurr,
           0 rightcurr, to_char(NOW(), 'YYYYMMDDHH24MISS') begtm, d.endtm, 2 status, 0 fee, par, 'AKTIVACIJA_DOKUMENTA' descript,
           d.tax, a.text nart, d.row, d.label, d.seat
@@ -385,12 +385,12 @@ const activateEvent = async (eventId) => {
           WHERE d.event::varchar in (
             select a.value 
             from	tic_eventatts a, tic_eventatt b
-            where a.event = $3
+            where a.event = $2
             and a.att = b.id 
             and b.code  in ('00.01.', '00.02.')
           ) 
         `,
-        [row.id, eventId, eventId]);
+        [row.id, eventId]);
       // console.log(eventId, "***********************03****************************", docId)
       for (const row1 of docsRows.rows) {
         // console.log("***********************04****************************", row.id)
