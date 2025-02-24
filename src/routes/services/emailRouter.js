@@ -8,6 +8,7 @@ const router = express.Router();
 router.use("/", (req, res, next) => {
     router.post("/fiskal", emailController.postFiskal);
     router.post("/racun", emailController.postRacun);   
+    router.post("/message", emailController.postMessage); 
     next();
 });
 
